@@ -837,7 +837,7 @@ window.render = (t) => {
   titulo(t, 't0', 0.25, 4.7); titulo(t, 't1', 5.1, 10.7); titulo(t, 't2', 11.3, 16.9); titulo(t, 't3', 18.6, 22.6);
   titulo(t, 't4', 23.8, 29.3); titulo(t, 't5', 29.9, 34.3);
   chip(t, 'chip-1', 15.7, 16.9); chip(t, 'chip-2', 27.7, 29.3);
-  if (tReal >= INS && tReal < INS + DI) $('t5').style.opacity = 1 - ease(tramo(tReal, INS, INS + 0.3));
+  if (tReal >= INS) $('t5').style.opacity = 1 - ease(tramo(tReal, INS, INS + 0.3));   // y no vuelve al salir del inserto
   titulo(tReal, 't6', INS + 0.45, INS + DI - 0.35); chip(tReal, 'chip-3', INS + 1.3, INS + DI - 0.35);
   const kc2 = ease(tramo(t, 34.6, 35.2)); $('cierre').style.opacity = kc2; $('velo').style.opacity = 1 - kc2; $('logo').style.opacity = 1 - kc2;
   aparece(t, $('c-logo'), 34.9); aparece(t, $('c-f1'), 35.9); aparece(t, $('c-f2'), 36.95); aparece(t, $('c-plan'), 38.3); aparece(t, $('c-cta'), 40.0); aparece(t, $('c-web'), 40.6);
