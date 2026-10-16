@@ -1,0 +1,41 @@
+# Renderiza un proyecto HyperFrames (HTML + GSAP/three.js → MP4) en una máquina de GitHub.
+# Se dispara con un push que cambie hf/pedido.json (lo escribe render-hf.sh) o a mano.
+name: hyperframes
+on:
+  workflow_dispatch:
+    inputs:
+      proyecto: { description: 'Carpeta dentro de hf/', default: 'costo-plato' }
+  push:
+    paths: ['hf/pedido.json']
+
+concurrency:
+  group: hyperframes-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Proyecto
+        id: p
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then P='${{ inputs.proyecto }}'; else P=$(jq -r .proyecto hf/pedido.json); fi
+          test -f "hf/$P/index.html" || { echo "no existe hf/$P/index.html"; exit 1; }
+          echo "proyecto=$P" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r '.scripts.render' "hf/$P/package.json" | grep -oE 'hyperframes@[0-9.]+')" >> "$GITHUB_OUTPUT"
+      - name: FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Chrome de HyperFrames
+        working-directory: hf/${{ steps.p.outputs.proyecto }}
+        run: npx --yes ${{ steps.p.outputs.version }} browser ensure
+      - name: Render
+        working-directory: hf/${{ steps.p.outputs.proyecto }}
+        run: |
+          npx --yes ${{ steps.p.outputs.version }} render . -q high -o renders/video.mp4
+          ls -la renders
+      - uses: actions/upload-artifact@v4
+        with: { name: video, path: 'hf/${{ steps.p.outputs.proyecto }}/renders/video.mp4', retention-days: 7, compression-level: 0 }
