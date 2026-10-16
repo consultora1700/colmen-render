@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <title>Costo real del plato</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "DM Sans";
+        src: url("assets/dmsans.woff2") format("woff2");
+        font-weight: 400 800;
+        font-display: block;
+      }
+      :root {
+        --fondo: #0a0a0a;
+        --tinta: #ecebe9;
+        --tenue: rgba(236, 235, 233, 0.62);
+        --lima: #c2d602;
+        --sup: #161616;
+        --borde: rgba(236, 235, 233, 0.12);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--fondo); }
+      body { font-family: "DM Sans", system-ui, sans-serif; color: var(--tinta); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--fondo); }
+      #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+      .velo { position: absolute; inset: 0; pointer-events: none; }
+      .velo-arriba { position: absolute; left: 0; right: 0; top: 0; height: 430px; background: linear-gradient(#0a0a0a 0%, rgba(10,10,10,.82) 52%, rgba(10,10,10,0) 100%); }
+      .velo-abajo { position: absolute; left: 0; right: 0; bottom: 0; height: 300px; background: linear-gradient(rgba(10,10,10,0), rgba(10,10,10,.88) 62%, #0a0a0a); }
+      .placa { position: absolute; inset: 0; }
+      .kicker { position: absolute; left: 72px; top: 76px; font-size: 26px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--lima); }
+      .tit { position: absolute; left: 72px; right: 72px; top: 122px; font-size: 82px; font-weight: 800; line-height: 1.02; letter-spacing: -1.6px; }
+      .tit .l { display: block; }
+      .tit em { font-style: normal; color: var(--lima); }
+      .sub { position: absolute; left: 72px; right: 110px; font-size: 34px; font-weight: 500; line-height: 1.3; color: var(--tenue); }
+      .pie { position: absolute; left: 72px; right: 72px; bottom: 64px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+      .pie img { height: 38px; width: auto; display: block; }
+      .puntos { display: flex; gap: 10px; align-items: center; }
+      .puntos i { display: block; width: 12px; height: 12px; border-radius: 6px; background: rgba(236,235,233,.26); }
+      .puntos i.on { width: 40px; background: var(--lima); }
+      /* etiqueta de precio con línea guía */
+      .tag { position: absolute; display: flex; align-items: center; gap: 0; }
+      .tag .linea { display: block; height: 3px; width: 120px; background: rgba(194,214,2,.75); transform-origin: left center; }
+      .tag .punto { display: block; width: 14px; height: 14px; border-radius: 7px; background: var(--lima); margin-right: -2px; }
+      .tag .caja { display: block; padding: 14px 22px 14px 22px; border-radius: 18px; background: rgba(22,22,22,.92); border: 2px solid var(--borde); }
+      .tag .nom { display: block; font-size: 28px; font-weight: 600; color: var(--tenue); white-space: nowrap; }
+      .tag .pre { display: block; font-size: 44px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .tag.fuerte .caja { border-color: var(--lima); }
+      .tag.fuerte .pre { color: var(--lima); }
+      .pill { position: absolute; display: block; padding: 12px 20px; border-radius: 16px; background: rgba(22,22,22,.94); border: 2px solid var(--borde); text-align: center; }
+      .pill .nom { display: block; font-size: 26px; font-weight: 600; color: var(--tenue); white-space: nowrap; }
+      .pill .pre { display: block; font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .contador { position: absolute; left: 72px; bottom: 150px; display: flex; align-items: baseline; gap: 18px; }
+      .contador .nom { font-size: 34px; font-weight: 600; color: var(--tenue); }
+      .contador .num { display: inline-block; font-size: 76px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; color: var(--lima); }
+      .vende { position: absolute; display: flex; flex-direction: column; padding: 18px 28px; border-radius: 22px; background: var(--lima); color: #111; transform-origin: 50% 0%; }
+      .vende .nom { font-size: 28px; font-weight: 700; }
+      .vende .pre { font-size: 56px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+      .desliza { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 30px; color: #111; background: var(--lima); padding: 12px 20px 12px 26px; border-radius: 999px; }
+      .desliza svg { width: 30px; height: 30px; display: block; }
+      .nota { position: absolute; left: 72px; bottom: 122px; font-size: 22px; font-weight: 500; color: rgba(236,235,233,.45); }
+      /* placa 4 y 5: barras */
+      .gran { position: absolute; left: 72px; font-size: 200px; font-weight: 800; line-height: 1; letter-spacing: -6px; font-variant-numeric: tabular-nums; color: var(--lima); }
+      .barra { position: absolute; left: 72px; right: 72px; height: 92px; border-radius: 20px; background: #1d1d1d; border: 2px solid var(--borde); overflow: hidden; }
+      .barra .lleno { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: var(--lima); transform-origin: left center; }
+      .barra .rot { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; font-size: 34px; font-weight: 800; color: #111; left: 26px; }
+      .barra .resto { position: absolute; top: 0; bottom: 0; right: 26px; display: flex; align-items: center; font-size: 30px; font-weight: 600; color: var(--tenue); }
+      .leyenda { position: absolute; left: 72px; right: 72px; display: flex; justify-content: space-between; font-size: 30px; font-weight: 600; color: var(--tenue); }
+      .leyenda b { color: var(--tinta); font-weight: 800; }
+      .regla { position: absolute; left: 72px; right: 72px; height: 150px; }
+      .regla .pista { position: absolute; left: 0; right: 0; top: 60px; height: 22px; border-radius: 11px; background: #232323; }
+      .regla .banda { position: absolute; top: 60px; height: 22px; background: rgba(194,214,2,.85); border-radius: 11px; }
+      .regla .marca { position: absolute; top: 0; width: 4px; height: 142px; margin-left: -2px; background: var(--tinta); }
+      .regla .marca span { position: absolute; top: -6px; left: 14px; font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .regla .esc { position: absolute; top: 96px; font-size: 24px; font-weight: 600; color: rgba(236,235,233,.45); transform: translateX(-50%); }
+      .opcion { position: absolute; left: 72px; right: 72px; display: flex; align-items: center; gap: 26px; padding: 26px 30px; border-radius: 24px; background: var(--sup); border: 2px solid var(--borde); }
+      .opcion .ico { flex: 0 0 64px; height: 64px; border-radius: 18px; background: rgba(194,214,2,.14); display: flex; align-items: center; justify-content: center; }
+      .opcion .ico svg { width: 36px; height: 36px; display: block; }
+      .opcion .txt { display: block; font-size: 36px; font-weight: 700; line-height: 1.2; }
+      .opcion .txt em { font-style: normal; color: var(--lima); }
+      .o-o { position: absolute; left: 72px; right: 72px; text-align: center; font-size: 28px; font-weight: 700; color: rgba(236,235,233,.45); letter-spacing: 2px; }
+      /* placa 6: panel Colmen */
+      .panel { position: absolute; left: 72px; right: 72px; top: 400px; border-radius: 32px; background: #141414; border: 2px solid rgba(236,235,233,.14); padding: 34px; box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+      .panel .cab { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+      .panel .plato { font-size: 36px; font-weight: 800; }
+      .panel .eti { font-size: 24px; font-weight: 700; color: #111; background: var(--lima); padding: 8px 16px; border-radius: 999px; }
+      .cifras { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; border-radius: 20px; overflow: hidden; background: rgba(236,235,233,.10); }
+      .cifra { background: #1b1b1b; padding: 24px 22px; }
+      .cifra .nom { display: block; font-size: 24px; font-weight: 600; color: var(--tenue); }
+      .cifra .val { display: block; font-size: 46px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-top: 6px; }
+      .cifra .hint { display: block; font-size: 22px; font-weight: 700; color: var(--lima); margin-top: 4px; }
+      .cifra.bien .val { color: var(--lima); }
+      .renglon { display: flex; align-items: center; gap: 18px; margin-top: 24px; font-size: 30px; font-weight: 600; }
+      .renglon svg { flex: 0 0 38px; width: 38px; height: 38px; display: block; }
+      .cta { position: absolute; left: 72px; right: 72px; bottom: 150px; display: flex; align-items: center; gap: 26px; }
+      .chip { background: var(--lima); color: #111; font-weight: 800; font-size: 40px; padding: 22px 36px; border-radius: 999px; white-space: nowrap; }
+      .web { font-size: 34px; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="36" data-width="1080" data-height="1350">
+      <canvas id="gl" width="1080" height="1350" class="clip" data-start="0" data-duration="36" data-track-index="0"></canvas>
+      <div id="velo" class="velo clip" data-start="0" data-duration="36" data-track-index="1">
+        <div class="velo-arriba"></div>
+        <div class="velo-abajo"></div>
+      </div>
+
+      <!-- 1 · portada -->
+      <section id="p1" class="placa clip" data-start="0" data-duration="6" data-track-index="2">
+        <div class="kicker">Costo real del plato</div>
+        <h1 class="tit"><span class="l">¿Cuánto te cuesta</span><span class="l"><em>de verdad</em> tu</span><span class="l">hamburguesa?</span></h1>
+        <div class="vende" id="p1-vende" style="left: 640px; top: 640px"><span class="nom">La vendés a</span><span class="pre">$15.000</span></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="desliza" id="p1-desliza">Deslizá<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
+      </section>
+
+      <!-- 2 · capa por capa -->
+      <section id="p2" class="placa clip" data-start="6" data-duration="6" data-track-index="2">
+        <div class="kicker">Paso 1</div>
+        <h2 class="tit"><span class="l">Sumá cada capa.</span></h2>
+        <div class="tag" id="p2-t0"><span class="punto"></span><span class="linea"></span><span class="caja"><span class="nom">Pan de papa</span><span class="pre">$600</span></span></div>
+        <div class="tag" id="p2-t1"><span class="punto"></span><span class="linea"></span><span class="caja"><span class="nom">Lechuga, tomate, cebolla</span><span class="pre">$400</span></span></div>
+        <div class="tag" id="p2-t2"><span class="punto"></span><span class="linea"></span><span class="caja"><span class="nom">Cheddar × 2</span><span class="pre">$500</span></span></div>
+        <div class="tag fuerte" id="p2-t3"><span class="punto"></span><span class="linea"></span><span class="caja"><span class="nom">Medallón 120 g</span><span class="pre">$2.400</span></span></div>
+        <div class="contador"><span class="nom">Llevás</span><span class="num" id="p2-num">$0</span></div>
+        <div class="nota">Precios de ejemplo. Hacé la cuenta con los tuyos.</div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="puntos"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+      </section>
+
+      <!-- 3 · lo que nadie cuenta -->
+      <section id="p3" class="placa clip" data-start="12" data-duration="6" data-track-index="2">
+        <div class="kicker">Paso 2</div>
+        <h2 class="tit"><span class="l">Lo que <em>nadie</em></span><span class="l">cuenta.</span></h2>
+        <div class="pill" id="p3-t0"><span class="nom">Salsa</span><span class="pre">$150</span></div>
+        <div class="pill" id="p3-t1"><span class="nom">Papas 200 g</span><span class="pre">$700</span></div>
+        <div class="pill" id="p3-t2"><span class="nom">Caja y servilleta</span><span class="pre">$350</span></div>
+        <div class="contador"><span class="nom">Llevás</span><span class="num" id="p3-num">$3.900</span></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="puntos"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
+      </section>
+
+      <!-- 4 · el total -->
+      <section id="p4" class="placa clip" data-start="18" data-duration="6" data-track-index="2">
+        <div class="kicker">El total</div>
+        <h2 class="tit"><span class="l">Tu hamburguesa</span><span class="l">te cuesta</span></h2>
+        <div class="gran" id="p4-num" style="top: 330px">$5.100</div>
+        <div class="leyenda" style="top: 930px"><span>De cada <b>$15.000</b> que cobrás</span><span id="p4-pct-txt"><b>34%</b> es mercadería</span></div>
+        <div class="barra" style="top: 990px"><div class="lleno" id="p4-lleno" style="width: 34%"></div><div class="rot">$5.100</div><div class="resto">$9.900 te queda</div></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="puntos"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
+      </section>
+
+      <!-- 5 · la referencia -->
+      <section id="p5" class="placa clip" data-start="24" data-duration="6" data-track-index="2">
+        <div class="kicker">La referencia</div>
+        <h2 class="tit"><span class="l">Apuntá a <em>~30%</em></span><span class="l">de mercadería.</span></h2>
+        <div class="sub" style="top: 320px">Lo habitual en gastronomía: entre 25% y 35% del precio.</div>
+        <div class="regla" style="top: 470px">
+          <div class="pista"></div>
+          <div class="banda" style="left: 50%; width: 20%"></div>
+          <div class="marca" id="p5-marca" style="left: 68%"><span id="p5-pct">34%</span></div>
+          <div class="esc" style="left: 0%">0%</div><div class="esc" style="left: 50%">25%</div><div class="esc" style="left: 70%">35%</div><div class="esc" style="left: 100%">50%</div>
+        </div>
+        <div class="opcion" id="p5-o1" style="top: 690px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span><span class="txt">Subís el precio a <em>$17.000</em></span></div>
+        <div class="o-o" id="p5-oo" style="top: 850px">O</div>
+        <div class="opcion" id="p5-o2" style="top: 910px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span><span class="txt">Bajás el costo a <em>$4.500</em></span></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="puntos"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
+      </section>
+
+      <!-- 6 · Colmen -->
+      <section id="p6" class="placa clip" data-start="30" data-duration="6" data-track-index="2">
+        <div class="kicker">Con Colmen</div>
+        <h2 class="tit"><span class="l">Esta cuenta,</span><span class="l"><em>la hace sola.</em></span></h2>
+        <div class="panel" id="p6-panel">
+          <div class="cab"><span class="plato">Hamburguesa clásica</span><span class="eti">Receta</span></div>
+          <div class="cifras">
+            <div class="cifra"><span class="nom">Te cuesta</span><span class="val">$5.100</span></div>
+            <div class="cifra"><span class="nom">Lo vendés a</span><span class="val">$17.000</span></div>
+            <div class="cifra bien"><span class="nom">Te queda</span><span class="val" id="p6-queda">$11.900</span><span class="hint">70% del precio</span></div>
+          </div>
+          <div class="renglon" id="p6-r1"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Cargás una compra y el costo se actualiza.</span></div>
+          <div class="renglon" id="p6-r2"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Cada venta descuenta el stock.</span></div>
+        </div>
+        <div class="cta" id="p6-cta"><div class="chip">Probalo gratis 14 días</div><div class="web">colmen.com.ar</div></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div class="puntos"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
+      </section>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+
+      // ── utilidades deterministas
+      const cl = (x) => Math.max(0, Math.min(1, x));
+      const pr = (t, a, d) => cl((t - a) / d);
+      const eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const eo = (x) => 1 - Math.pow(1 - x, 3);
+      const mix = (a, b, k) => a + (b - a) * k;
+      const semilla = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+      const plata = (n) => "$" + Math.round(n).toLocaleString("es-AR");
+
+      // ── motor
+      const canvas = document.getElementById("gl");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(1080, 1350, false);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const escena = new THREE.Scene();
+      escena.background = new THREE.Color(0x0a0a0a);
+      escena.fog = new THREE.Fog(0x0a0a0a, 13, 24);
+      const cam = new THREE.PerspectiveCamera(30, 1080 / 1350, 0.05, 60);
+
+      // luz en clave baja: una principal cálida, un contraluz lima tenue, casi nada de relleno
+      const hemi = new THREE.HemisphereLight(0xfff0dc, 0x0a0a0a, 0.18); escena.add(hemi);
+      const key = new THREE.SpotLight(0xffe2bf, 62, 18, 0.5, 0.75, 1.6);
+      key.position.set(-2.6, 5.2, 3.4); key.target.position.set(0, 0.6, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
+      escena.add(key, key.target);
+      const rim = new THREE.SpotLight(0xc2d602, 9, 14, 0.6, 0.9, 1.6);
+      rim.position.set(3.2, 3.0, -3.4); rim.target.position.set(0, 0.8, 0); escena.add(rim, rim.target);
+      const relleno = new THREE.PointLight(0xffd7a8, 2.2, 9, 2); relleno.position.set(2.4, 1.6, 3.6); escena.add(relleno);
+
+      const mat = (c, r = 0.7, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+      const sombra = (o) => { o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); return o; };
+
+      // mesada y tabla
+      const mesada = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), mat(0x151311, 0.85));
+      mesada.rotation.x = -Math.PI / 2; mesada.receiveShadow = true; escena.add(mesada);
+      const tabla = sombra(new THREE.Mesh(new RoundedBoxGeometry(3.3, 0.14, 2.5, 4, 0.06), mat(0x6b4a2e, 0.62)));
+      tabla.position.set(0, 0.07, 0); escena.add(tabla);
+      const BASE = 0.14;
+
+      // ── hamburguesa (cada capa en su grupo, para separarlas)
+      const torno = (perfil, m, seg = 64) => new THREE.Mesh(new THREE.LatheGeometry(perfil.map(([x, y]) => new THREE.Vector2(x, y)), seg), m);
+      const capas = {};
+      const burger = new THREE.Group(); escena.add(burger);
+      const capa = (nombre, obj, y) => { const g = new THREE.Group(); g.add(sombra(obj)); g.userData.y0 = y; burger.add(g); capas[nombre] = g; return g; };
+
+      const panM = mat(0xc9853f, 0.55);
+      const migaM = mat(0xe8c48c, 0.8);
+      // pan de abajo
+      const panAbajo = new THREE.Group();
+      panAbajo.add(torno([[0, 0], [0.86, 0], [0.98, 0.05], [1.02, 0.16], [0.99, 0.27], [0.9, 0.32], [0, 0.32]], panM));
+      const miga1 = new THREE.Mesh(new THREE.CircleGeometry(0.9, 64), migaM); miga1.rotation.x = -Math.PI / 2; miga1.position.y = 0.322; panAbajo.add(miga1);
+      capa("panAbajo", panAbajo, 0);
+      // medallón (relieve sembrado)
+      const medG = new THREE.LatheGeometry([[0, 0], [1.0, 0], [1.08, 0.08], [1.1, 0.17], [1.06, 0.26], [0.98, 0.3], [0, 0.3]].map(([x, y]) => new THREE.Vector2(x, y)), 96);
+      { const r = semilla(11), p = medG.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i); const k = 1 + (r() - 0.5) * 0.035; p.setXYZ(i, x * k, y + (y > 0.2 ? (r() - 0.5) * 0.03 : 0), z * k); } medG.computeVertexNormals(); }
+      const medallon = new THREE.Mesh(medG, mat(0x4a2a19, 0.92));
+      capa("medallon", medallon, 0.32);
+      // cheddar: lámina cuadrada que se derrite en las puntas
+      const queG = new THREE.BoxGeometry(2.0, 0.035, 2.0, 40, 1, 40);
+      { const p = queG.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), z = p.getZ(i); const d = Math.hypot(x, z); const caida = Math.max(0, d - 0.95); p.setY(i, p.getY(i) - caida * caida * 0.9 - caida * 0.12); } queG.computeVertexNormals(); }
+      const queso = new THREE.Mesh(queG, mat(0xf2a516, 0.42)); queso.rotation.y = Math.PI / 4; queso.position.y = 0.02;
+      capa("queso", queso, 0.62);
+      // verdura: lechuga ondulada + tomate + cebolla
+      const verdura = new THREE.Group();
+      const lechG = new THREE.CircleGeometry(1.14, 128, 0, Math.PI * 2);
+      { const p = lechG.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i); const a = Math.atan2(y, x), d = Math.hypot(x, y); p.setZ(i, Math.sin(a * 11) * 0.06 * (d / 1.14) ** 2); } lechG.computeVertexNormals(); }
+      const lechuga = new THREE.Mesh(lechG, new THREE.MeshStandardMaterial({ color: 0x5f9a2c, roughness: 0.6, side: THREE.DoubleSide })); lechuga.rotation.x = -Math.PI / 2; lechuga.position.y = 0.03; verdura.add(lechuga);
+      for (const [x, z] of [[-0.42, 0.18], [0.4, -0.12], [0.02, 0.5]]) { const tom = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.09, 48), mat(0xc8321f, 0.45)); tom.position.set(x, 0.1, z); verdura.add(tom); }
+      for (const [x, z, r] of [[-0.2, -0.35, 0.34], [0.35, 0.36, 0.28]]) { const ce = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 10, 48), mat(0xe9dde6, 0.5)); ce.rotation.x = Math.PI / 2; ce.position.set(x, 0.165, z); verdura.add(ce); }
+      capa("verdura", verdura, 0.66);
+      // pan de arriba con sésamo
+      const panArriba = new THREE.Group();
+      const domo = []; for (let i = 0; i <= 16; i++) { const a = (i / 16) * Math.PI / 2; domo.push([1.04 * Math.cos(a) * (1 - 0.05 * Math.sin(a)), 0.08 + 0.7 * Math.sin(a)]); }
+      panArriba.add(torno([[0, 0], [0.92, 0], [1.03, 0.04], ...domo.reverse().reverse(), [0, 0.78]], panM));
+      { const r = semilla(5); const sesM = mat(0xf3e2b8, 0.5); for (let i = 0; i < 46; i++) { const a = r() * Math.PI * 2, rr = Math.sqrt(r()) * 0.82; const x = Math.cos(a) * rr, z = Math.sin(a) * rr; const yy = 0.08 + 0.7 * Math.sqrt(Math.max(0, 1 - (rr / 1.0) ** 2)); const s = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), sesM); s.scale.set(1, 0.45, 0.62); s.position.set(x, yy, z); s.rotation.set(r(), r() * 3, r()); panArriba.add(s); } }
+      capa("panArriba", panArriba, 0.86);
+
+      // ── extras de la placa 3: salsa, papas, caja
+      const extras = new THREE.Group(); escena.add(extras);
+      const salsa = new THREE.Group();
+      salsa.add(sombra(torno([[0, 0], [0.3, 0], [0.36, 0.26], [0.33, 0.26], [0, 0.26]], mat(0xf1efe9, 0.4))));
+      const salsaTop = new THREE.Mesh(new THREE.CircleGeometry(0.32, 48), mat(0xd9541e, 0.3)); salsaTop.rotation.x = -Math.PI / 2; salsaTop.position.y = 0.23; salsa.add(salsaTop);
+      const papas = new THREE.Group();
+      papas.add(sombra(new THREE.Mesh(new RoundedBoxGeometry(0.78, 0.86, 0.5, 3, 0.04), mat(0xb8282a, 0.55)))); papas.children[0].position.y = 0.43;
+      { const r = semilla(9); const pm = mat(0xf3bf45, 0.6); for (let i = 0; i < 22; i++) { const f = sombra(new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.6 + r() * 0.25, 0.075), pm)); f.position.set((r() - 0.5) * 0.6, 0.86 + r() * 0.14, (r() - 0.5) * 0.3); f.rotation.set((r() - 0.5) * 0.35, r(), (r() - 0.5) * 0.35); papas.add(f); } }
+      const cajaG = new THREE.Group();
+      const kraft = mat(0xa9845a, 0.8);
+      cajaG.add(sombra(new THREE.Mesh(new RoundedBoxGeometry(1.2, 0.55, 1.2, 3, 0.05), kraft))); cajaG.children[0].position.y = 0.275;
+      const serv = sombra(new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.08, 0.62, 2, 0.02), mat(0xf4f2ec, 0.9))); serv.position.set(0.05, 0.6, 0.05); serv.rotation.y = 0.3; cajaG.add(serv);
+      const EXTRA = [
+        { o: salsa, x: 1.3, z: 1.05, ry: 0 },
+        { o: papas, x: 1.75, z: -0.35, ry: -0.35 },
+        { o: cajaG, x: -1.95, z: -0.3, ry: 0.4 },
+      ];
+      for (const e of EXTRA) { e.o.position.set(e.x, BASE, e.z); e.o.rotation.y = e.ry; extras.add(e.o); }
+
+      // ── cámara por placa (posición, mira) y estado de la hamburguesa
+      const CAMS = [
+        { p: [0.0, 2.7, 7.6], m: [0, 1.25, 0], bx: 0, ex: 0 },        // 1 portada
+        { p: [0.4, 3.1, 13.6], m: [0.6, 2.1, 0], bx: -0.6, ex: 1 },  // 2 despiece
+        { p: [0.0, 4.4, 11.8], m: [0, 0.55, 0], bx: 0, ex: 0 },         // 3 extras
+        { p: [0.0, 4.4, 11.8], m: [0, 1.6, 0], bx: 0, ex: 0 },       // 4 total
+        { p: [0.0, 5.2, 10.5], m: [0, 0.5, 0], bx: 0, ex: 0 },        // 5 lejos y en penumbra
+        { p: [0.0, 5.2, 10.5], m: [0, 0.5, 0], bx: 0, ex: 0 },        // 6
+      ];
+      const SEP = { panAbajo: 0, medallon: 0.42, queso: 1.0, verdura: 1.56, panArriba: 1.98 };
+      const placaDe = (t) => Math.min(5, Math.floor(t / 6));
+      // mezcla entre la placa anterior y la actual en el primer 0,9 s de cada placa
+      const estado = (t) => {
+        const k = placaDe(t), u = t - k * 6, a = CAMS[Math.max(0, k - 1)], b = CAMS[k];
+        const w = k === 0 ? 1 : eio(pr(u, 0, 0.9));
+        const f = (i) => [mix(a.p[i], b.p[i], w), mix(a.m[i], b.m[i], w)];
+        return { k, u, p: [f(0)[0], f(1)[0], f(2)[0]], m: [f(0)[1], f(1)[1], f(2)[1]], bx: mix(a.bx, b.bx, w), ex: mix(a.ex, b.ex, w) };
+      };
+      const aplicar = (t) => {
+        const s = estado(t);
+        // respiración de cámara: un empuje lento y continuo, nunca quieta
+        const push = 1 - 0.035 * eio(pr(s.u, 0.9, 5.1));
+        cam.position.set(s.m[0] + (s.p[0] - s.m[0]) * push, s.m[1] + (s.p[1] - s.m[1]) * push, s.m[2] + (s.p[2] - s.m[2]) * push);
+        cam.lookAt(s.m[0], s.m[1], s.m[2]);
+        burger.position.set(s.bx, BASE, 0);
+        burger.rotation.y = -0.5 + t * 0.12;
+        // despiece en la placa 2: se separa en escalera (de abajo hacia arriba), vuelve en la 3
+        for (const [n, g] of Object.entries(capas)) {
+          let ex = s.ex;
+          if (s.k === 1) ex = eio(pr(s.u, 0.35, 1.1));
+          g.position.y = g.userData.y0 + SEP[n] * ex;
+        }
+        // extras: caen en la placa 3, uno por vez; desde la 4 quedan
+        EXTRA.forEach((e, i) => {
+          const t0 = 12 + 0.7 + i * 0.95;
+          const v = t < 12 ? 0 : pr(t, t0, 0.55);
+          const caida = 1 - v;
+          e.o.visible = t >= t0 - 0.0001 && t >= 12;
+          e.o.position.y = BASE + 2.4 * caida * caida;
+          const rebote = v >= 1 ? Math.max(0, Math.sin(pr(t, t0 + 0.55, 0.35) * Math.PI)) * 0.06 : 0;
+          e.o.position.y += rebote;
+          e.o.rotation.y = e.ry + caida * 0.8;
+        });
+        // placas 5 y 6: la escena baja a penumbra para que lean los números
+        const nivel = [1, 1, 1, 0.42, 0.09, 0.3];
+        const dim = s.k === 0 ? 1 : mix(nivel[s.k - 1], nivel[s.k], eio(pr(s.u, 0, 0.9)));
+        key.intensity = 62 * dim; rim.intensity = 9 * dim; relleno.intensity = 2.2 * dim; hemi.intensity = 0.18 * dim;
+        renderer.render(escena, cam);
+        return s;
+      };
+
+      // ── etiquetas ancladas: se proyectan UNA vez, con la cámara final de cada placa
+      const pantalla = (camCfg, x, y, z) => {
+        const c = new THREE.PerspectiveCamera(30, 1080 / 1350, 0.05, 60);
+        const m = camCfg.m, p = camCfg.p, push = 1 - 0.035;
+        c.position.set(m[0] + (p[0] - m[0]) * push, m[1] + (p[1] - m[1]) * push, m[2] + (p[2] - m[2]) * push);
+        c.lookAt(m[0], m[1], m[2]); c.updateMatrixWorld(); c.updateProjectionMatrix();
+        const v = new THREE.Vector3(x, y, z).project(c);
+        return { x: (v.x * 0.5 + 0.5) * 1080, y: (-v.y * 0.5 + 0.5) * 1350 };
+      };
+      const C2 = CAMS[1], bx = C2.bx;
+      const ANCLA2 = [
+        ["p2-t0", BASE + capas.panArriba.userData.y0 + SEP.panArriba + 0.45],
+        ["p2-t1", BASE + capas.verdura.userData.y0 + SEP.verdura + 0.12],
+        ["p2-t2", BASE + capas.queso.userData.y0 + SEP.queso],
+        ["p2-t3", BASE + capas.medallon.userData.y0 + SEP.medallon + 0.02],
+      ];
+      for (const [id, y] of ANCLA2) {
+        const a = pantalla(C2, bx + 1.08, y, 0), el = document.getElementById(id);
+        el.style.left = a.x - 7 + "px"; el.style.top = a.y - 52 + "px";
+      }
+      const C3 = CAMS[2];
+      const ANCLA3 = [["p3-t0", EXTRA[0], 0.36], ["p3-t1", EXTRA[1], 1.25], ["p3-t2", EXTRA[2], 0.75]];
+      for (const [id, e, h] of ANCLA3) {
+        const a = pantalla(C3, e.x, BASE + h, e.z), el = document.getElementById(id);
+        el.dataset.cx = a.x; el.dataset.cy = a.y;
+      }
+
+      // ── contadores (función pura del tiempo)
+      const sumaP2 = [600, 400, 500, 2400];
+      const T2 = [1.45, 2.35, 3.25, 4.15];
+      const T3 = [0.7 + 0.55, 1.65 + 0.55, 2.6 + 0.55];
+      const sumaP3 = [150, 700, 350];
+      const contar = (t) => {
+        const u2 = t - 6; let v2 = 0; sumaP2.forEach((n, i) => (v2 += n * eo(pr(u2, T2[i] + 0.15, 0.55))));
+        document.getElementById("p2-num").textContent = plata(v2);
+        const u3 = t - 12; let v3 = 3900; sumaP3.forEach((n, i) => (v3 += n * eo(pr(u3, T3[i], 0.55))));
+        document.getElementById("p3-num").textContent = plata(v3);
+        const u5 = t - 24; const pct = mix(34, 30, eio(pr(u5, 3.2, 1.0)));
+        document.getElementById("p5-pct").textContent = Math.round(pct) + "%";
+        const m = document.getElementById("p5-marca"); m.style.left = (pct / 50) * 100 + "%";
+      };
+      const dibujar = (t) => { aplicar(t); contar(t); };
+
+      // ── timeline GSAP para la tipografía y las tarjetas
+      const tl = gsap.timeline({ paused: true });
+      // 1
+      tl.fromTo("#p1-vende", { y: -40, rotation: -9, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.9, ease: "elastic.out(1, 0.55)" }, 0.6);
+      tl.fromTo("#p1-desliza", { x: -16 }, { x: 0, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 7 }, 1.6);
+      // 2
+      tl.fromTo("#p2 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 6.05);
+      ["#p2-t0", "#p2-t1", "#p2-t2", "#p2-t3"].forEach((id, i) => {
+        tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 6 + T2[i]);
+        tl.fromTo(id + " .linea", { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power2.out" }, 6 + T2[i]);
+        tl.fromTo(id + " .caja", { x: -24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 6 + T2[i] + 0.2);
+      });
+      tl.fromTo("#p2 .contador", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 6.6);
+      tl.fromTo("#p2-num", { scale: 1 }, { scale: 1.12, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 6 + T2[3] + 0.7);
+      // 3
+      tl.fromTo("#p3 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 12.05);
+      ["#p3-t0", "#p3-t1", "#p3-t2"].forEach((id, i) => {
+        tl.fromTo(id, { opacity: 0, y: 18, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(2)" }, 12 + T3[i] - 0.05);
+      });
+      // 4
+      tl.fromTo("#p4 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 18.05);
+      tl.fromTo("#p4-num", { scale: 0.55, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.5)", transformOrigin: "0% 50%" }, 18.6);
+      tl.fromTo("#p4 .leyenda", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, 19.6);
+      tl.fromTo("#p4 .barra", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 19.8);
+      tl.fromTo("#p4-lleno", { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: "power3.out" }, 20.0);
+      tl.fromTo("#p4 .barra .rot", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 20.7);
+      tl.fromTo("#p4 .barra .resto", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 20.9);
+      // 5
+      tl.fromTo("#p5 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 24.05);
+      tl.fromTo("#p5 .sub", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 24.6);
+      tl.fromTo("#p5 .regla", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 24.9);
+      tl.fromTo("#p5-o1", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 26.0);
+      tl.fromTo("#p5-oo", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 26.5);
+      tl.fromTo("#p5-o2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 26.7);
+      // 6
+      tl.fromTo("#p6 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 30.05);
+      tl.fromTo("#p6-panel", { y: 70, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 30.5);
+      tl.fromTo("#p6 .cifra", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.25, ease: "power2.out" }, 31.0);
+      tl.fromTo("#p6-queda", { scale: 1 }, { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1, transformOrigin: "0% 50%" }, 31.8);
+      tl.fromTo("#p6-r1", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, 32.3);
+      tl.fromTo("#p6-r2", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, 32.7);
+      tl.fromTo("#p6-cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" }, 33.3);
+
+      // pastillas de la placa 3: centradas sobre su objeto (layout calculado una vez)
+      for (const id of ["p3-t0", "p3-t1", "p3-t2"]) {
+        const el = document.getElementById(id), w = el.offsetWidth, h = el.offsetHeight;
+        el.style.left = Math.max(40, Math.min(1040 - w, +el.dataset.cx - w / 2)) + "px";
+        el.style.top = +el.dataset.cy - h - 24 + "px";
+      }
+
+      tl.eventCallback("onUpdate", () => dibujar(tl.time()));
+      window.addEventListener("hf-seek", (e) => dibujar(e.detail.time));
+      dibujar(0);
+      tl.seek(0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
