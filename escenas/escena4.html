@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500;9..40,600;9..40,700;9..40,800&display=block" rel="stylesheet">
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+  /* Zonas seguras de Reels (1080×1920): arriba 250 px (encabezado de IG), abajo 420 px (texto del posteo y
+     botones), derecha 140 px (columna de me gusta / comentar / compartir). Todo lo que se lee vive adentro. */
+  :root { --tinta:#111111; --lima:#c2d602; --hueso:#ecebe9; --seg-arriba:250px; --seg-abajo:420px; --seg-der:140px; --seg-izq:64px; }
+  html,body { margin:0; width:1080px; height:1920px; overflow:hidden; background:#fff; font-family:'DM Sans',system-ui,sans-serif; color:var(--tinta); }
+  canvas { position:absolute; inset:0; }
+  .vineta { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 85% 70% at 50% 55%, rgba(0,0,0,0) 60%, rgba(40,30,20,.10) 100%); }
+  .velo { position:absolute; left:0; right:0; top:0; height:560px; background:linear-gradient(#fff 0%, rgba(255,255,255,.92) 55%, rgba(255,255,255,0)); }
+  .logo { position:absolute; left:var(--seg-izq); top:258px; font-weight:800; font-size:46px; letter-spacing:-1.3px; }
+  .logo i { font-style:normal; color:var(--lima); }
+  .titulo { position:absolute; left:var(--seg-izq); right:var(--seg-der); top:328px; font-weight:800; font-size:74px; line-height:1.04; letter-spacing:-2.3px; opacity:0; }
+  .titulo .linea { display:block; overflow:hidden; padding-bottom:8px; }
+  .titulo .linea > span { display:inline-block; }
+  .marca { background:var(--lima); padding:0 14px; border-radius:14px; }
+  .chip { position:absolute; left:var(--seg-izq); bottom:calc(var(--seg-abajo) + 30px); background:var(--tinta); color:#fff; font-weight:700; font-size:36px; opacity:0;
+          padding:20px 34px 20px 24px; border-radius:999px; display:flex; align-items:center; gap:16px; white-space:nowrap; box-shadow:0 20px 50px rgba(0,0,0,.22); }
+  .chip b { width:46px; height:46px; border-radius:50%; background:var(--lima); color:var(--tinta); display:grid; place-items:center; font-size:28px; }
+  /* placa final, también dentro de la zona segura */
+  .cierre { position:absolute; inset:0; background:#111111; color:var(--hueso); display:flex; flex-direction:column; justify-content:center;
+            padding:var(--seg-arriba) var(--seg-der) var(--seg-abajo) 90px; gap:30px; opacity:0; box-sizing:border-box; }
+  .cierre .grande { font-weight:800; font-size:136px; letter-spacing:-5px; line-height:1; }
+  .cierre .grande i { font-style:normal; color:var(--lima); }
+  .cierre .frase { font-weight:800; font-size:60px; letter-spacing:-1.8px; line-height:1.08; }
+  .cierre .frase span { display:block; }
+  .cierre .frase .lima { color:var(--lima); }
+  .cierre .plan { font-weight:600; font-size:38px; color:#a9a7a2; }
+  .cierre .plan b { color:var(--hueso); font-weight:800; }
+  .cierre .cta { align-self:flex-start; background:var(--lima); color:var(--tinta); font-weight:800; font-size:44px; padding:22px 40px; border-radius:999px; }
+  .cierre .web { font-weight:700; font-size:36px; color:#a9a7a2; }
+  /* guía de zonas seguras: solo en los cuadros de prueba (?guia=1) */
+  .guia { position:absolute; inset:0; pointer-events:none; display:none; }
+  .guia div { position:absolute; background:rgba(255,0,80,.18); }
+  body.con-guia .guia { display:block; }
+</style></head>
+<body>
+<div class="vineta"></div>
+<div class="velo" id="velo"></div>
+<div class="logo" id="logo">Colmen<i>.</i></div>
+<div class="titulo" id="t0"><span class="linea"><span>¿Cuántos pedidos</span></span><span class="linea"><span><span class="marca">se te pierden?</span></span></span></div>
+<div class="titulo" id="t1"><span class="linea"><span>Pide desde</span></span><span class="linea"><span><span class="marca">la mesa.</span></span></span></div>
+<div class="titulo" id="t2"><span class="linea"><span>Cada estación</span></span><span class="linea"><span><span class="marca">ve lo suyo.</span></span></span></div>
+<div class="titulo" id="t3"><span class="linea"><span>¿Todo listo?</span></span><span class="linea"><span><span class="marca">Al mozo le avisa.</span></span></span></div>
+<div class="titulo" id="t4"><span class="linea"><span>Cerrás la mesa.</span></span><span class="linea"><span><span class="marca">Paga con su celular.</span></span></span></div>
+<div class="titulo" id="t5"><span class="linea"><span>Suma puntos.</span></span><span class="linea"><span><span class="marca">Y vuelve.</span></span></span></div>
+<div class="titulo" id="t6"><span class="linea"><span>Fidelización</span></span><span class="linea"><span><span class="marca">integrada.</span></span></span></div>
+<div class="chip" id="chip-1"><b>✓</b>Parrilla · Fríos · Barra</div>
+<div class="chip" id="chip-2"><b>✓</b>Se confirma solo</div>
+<div class="chip" id="chip-3"><b>✓</b>Sin apps ni tarjetitas</div>
+<div class="cierre" id="cierre">
+  <div class="grande" id="c-logo">Colmen<i>.</i></div>
+  <div class="frase"><span id="c-f1">Vos cocinás.</span><span class="lima" id="c-f2">Nosotros ordenamos el resto.</span></div>
+  <div class="plan" id="c-plan">Plan Servicio · <b>$44.900/mes</b></div>
+  <div class="cta" id="c-cta">Probalo gratis 14 días</div>
+  <div class="web" id="c-web">colmen.com.ar</div>
+</div>
+<div class="guia"><div style="left:0;right:0;top:0;height:250px"></div><div style="left:0;right:0;bottom:0;height:420px"></div><div style="right:0;top:250px;bottom:420px;width:140px"></div></div>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+window.DURACION = 48.8;
+if (location.search.includes('guia=1')) document.body.classList.add('con-guia');
+
+await document.fonts.ready;
+for (const w of [500, 600, 700, 800]) await document.fonts.load(`${w} 40px "DM Sans"`);
+const imagen = (u) => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => no(u); i.src = u; });
+const [imgCarta, imgKds, imgQr] = await Promise.all(['img/carta.png', 'img/kds.png', 'img/qr.png'].map(imagen));
+// ================= render y luz =================
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setSize(1080, 1920); r.setPixelRatio(1);
+r.outputColorSpace = THREE.SRGBColorSpace;
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 0.98;
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.VSMShadowMap;
+document.body.prepend(r.domElement);
+const esc = new THREE.Scene(); esc.background = new THREE.Color('#ffffff');
+esc.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), 0.04).texture;
+esc.environmentIntensity = 0.6;
+esc.add(new THREE.HemisphereLight(0xffffff, 0xefe7da, 0.85));
+const sol = new THREE.DirectionalLight(0xfff4e6, 1.55);
+sol.position.set(-2.6, 6, 3.2); sol.target.position.set(-0.6, 0, -1.2); esc.add(sol.target);
+sol.castShadow = true; sol.shadow.mapSize.set(2048, 2048); sol.shadow.radius = 9; sol.shadow.blurSamples = 20; sol.shadow.bias = -0.0005;
+Object.assign(sol.shadow.camera, { left: -4.2, right: 4.2, top: 4.2, bottom: -4.2, near: 0.5, far: 16 });
+esc.add(sol);
+const cam = new THREE.PerspectiveCamera(35, 1080 / 1920, 0.02, 40);
+
+// ================= utilidades =================
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const lienzo = (w, h, pintar, srgb = true) => { const c = document.createElement('canvas'); c.width = w; c.height = h; pintar(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; };
+const tx = (g, s, x, y, size, c, p = 700, al = 'center') => { g.font = `${p} ${size}px "DM Sans"`; g.fillStyle = c; g.textAlign = al; g.textBaseline = 'middle'; g.fillText(s, x, y); };
+const azar = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const arcilla = (color, rug = 0.78, extra = {}) => new THREE.MeshPhysicalMaterial({ color, roughness: rug, sheen: 0.4, sheenRoughness: 0.8, sheenColor: new THREE.Color('#ffffff'), ...extra });
+const sombra = (m) => { m.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } }); return m; };
+const poner = (o, x, y, z, padre = esc) => { o.position.set(x, y, z); padre.add(o); return o; };
+const caja = (w, h, d, mat, rad = 0.01) => sombra(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 5, Math.min(rad, w / 2.01, h / 2.01, d / 2.01)), mat));
+const cil = (r1, r2, h, mat, seg = 48) => sombra(new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, seg), mat));
+// rectángulo redondeado como Shape (para extrusiones y pantallas)
+const rrect = (w, h, rr) => { const s = new THREE.Shape(); s.moveTo(-w / 2 + rr, -h / 2); s.lineTo(w / 2 - rr, -h / 2); s.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + rr);
+  s.lineTo(w / 2, h / 2 - rr); s.quadraticCurveTo(w / 2, h / 2, w / 2 - rr, h / 2); s.lineTo(-w / 2 + rr, h / 2); s.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - rr);
+  s.lineTo(-w / 2, -h / 2 + rr); s.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + rr, -h / 2); return s; };
+// losa con canto redondeado de verdad (extrusión con bisel), centrada; el espesor va en Y
+const losa = (w, d, alto, rr, bisel, mat) => { const g = new THREE.ExtrudeGeometry(rrect(w - 2 * bisel, d - 2 * bisel, Math.max(0.001, rr - bisel)),
+  { depth: Math.max(0.0005, alto - 2 * bisel), bevelEnabled: true, bevelThickness: bisel, bevelSize: bisel, bevelSegments: 6, curveSegments: 24 });
+  g.translate(0, 0, -(alto - 2 * bisel) / 2); g.rotateX(-Math.PI / 2); return sombra(new THREE.Mesh(g, mat)); };
+// pantalla plana con esquinas redondeadas y UV 0..1
+const pantallaPlana = (w, h, rr, mat) => { const g = new THREE.ShapeGeometry(rrect(w, h, rr), 24); const p = g.attributes.position, uv = g.attributes.uv;
+  for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / w + 0.5, p.getY(i) / h + 0.5); return new THREE.Mesh(g, mat); };
+const torneado = (perfil, mat, seg = 64) => sombra(new THREE.Mesh(new THREE.LatheGeometry(perfil.map(([x, y]) => new THREE.Vector2(x, y)), seg), mat));
+const mancha = (() => { const tex = lienzo(256, 256, (g) => { const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  gr.addColorStop(0, 'rgba(70,52,34,0.40)'); gr.addColorStop(0.55, 'rgba(70,52,34,0.16)'); gr.addColorStop(1, 'rgba(70,52,34,0)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); });
+  return (x, z, w, d, y = 0.001) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); esc.add(m); return m; }; })();
+
+// ================= texturas de material =================
+const texMadera = lienzo(1024, 1024, (g, W, H) => { g.fillStyle = '#d4a062'; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 140; i++) { const y = azar() * H, a = 0.03 + azar() * 0.07; g.strokeStyle = `rgba(${120 + azar() * 40},${70 + azar() * 30},${30},${a})`; g.lineWidth = 1 + azar() * 4;
+    g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= W; x += 32) g.lineTo(x, y + Math.sin(x / 140 + i) * 6 + (azar() - 0.5) * 2); g.stroke(); } });
+texMadera.wrapS = texMadera.wrapT = THREE.RepeatWrapping;
+const texCepillado = lienzo(512, 512, (g, W, H) => { g.fillStyle = '#808080'; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 900; i++) { const y = azar() * H, c = 110 + azar() * 40; g.fillStyle = `rgb(${c},${c},${c})`; g.fillRect(0, y, W, 0.6 + azar()); } }, false);
+const texAzulejo = lienzo(1024, 1024, (g, W, H) => { g.fillStyle = '#d9d6cf'; g.fillRect(0, 0, W, H); const tw = 128, th = 64;
+  for (let fy = 0; fy < H / th; fy++) for (let fx = -1; fx < W / tw + 1; fx++) { const x = fx * tw + (fy % 2 ? tw / 2 : 0), y = fy * th;
+    const gr = g.createLinearGradient(0, y, 0, y + th); gr.addColorStop(0, '#fbfaf7'); gr.addColorStop(1, '#efede8'); g.fillStyle = gr;
+    g.beginPath(); g.roundRect(x + 3, y + 3, tw - 6, th - 6, 8); g.fill(); } });
+texAzulejo.wrapS = texAzulejo.wrapT = THREE.RepeatWrapping;
+
+// ================= materiales =================
+const M = {
+  madera: arcilla('#ffffff', 0.62, { map: texMadera }), maderaOsc: arcilla('#b97a43', 0.65), pata: arcilla('#34302e', 0.5, { metalness: 0.2 }),
+  blanco: arcilla('#f8f6f1', 0.8), hueso: arcilla('#efece5', 0.85),
+  acrilico: new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.05, transparent: true, opacity: 0.32, clearcoat: 1, metalness: 0, depthWrite: false }),
+  titanio: new THREE.MeshPhysicalMaterial({ color: '#3a3b3f', metalness: 0.75, roughness: 0.32, clearcoat: 0.4 }),
+  vidrioNegro: new THREE.MeshPhysicalMaterial({ color: '#050506', roughness: 0.08, clearcoat: 1, metalness: 0.1 }),
+  acero: new THREE.MeshPhysicalMaterial({ color: '#d4d7da', metalness: 0.65, roughness: 0.38, roughnessMap: texCepillado }),
+  aceroOsc: new THREE.MeshPhysicalMaterial({ color: '#9da2a6', metalness: 0.7, roughness: 0.35 }),
+  azulejo: new THREE.MeshStandardMaterial({ map: texAzulejo, roughness: 0.35 }),
+  plancha: arcilla('#2a2a2c', 0.45, { metalness: 0.3 }), cromo: new THREE.MeshPhysicalMaterial({ color: '#e8eaec', metalness: 1, roughness: 0.12 }),
+  pan: arcilla('#dc9a4a', 0.7), panTapa: arcilla('#d08a3a', 0.6), sesamo: arcilla('#fbf1d8', 0.8), carne: arcilla('#5d3221', 0.8), queso: arcilla('#f5c02c', 0.55),
+  lechuga: arcilla('#86c34f', 0.75), tomate: arcilla('#e0452e', 0.6), plato: arcilla('#fbfaf7', 0.35, { clearcoat: 0.5 }), bandeja: arcilla('#2c2a28', 0.55),
+  kraft: arcilla('#c69a63', 0.9), lima: arcilla('#c2d602', 0.6), tinta: arcilla('#141414', 0.5), marco: new THREE.MeshPhysicalMaterial({ color: '#141416', roughness: 0.35, metalness: 0.4 }),
+  frasco: new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.08, transparent: true, opacity: 0.35, clearcoat: 1 }),
+  pared: arcilla('#f4f1ea', 0.9), lampara: new THREE.MeshPhysicalMaterial({ color: '#1d1d1f', roughness: 0.4, metalness: 0.5 }),
+};
+const brillo = (color, fuerza) => new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(fuerza), toneMapped: false });
+
+// piso: blanco puro que solo recibe sombras
+const piso = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: 0.12 }));
+piso.rotation.x = -Math.PI / 2; piso.receiveShadow = true; esc.add(piso);
+
+// ================= ZONA 1: la mesa 4 =================
+const TOPE = 0.765;
+{
+  const tapa = losa(0.74, 0.74, 0.04, 0.05, 0.012, M.madera); poner(tapa, 0, 0.745, 0);
+  // pie torneado: columna que se afina + base redonda con canto suave
+  poner(torneado([[0, 0], [0.2, 0], [0.205, 0.006], [0.2, 0.022], [0.04, 0.03], [0.03, 0.06], [0.026, 0.68], [0.06, 0.7], [0.07, 0.725], [0, 0.725]], M.pata), 0, 0, 0);
+  mancha(0, 0, 0.95, 0.95);
+}
+// silla de café: asiento con canto, patas que se abren apenas y respaldo curvo
+const silla = (x, z, rotY) => {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY; esc.add(g);
+  poner(losa(0.42, 0.4, 0.04, 0.07, 0.014, M.maderaOsc), 0, 0.455, 0, g);
+  for (const [px, pz] of [[-0.16, -0.15], [0.16, -0.15], [-0.16, 0.15], [0.16, 0.15]]) {
+    const p = cil(0.016, 0.012, 0.45, M.maderaOsc, 24); p.position.set(px * 1.05, 0.225, pz * 1.05); p.rotation.set(pz * 0.18, 0, -px * 0.18); g.add(p); }
+  for (const px of [-0.16, 0.16]) { const p = cil(0.014, 0.014, 0.36, M.maderaOsc, 24); p.position.set(px, 0.64, 0.17); p.rotation.x = -0.08; g.add(p); }
+  // respaldo: lámina doblada en arco
+  const geo = new THREE.BoxGeometry(0.4, 0.11, 0.022, 40, 4, 2); const P = geo.attributes.position;
+  for (let i = 0; i < P.count; i++) { const xx = P.getX(i); P.setZ(i, P.getZ(i) - (xx * xx) * 0.9); }
+  geo.computeVertexNormals(); const resp = sombra(new THREE.Mesh(geo, M.maderaOsc)); resp.position.set(0, 0.79, 0.2); resp.rotation.x = -0.1; g.add(resp);
+  mancha(x, z, 0.62, 0.62);
+};
+silla(-0.08, 0.56, 0); silla(0.58, -0.04, Math.PI / 2);
+
+// atril de acrílico con el QR real (lleva a colmen.com.ar)
+const texCartelQR = lienzo(520, 680, (g, W, H) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#111'; g.fillRect(0, 0, W, 110); tx(g, 'Mesa 4', W / 2, 56, 52, '#fff', 800);
+  g.drawImage(imgQr, 70, 150, 380, 380); tx(g, 'Escaneá y pedí', W / 2, 585, 40, '#111', 700);
+  g.fillStyle = '#c2d602'; g.fillRect(W / 2 - 60, 628, 120, 10); });
+const atril = new THREE.Group(); atril.position.set(0.05, TOPE, -0.17); atril.rotation.y = -0.06; esc.add(atril);
+{
+  poner(caja(0.12, 0.016, 0.06, M.acrilico, 0.005), 0, 0.008, 0, atril);
+  const placa = caja(0.104, 0.136, 0.006, M.acrilico, 0.004); placa.position.set(0, 0.084, 0); placa.rotation.x = -0.12; atril.add(placa);
+  const cartel = pantallaPlana(0.092, 0.12, 0.004, new THREE.MeshBasicMaterial({ map: texCartelQR, toneMapped: false }));
+  cartel.position.set(0, 0.084, 0.0035); cartel.rotation.x = -0.12; atril.add(cartel); atril.userData.cartel = cartel;
+}
+
+// ================= el celular (7,2 × 14,8 cm) =================
+const PW = 600, PH = 1272;
+const crearCelular = () => {
+  const g = new THREE.Group();
+  const W = 0.0716, H = 0.1476, D = 0.0078, RR = 0.0115;
+  const cuerpoG = new THREE.ExtrudeGeometry(rrect(W - 0.002, H - 0.002, RR - 0.001), { depth: D - 0.002, bevelEnabled: true, bevelThickness: 0.001, bevelSize: 0.001, bevelSegments: 6, curveSegments: 32 });
+  cuerpoG.translate(0, 0, -(D - 0.002) / 2); g.add(sombra(new THREE.Mesh(cuerpoG, M.titanio)));
+  const vidrio = pantallaPlana(W - 0.0012, H - 0.0012, RR - 0.0006, M.vidrioNegro); vidrio.position.z = D / 2 + 0.0002; g.add(vidrio);
+  const lienzoP = document.createElement('canvas'); lienzoP.width = PW; lienzoP.height = PH;
+  const tex = new THREE.CanvasTexture(lienzoP); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const pant = pantallaPlana(W - 0.0052, H - 0.0052, RR - 0.0028, new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })); pant.position.z = D / 2 + 0.0004; g.add(pant);
+  // reflejo del vidrio: banda diagonal muy tenue
+  const texReflejo = lienzo(256, 512, (c, w, h) => { const gr = c.createLinearGradient(0, 0, w, h * 0.7); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.42, 'rgba(255,255,255,0)');
+    gr.addColorStop(0.5, 'rgba(255,255,255,0.10)'); gr.addColorStop(0.62, 'rgba(255,255,255,0.03)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, w, h); });
+  const reflejo = pantallaPlana(W - 0.0052, H - 0.0052, RR - 0.0028, new THREE.MeshBasicMaterial({ map: texReflejo, transparent: true, depthWrite: false, toneMapped: false }));
+  reflejo.position.z = D / 2 + 0.0006; g.add(reflejo);
+  // botones laterales y módulo de cámaras atrás
+  for (const [x, y, h] of [[-W / 2 - 0.0006, 0.032, 0.008], [-W / 2 - 0.0006, 0.016, 0.014], [-W / 2 - 0.0006, -0.002, 0.014], [W / 2 + 0.0006, 0.018, 0.022]]) {
+    const b = caja(0.0016, h, 0.0034, M.titanio, 0.0007); b.position.set(x, y, 0); g.add(b); }
+  const modulo = caja(0.034, 0.036, 0.0022, M.titanio, 0.008); modulo.position.set(-W / 2 + 0.022, H / 2 - 0.022, -D / 2 - 0.001); g.add(modulo);
+  for (const [x, y] of [[-0.008, 0.008], [-0.008, -0.008], [0.008, 0]]) { const l = cil(0.0058, 0.0058, 0.002, M.vidrioNegro, 32); l.rotation.x = Math.PI / 2;
+    l.position.set(modulo.position.x + x, modulo.position.y + y, -D / 2 - 0.0028); g.add(l); }
+  return { g, lienzo: lienzoP, ctx: lienzoP.getContext('2d'), tex };
+};
+const celu = crearCelular(); esc.add(celu.g);
+
+// pantalla del celular: barra de estado + isla dinámica dibujadas nítidas (píldora real, no un rectángulo)
+const barraEstado = (c, claro) => {
+  const col = claro ? '#ffffff' : '#111111';
+  tx(c, '9:41', 78, 46, 30, col, 700);
+  c.fillStyle = col; for (let i = 0; i < 4; i++) c.fillRect(440 + i * 11, 54 - i * 6, 7, 8 + i * 6);
+  c.strokeStyle = col; c.lineWidth = 2.5; c.beginPath(); c.roundRect(500, 34, 46, 23, 7); c.stroke(); c.fillRect(504, 38, 32, 15); c.fillRect(548, 41, 3, 9);
+};
+const isla = (c) => { c.fillStyle = '#000'; c.beginPath(); c.roundRect(PW / 2 - 92, 22, 184, 52, 26); c.fill(); };
+
+// ================= pantallas del celular del comensal =================
+const PRECIOS = [['1×', 'Promo Smash Triple', '$ 15.600'], ['2×', 'Classic Smash', '$ 12.400'], ['1×', 'Brownie con Helado', '$ 4.200'], ['2×', 'Coca-Cola 500ml', '$ 3.600']];
+const TOTAL = '$ 35.800', PUNTOS = 358;
+const toque = (c, x, y, k) => { if (k <= 0 || k >= 1) return; const r = 30 + 40 * k; c.fillStyle = `rgba(17,17,17,${0.25 * (1 - k)})`; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); };
+const tilde = (c, x, y, r, fondo, trazo) => { c.fillStyle = fondo; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.strokeStyle = trazo; c.lineWidth = r * 0.22; c.lineCap = 'round'; c.lineJoin = 'round';
+  c.beginPath(); c.moveTo(x - r * 0.42, y); c.lineTo(x - r * 0.08, y + r * 0.34); c.lineTo(x + r * 0.46, y - r * 0.3); c.stroke(); };
+const pintarCelular = (modo, k = 0) => {
+  const c = celu.ctx; c.save(); c.clearRect(0, 0, PW, PH);
+  if (modo === 'bloqueo') {
+    const gr = c.createLinearGradient(0, 0, PW, PH); gr.addColorStop(0, '#2b2f20'); gr.addColorStop(1, '#0f1009'); c.fillStyle = gr; c.fillRect(0, 0, PW, PH);
+    tx(c, '9:41', PW / 2, 250, 150, '#ecebe9', 600); tx(c, 'jueves 16 de octubre', PW / 2, 150, 32, '#c9c7c2', 600); barraEstado(c, true); isla(c);
+  } else if (modo === 'camara') {
+    // lo que ve la cámara del celular, en vivo: busca el código → lo detecta → ofrece abrir la carta → la carta sube
+    const t = k, qr = verPorElCelular();
+    const det = ease(tramo(t, 6.5, 6.8)), L = (a, b) => a + (b - a) * det, pul = 1 + 0.05 * Math.sin(t * 7) * (1 - det), cx = PW / 2, cy = PH * 0.43, pad = 22;
+    const b = { x0: L(cx - 160 * pul, qr.x0 - pad), x1: L(cx + 160 * pul, qr.x1 + pad), y0: L(cy - 160 * pul, qr.y0 - pad), y1: L(cy + 160 * pul, qr.y1 + pad) };
+    // interfaz de la cámara: franja negra arriba y abajo (modos + disparador), así se lee "cámara abierta" y no vidrio
+    c.fillStyle = '#000'; c.fillRect(0, 0, PW, 120); c.fillRect(0, PH - 270, PW, 270);
+    ['VIDEO', 'FOTO', 'RETRATO'].forEach((m, i) => tx(c, m, PW / 2 + (i - 1) * 150, PH - 228, 22, i === 1 ? '#f5c518' : '#e5e5e5', 700));
+    c.strokeStyle = '#fff'; c.lineWidth = 7; c.beginPath(); c.arc(PW / 2, PH - 118, 58, 0, 7); c.stroke(); c.fillStyle = '#fff'; c.beginPath(); c.arc(PW / 2, PH - 118, 47, 0, 7); c.fill();
+    c.fillStyle = '#2a2a2a'; c.beginPath(); c.roundRect(70, PH - 150, 64, 64, 12); c.fill(); c.beginPath(); c.arc(PW - 102, PH - 118, 34, 0, 7); c.fill();
+    c.strokeStyle = det > 0.5 ? '#c2d602' : '#ffffff'; c.lineWidth = 9; c.lineCap = 'round'; c.lineJoin = 'round'; const m = 54;
+    for (const [x, y, dx, dy] of [[b.x0, b.y0, 1, 1], [b.x1, b.y0, -1, 1], [b.x0, b.y1, 1, -1], [b.x1, b.y1, -1, -1]]) { c.beginPath(); c.moveTo(x + dx * m, y); c.lineTo(x, y); c.lineTo(x, y + dy * m); c.stroke(); }
+    if (det < 1) { c.globalAlpha = 1 - det; c.fillStyle = '#c2d602'; c.fillRect(b.x0 + 16, b.y0 + (b.y1 - b.y0) * ((t * 1.5) % 1), b.x1 - b.x0 - 32, 6);
+      c.fillStyle = 'rgba(0,0,0,.6)'; c.beginPath(); c.roundRect(PW / 2 - 175, 150, 350, 64, 32); c.fill(); tx(c, 'Apuntá al código QR', PW / 2, 183, 26, '#fff', 700); c.globalAlpha = 1; }
+    const pk = easeOut(tramo(t, 6.85, 7.15));
+    if (pk > 0) { const py = Math.min(PH - 420, b.y1 + 44) + (1 - pk) * 40, pw = 470, px = PW / 2 - pw / 2; c.globalAlpha = pk;
+      c.fillStyle = '#c2d602'; c.beginPath(); c.roundRect(px, py, pw, 116, 58); c.fill();
+      c.fillStyle = '#111'; c.beginPath(); c.arc(px + 58, py + 58, 36, 0, 7); c.fill(); tx(c, 'QR', px + 58, py + 59, 22, '#c2d602', 800);
+      tx(c, 'Smash House · Mesa 4', px + 112, py + 42, 28, '#111', 800, 'left'); tx(c, 'Abrir la carta', px + 112, py + 80, 23, '#3a3f0a', 700, 'left'); tx(c, '›', px + pw - 44, py + 56, 52, '#111', 700);
+      toque(c, PW / 2, py + 58, tramo(t, 7.3, 7.75)); c.globalAlpha = 1; }
+    const ks = ease(tramo(t, 7.6, 8.15));
+    if (ks > 0) { const y = PH * (1 - ks); c.save(); c.beginPath(); c.roundRect(0, y, PW, PH, [40, 40, 0, 0]); c.clip(); c.fillStyle = '#fff'; c.fillRect(0, y, PW, PH);
+      c.drawImage(imgCarta, 0, y + 18, PW, PW * imgCarta.height / imgCarta.width); c.fillStyle = '#fff'; c.fillRect(0, y, PW, 92); c.restore(); }
+    barraEstado(c, ks < 0.92); isla(c);
+  } else if (modo === 'carta') {
+    const h = PW * imgCarta.height / imgCarta.width, scroll = (h - PH) * 0.22 * k; c.drawImage(imgCarta, 0, -scroll + 18, PW, h);
+    c.fillStyle = '#ffffff'; c.fillRect(0, 0, PW, 92); barraEstado(c, false); isla(c);
+  } else if (modo === 'cuenta') {
+    // "Tu cuenta" con los textos reales de la carta de mesa (messages/es.json → mesa.bill.*)
+    c.fillStyle = '#f7f6f3'; c.fillRect(0, 0, PW, PH);
+    c.fillStyle = '#e8590c'; c.fillRect(0, 0, PW, 150); tx(c, 'Smash House', 40, 118, 30, '#fff', 800, 'left');
+    c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.roundRect(430, 96, 130, 44, 22); c.fill(); tx(c, 'Mesa 4', 495, 118, 24, '#fff', 800);
+    tx(c, 'Tu cuenta', 40, 215, 50, '#111', 800, 'left'); tx(c, 'DETALLE DE CONSUMO', 40, 275, 20, '#8a8883', 700, 'left');
+    c.fillStyle = '#fff'; c.beginPath(); c.roundRect(28, 298, PW - 56, 330, 26); c.fill();
+    PRECIOS.forEach(([n, p, $], i) => { const y = 345 + i * 66; tx(c, n, 56, y, 26, '#111', 800, 'left'); tx(c, p, 104, y, 26, '#111', 600, 'left'); tx(c, $, PW - 56, y, 26, '#111', 700, 'right'); });
+    c.fillStyle = '#ecebe9'; c.fillRect(56, 600, PW - 112, 2);
+    tx(c, '¿Querés dejar propina?', 40, 672, 26, '#111', 700, 'left');
+    ['Sin', '10%', '15%', 'Otro'].forEach((s, i) => { const x = 40 + i * 132; c.fillStyle = i === 0 ? '#111' : '#fff'; c.beginPath(); c.roundRect(x, 700, 118, 60, 30); c.fill();
+      tx(c, s, x + 59, 731, 24, i === 0 ? '#fff' : '#111', 700); });
+    tx(c, 'Total a pagar', 40, 812, 26, '#5d5b56', 700, 'left'); tx(c, TOTAL, PW - 40, 812, 44, '#111', 800, 'right');
+    tx(c, '¿Cómo querés pagar?', 40, 880, 26, '#111', 700, 'left');
+    c.fillStyle = '#fff'; c.strokeStyle = '#c2d602'; c.lineWidth = 5; c.beginPath(); c.roundRect(28, 906, PW - 56, 112, 24); c.fill(); c.stroke();
+    c.fillStyle = '#009ee3'; c.beginPath(); c.arc(84, 962, 26, 0, 7); c.fill(); tx(c, 'MP', 84, 963, 20, '#fff', 800);
+    tx(c, 'Mercado Pago', 128, 944, 28, '#111', 800, 'left'); tx(c, 'Dinero, tarjetas, cuotas — todo desde tu cuenta', 128, 984, 18, '#5d5b56', 600, 'left');
+    for (const [s, y] of [['Efectivo', 1050], ['Tarjetas', 1110]]) { c.fillStyle = '#fff'; c.beginPath(); c.roundRect(28, y - 26, PW - 56, 52, 18); c.fill(); tx(c, s, 56, y, 24, '#5d5b56', 700, 'left'); }
+    c.fillStyle = '#111'; c.beginPath(); c.roundRect(28, 1160, PW - 56, 84, 42); c.fill(); tx(c, 'Pagar ' + TOTAL, PW / 2, 1202, 32, '#fff', 800);
+    toque(c, PW / 2, 1202, k);
+    barraEstado(c, true); isla(c);
+  } else if (modo === 'pagado' || modo === 'puntos') {
+    // despedida real (mesa.bill.thanksHeading / farewell.totalPaid) + puntos ganados
+    c.fillStyle = '#f7f6f3'; c.fillRect(0, 0, PW, PH);
+    tilde(c, PW / 2, 250, 70, '#c2d602', '#111');
+    tx(c, '¡Nos encantó tenerte!', PW / 2, 385, 42, '#111', 800);
+    tx(c, 'Esperamos que hayas disfrutado', PW / 2, 440, 24, '#5d5b56', 600); tx(c, 'tu experiencia en Smash House', PW / 2, 474, 24, '#5d5b56', 600);
+    c.fillStyle = '#fff'; c.beginPath(); c.roundRect(28, 520, PW - 56, 110, 24); c.fill();
+    tx(c, 'Total pagado', 56, 575, 26, '#5d5b56', 700, 'left'); tx(c, TOTAL, PW - 56, 575, 40, '#111', 800, 'right');
+    if (modo === 'puntos') {
+      const e = Math.min(1, Math.max(0, k)); const y0 = 670 + (1 - Math.min(1, e * 3)) * 60;
+      c.globalAlpha = Math.min(1, e * 3);
+      c.fillStyle = '#111'; c.beginPath(); c.roundRect(28, y0, PW - 56, 470, 32); c.fill();
+      tx(c, 'GANASTE', 64, y0 + 62, 24, '#c2d602', 800, 'left');
+      tx(c, '+' + Math.round(PUNTOS * Math.min(1, e * 1.4)) + ' puntos', 64, y0 + 140, 72, '#ecebe9', 800, 'left');
+      tx(c, 'Smash gratis · 300 pts', 64, y0 + 225, 24, '#a9a7a2', 700, 'left');
+      c.fillStyle = '#2b2b2b'; c.beginPath(); c.roundRect(64, y0 + 255, PW - 128, 22, 11); c.fill();
+      c.fillStyle = '#c2d602'; c.beginPath(); c.roundRect(64, y0 + 255, (PW - 128) * Math.min(1, e * 1.4), 22, 11); c.fill();
+      tx(c, e > 0.72 ? '¡Ya tenés tu Smash gratis' : 'Te acercás a tu Smash gratis', 64, y0 + 330, 28, '#ecebe9', 800, 'left');
+      if (e > 0.72) tx(c, 'para la próxima visita!', 64, y0 + 368, 28, '#ecebe9', 800, 'left');
+      c.fillStyle = '#c2d602'; c.beginPath(); c.roundRect(64, y0 + 400, 260, 52, 26); c.fill(); tx(c, 'Ver mis puntos', 194, y0 + 426, 22, '#111', 800);
+      c.globalAlpha = 1;
+    }
+    barraEstado(c, false); isla(c);
+  }
+  c.restore(); celu.tex.needsUpdate = true;
+};
+
+// ================= ZONA 2: la cocina en 3 estaciones =================
+const COC = V(0.5, 0, -2.75);
+const EST = [
+  { id: 'parrilla', nombre: 'PARRILLA', x: -0.7, luz: 0xff9a4a },
+  { id: 'frios', nombre: 'FRÍOS', x: 0.5, luz: 0xcfe8ff },
+  { id: 'barra', nombre: 'BARRA', x: 1.7, luz: 0xfff1d6 },
+];
+{
+  // pared de azulejos corrida detrás de las tres estaciones
+  const pared = new THREE.Mesh(new THREE.PlaneGeometry(3.9, 1.4), M.azulejo); texAzulejo.repeat.set(7.8, 2.8); pared.receiveShadow = true;
+  poner(pared, COC.x, 0.92 + 0.7, COC.z - 0.34); poner(caja(3.94, 1.44, 0.04, M.pared, 0.01), COC.x, 0.92 + 0.7, COC.z - 0.365);
+  mancha(COC.x, COC.z + 0.05, 4.4, 1.1);
+}
+const mesada = (x, ancho, matFrente, matTapa) => {
+  poner(caja(ancho, 0.84, 0.66, matFrente, 0.012), x, 0.46, COC.z);
+  poner(caja(ancho - 0.04, 0.08, 0.6, M.pata, 0.01), x, 0.04, COC.z + 0.01);
+  poner(losa(ancho + 0.04, 0.7, 0.04, 0.02, 0.008, matTapa), x, 0.9, COC.z);
+};
+// --- Parrilla: línea de fuego ---
+const PAR = EST[0];
+mesada(PAR.x, 1.14, M.acero, M.acero);
+for (let i = 0; i < 2; i++) { const x = PAR.x - 0.27 + i * 0.54; poner(caja(0.5, 0.7, 0.006, M.aceroOsc, 0.004), x, 0.46, COC.z + 0.331); poner(caja(0.16, 0.012, 0.016, M.cromo, 0.005), x, 0.74, COC.z + 0.345); }
+const PL = V(PAR.x - 0.12, 0.92, COC.z + 0.04);
+poner(caja(0.66, 0.06, 0.46, M.plancha, 0.012), PL.x, PL.y + 0.03, PL.z);
+poner(caja(0.62, 0.004, 0.42, arcilla('#1b1b1c', 0.3, { metalness: 0.5 }), 0.002), PL.x, PL.y + 0.062, PL.z);
+const hamburguesa = (completa = true) => {
+  const g = new THREE.Group(); let y = 0;
+  const capa = (geo, mat, h) => { const m = sombra(new THREE.Mesh(geo, mat)); m.position.y = y + h / 2; g.add(m); y += h; return m; };
+  capa(new THREE.CylinderGeometry(0.052, 0.05, 0.016, 40), M.pan, 0.016);
+  capa(new THREE.CylinderGeometry(0.056, 0.055, 0.016, 40), M.carne, 0.016);
+  if (completa) {
+    const q = caja(0.1, 0.004, 0.1, M.queso, 0.002); q.rotation.y = 0.5; q.position.y = y + 0.002; g.add(q); y += 0.004;
+    capa(new THREE.CylinderGeometry(0.05, 0.05, 0.007, 40), M.tomate, 0.007);
+    const lec = new THREE.Mesh(new THREE.TorusGeometry(0.048, 0.008, 8, 24), M.lechuga); lec.rotation.x = Math.PI / 2; lec.scale.z = 0.6; lec.position.y = y + 0.003; sombra(lec); g.add(lec); y += 0.006;
+    const tapa = sombra(new THREE.Mesh(new THREE.SphereGeometry(0.054, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2), M.panTapa)); tapa.scale.y = 0.62; tapa.position.y = y; g.add(tapa);
+    const ses = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0028, 8, 6), M.sesamo, 26);
+    const mt = new THREE.Matrix4(); for (let i = 0; i < 26; i++) { const a = azar() * Math.PI * 2, rr = Math.sqrt(azar()) * 0.04, yy = Math.sqrt(Math.max(0, 1 - (rr / 0.054) ** 2)) * 0.054 * 0.62;
+      mt.compose(V(Math.cos(a) * rr, y + yy, Math.sin(a) * rr), new THREE.Quaternion().setFromEuler(new THREE.Euler(azar(), azar(), azar())), V(1, 0.6, 1.6)); ses.setMatrixAt(i, mt); }
+    g.add(ses);
+  }
+  return g;
+};
+poner(hamburguesa(false), PL.x - 0.16, PL.y + 0.064, PL.z + 0.06); poner(hamburguesa(false), PL.x + 0.1, PL.y + 0.064, PL.z - 0.06); poner(hamburguesa(false), PL.x + 0.2, PL.y + 0.064, PL.z + 0.1);
+// fuego: lenguas de llama al borde de la plancha + luz cálida que respira
+const texLlama = lienzo(128, 256, (g, W, H) => { const gr = g.createRadialGradient(64, 200, 4, 64, 170, 110); gr.addColorStop(0, 'rgba(255,240,170,0.95)'); gr.addColorStop(0.35, 'rgba(255,150,40,0.75)');
+  gr.addColorStop(1, 'rgba(255,80,0,0)'); g.fillStyle = gr; g.beginPath(); g.ellipse(64, 170, 46, 110, 0, 0, 7); g.fill(); });
+const llamas = Array.from({ length: 9 }, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texLlama, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
+  esc.add(s); return { s, x: PL.x - 0.3 + i * 0.075, fase: azar() * 10 }; });
+const luzFuego = new THREE.PointLight(PAR.luz, 0.9, 2.0, 2); poner(luzFuego, PL.x, 1.15, PL.z + 0.3);
+const texVapor = lienzo(128, 128, (g) => { const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); });
+const vapores = Array.from({ length: 12 }, () => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: texVapor, transparent: true, depthWrite: false })); esc.add(s);
+  return { s, x: PL.x + (azar() - 0.5) * 0.45, z: PL.z + (azar() - 0.5) * 0.3, fase: azar(), vel: 0.6 + azar() * 0.5 }; });
+const animarCocina = (t) => {
+  vapores.forEach((v) => { const k = (t * 0.32 * v.vel + v.fase) % 1; v.s.position.set(v.x + Math.sin(t + v.fase * 9) * 0.03 * k, PL.y + 0.08 + k * 0.5, v.z);
+    v.s.scale.setScalar(0.08 + k * 0.18); v.s.material.opacity = Math.sin(k * Math.PI) * 0.45; });
+  llamas.forEach((l) => { const f = 0.75 + 0.25 * Math.sin(t * 13 + l.fase) * Math.sin(t * 7.3 + l.fase * 2);
+    l.s.position.set(l.x, PL.y + 0.035 + 0.03 * f, PL.z + 0.235); l.s.scale.set(0.05 * f, 0.1 * f, 1); l.s.material.opacity = 0.8 * f; });
+  luzFuego.intensity = 0.8 + 0.25 * Math.sin(t * 9.1) * Math.sin(t * 4.3);
+};
+// --- Fríos: heladera vidriada, ensalada y postre ---
+const FRI = EST[1];
+mesada(FRI.x, 1.14, M.acero, M.acero);
+{
+  const vidrio = new THREE.MeshPhysicalMaterial({ color: '#dff1ff', roughness: 0.05, transparent: true, opacity: 0.45, clearcoat: 1 });
+  for (let i = 0; i < 2; i++) { const x = FRI.x - 0.27 + i * 0.54;
+    poner(caja(0.5, 0.7, 0.012, M.aceroOsc, 0.006), x, 0.46, COC.z + 0.33);
+    poner(new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.56), brillo('#e8f6ff', 1.05)), x, 0.47, COC.z + 0.338);
+    for (let j = 0; j < 3; j++) poner(caja(0.08, 0.1, 0.06, arcilla(['#e0452e', '#86c34f', '#f5c02c'][j], 0.6), 0.01), x - 0.12 + j * 0.12, 0.3 + (i ? 0.2 : 0), COC.z + 0.29);
+    poner(caja(0.44, 0.58, 0.004, vidrio, 0.004), x, 0.47, COC.z + 0.343);
+    poner(caja(0.012, 0.3, 0.02, M.cromo, 0.005), x + (i ? -0.2 : 0.2), 0.5, COC.z + 0.36); }
+  // bowl de ensalada
+  poner(torneado([[0, 0], [0.05, 0], [0.11, 0.06], [0.115, 0.065], [0.108, 0.066], [0.05, 0.008], [0, 0.008]], M.plato), FRI.x - 0.28, 0.92, COC.z + 0.05);
+  for (let i = 0; i < 9; i++) { const a = i * 2.4, r = 0.03 + (i % 3) * 0.022; poner(new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10), i % 4 === 0 ? M.tomate : M.lechuga), FRI.x - 0.28 + Math.cos(a) * r, 0.975 + (i % 2) * 0.01, COC.z + 0.05 + Math.sin(a) * r).scale.y = 0.6; }
+  // postre: brownie con helado
+  poner(torneado([[0, 0], [0.07, 0], [0.095, 0.012], [0.1, 0.016], [0.092, 0.016], [0.07, 0.006], [0, 0.006]], M.plato), FRI.x + 0.12, 0.92, COC.z + 0.08);
+  poner(caja(0.08, 0.04, 0.08, arcilla('#4a2a1a', 0.7), 0.008), FRI.x + 0.12, 0.948, COC.z + 0.08);
+  poner(new THREE.Mesh(new THREE.SphereGeometry(0.028, 24, 16), arcilla('#f6efe0', 0.6)), FRI.x + 0.12, 0.985, COC.z + 0.08);
+  const luzFria = new THREE.PointLight(FRI.luz, 0.55, 1.8, 2); poner(luzFria, FRI.x, 1.3, COC.z + 0.35);
+}
+// --- Barra: bebidas ---
+const BAR = EST[2];
+mesada(BAR.x, 1.14, M.maderaOsc, M.tinta);
+for (let i = 0; i < 7; i++) poner(caja(0.012, 0.76, 0.012, arcilla('#a8693a', 0.7), 0.004), BAR.x - 0.48 + i * 0.16, 0.46, COC.z + 0.332);
+const botella = (x, z) => { const g = new THREE.Group(); g.position.set(x, 0.92, z); esc.add(g);
+  g.add(torneado([[0, 0], [0.032, 0], [0.034, 0.01], [0.034, 0.14], [0.026, 0.175], [0.013, 0.215], [0.013, 0.24], [0, 0.24]], new THREE.MeshPhysicalMaterial({ color: '#2a120a', roughness: 0.1, clearcoat: 1, transparent: true, opacity: 0.92 })));
+  const et = cil(0.0345, 0.0345, 0.05, arcilla('#d72a1f', 0.55), 32); et.position.y = 0.08; g.add(et);
+  const tapa = cil(0.014, 0.014, 0.012, M.cromo, 16); tapa.position.y = 0.246; g.add(tapa); return g; };
+const vaso = (padre, x, z) => { const g = new THREE.Group(); g.position.set(x, 0, z); padre.add(g);
+  g.add(torneado([[0, 0], [0.032, 0], [0.036, 0.11], [0.034, 0.11], [0.03, 0.006], [0, 0.006]], M.frasco));
+  poner(cil(0.029, 0.031, 0.08, new THREE.MeshPhysicalMaterial({ color: '#3a1a0c', roughness: 0.2, transparent: true, opacity: 0.85 }), 32), 0, 0.046, 0, g);
+  for (let i = 0; i < 3; i++) { const h = caja(0.018, 0.018, 0.018, M.frasco, 0.004); h.position.set(-0.01 + i * 0.01, 0.08 + (i % 2) * 0.01, (i - 1) * 0.008); h.rotation.set(i, i * 2, 0); g.add(h); }
+  return g; };
+for (let i = 0; i < 4; i++) botella(BAR.x - 0.36 + i * 0.09, COC.z - 0.12);
+{ const g = new THREE.Group(); g.position.set(BAR.x + 0.2, 0.92, COC.z + 0.08); esc.add(g); vaso(g, -0.05, 0); vaso(g, 0.05, 0.02);
+  const limon = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.006, 24), M.lima); limon.position.set(0.14, 0.003, 0.0); g.add(limon); }
+{ // lámpara colgante de barra
+  poner(cil(0.004, 0.004, 0.5, M.tinta, 8), BAR.x, 2.12, COC.z + 0.12);
+  poner(torneado([[0, 0.1], [0.025, 0.1], [0.09, 0.0], [0.086, -0.004], [0.0, -0.004]], M.lampara), BAR.x, 1.86, COC.z + 0.12);
+  poner(new THREE.Mesh(new THREE.SphereGeometry(0.03, 24, 12), brillo('#ffe2b0', 1.5)), BAR.x, 1.865, COC.z + 0.12);
+  const luzBarra = new THREE.PointLight(BAR.luz, 0.5, 1.6, 2); poner(luzBarra, BAR.x, 1.8, COC.z + 0.12);
+}
+
+// ================= pantallas de cocina (KDS) =================
+const KW = 1920, KH = 1080;
+const tarjetaKds = (g, x, y, w, h, d) => {
+  g.fillStyle = '#0f172a'; g.beginPath(); g.roundRect(x, y, w, h, 16); g.fill();
+  g.fillStyle = d.boton === 'LISTO' ? '#10b981' : '#475569'; g.beginPath(); g.roundRect(x, y, w, 8, [16, 16, 0, 0]); g.fill();
+  tx(g, d.titulo, x + 22, y + 52, 40, '#ffffff', 800, 'left');
+  tx(g, d.tiempo, x + w - 22, y + 46, 32, '#e2e8f0', 700, 'right'); tx(g, 'EN HORA', x + w - 22, y + 82, 17, '#94a3b8', 700, 'right');
+  if (d.sub) tx(g, d.sub, x + 22, y + 88, 18, '#94a3b8', 700, 'left');
+  g.fillStyle = '#1e293b'; g.fillRect(x, y + 104, w, 2);
+  d.items.forEach(([n, p], i) => { tx(g, n, x + 22, y + 142 + i * 44, 30, '#ffffff', 800, 'left'); tx(g, p, x + 72, y + 142 + i * 44, 28, '#f1f5f9', 600, 'left'); });
+  const ok = d.boton === 'LISTO'; g.fillStyle = ok ? '#10b981' : '#0a9ae9'; g.beginPath(); g.roundRect(x, y + h - 64, w, 64, [0, 0, 16, 16]); g.fill();
+  tx(g, d.boton, x + w / 2, y + h - 32, 28, ok ? '#052e1f' : '#0b1220', 800);
+};
+const kdsGenerico = (g, nombre, enCurso, tarjetas) => {
+  g.fillStyle = '#0a0a0a'; g.fillRect(0, 0, KW, KH); g.fillStyle = '#111111'; g.fillRect(0, 0, KW, 72);
+  tx(g, '←', 40, 36, 34, '#e5e5e5', 700); tx(g, nombre, 84, 30, 30, '#ffffff', 800, 'left'); tx(g, `${enCurso} en curso`, 84, 58, 17, '#9ca3af', 600, 'left');
+  g.fillStyle = '#c2d602'; g.beginPath(); g.roundRect(1268, 14, 106, 44, 10); g.fill(); tx(g, 'Tickets', 1321, 36, 17, '#111', 800);
+  tx(g, 'Todo junto', 1450, 36, 17, '#d4d4d4', 700); g.fillStyle = '#062e1f'; g.beginPath(); g.roundRect(1520, 16, 196, 40, 10); g.fill(); tx(g, 'En vivo', 1618, 36, 16, '#10b981', 700);
+  tarjetas.forEach((d) => tarjetaKds(g, 12 + d.col * 318, d.fila ? 400 : 86, 305, d.fila ? 248 : 280, d));
+};
+// Grilla ordenada 3 × 2, igual en las tres pantallas: los pedidos anteriores en orden de llegada y la Mesa 4
+// (la más nueva) siempre en el último lugar, abajo a la derecha. Antes de que llegue, ese lugar espera vacío.
+const KCOL = 3, KGAP = 24, KTOP = 96, KESC = 1.55;
+const KTW = (KW - KGAP * (KCOL + 1)) / KCOL, KTH = (KH - KTOP - KGAP * 2) / 2;
+const ranura = (n) => ({ x: KGAP + (n % KCOL) * (KTW + KGAP), y: KTOP + Math.floor(n / KCOL) * (KTH + KGAP), w: KTW, h: KTH });
+const tarjetaGrande = (g, n, d) => { const s = ranura(n); g.save(); g.translate(s.x, s.y); g.scale(KESC, KESC); tarjetaKds(g, 0, 0, s.w / KESC, s.h / KESC, d); g.restore(); };
+const MESA4 = 5;
+const CONTENIDO = {
+  parrilla: [{ titulo: 'Mesa 2', tiempo: '9 min', items: [['2×', 'Classic Smash']], boton: 'LISTO' },
+             { titulo: '#93', sub: 'Delivery', tiempo: '7 min', items: [['1×', 'Promo Smash Triple']], boton: 'LISTO' },
+             { titulo: 'Mesa 7', tiempo: '5 min', items: [['1×', 'Combo Classic']], boton: 'EMPEZAR' },
+             { titulo: '#102', sub: 'Para llevar', tiempo: '3 min', items: [['1×', '2×1 Smash Clásica']], boton: 'EMPEZAR' },
+             { titulo: 'Mesa 10', tiempo: '2 min', items: [['1×', 'Classic Smash']], boton: 'EMPEZAR' }],
+  frios: [{ titulo: 'Mesa 2', tiempo: '9 min', items: [['1×', 'Churros con Dulce'], ['', 'de Leche']], boton: 'LISTO' },
+          { titulo: '#93', sub: 'Delivery', tiempo: '7 min', items: [['1×', 'Brownie con Helado']], boton: 'LISTO' },
+          { titulo: 'Mesa 7', tiempo: '5 min', items: [['2×', 'Churros con Dulce'], ['', 'de Leche']], boton: 'EMPEZAR' },
+          { titulo: '#102', sub: 'Para llevar', tiempo: '3 min', items: [['1×', 'Brownie con Helado']], boton: 'EMPEZAR' },
+          { titulo: 'Mesa 10', tiempo: '2 min', items: [['1×', 'Churros con Dulce'], ['', 'de Leche']], boton: 'EMPEZAR' }],
+  barra: [{ titulo: 'Mesa 2', tiempo: '9 min', items: [['2×', 'Sprite 500ml']], boton: 'LISTO' },
+          { titulo: '#93', sub: 'Delivery', tiempo: '7 min', items: [['1×', 'Coca-Cola 500ml']], boton: 'LISTO' },
+          { titulo: 'Mesa 7', tiempo: '5 min', items: [['1×', 'Sprite 500ml']], boton: 'EMPEZAR' },
+          { titulo: '#102', sub: 'Para llevar', tiempo: '3 min', items: [['2×', 'Coca-Cola 500ml']], boton: 'EMPEZAR' },
+          { titulo: 'Mesa 10', tiempo: '2 min', items: [['3×', 'Coca-Cola 500ml']], boton: 'EMPEZAR' }],
+};
+const MESA4_ITEMS = { parrilla: [['1×', 'Promo Smash Triple'], ['2×', 'Classic Smash']], frios: [['1×', 'Brownie con Helado']], barra: [['2×', 'Coca-Cola 500ml']] };
+const monitores = EST.map((e) => {
+  const MON = V(e.x + 0.22, 1.42, COC.z - 0.24);
+  poner(caja(0.08, 0.12, 0.012, M.aceroOsc, 0.004), MON.x, MON.y, COC.z - 0.33); poner(caja(0.03, 0.03, 0.08, M.aceroOsc, 0.006), MON.x, MON.y, COC.z - 0.29);
+  poner(caja(0.612, 0.38, 0.022, M.marco, 0.01), MON.x, MON.y, MON.z);
+  const cv = document.createElement('canvas'); cv.width = KW; cv.height = KH; const g = cv.getContext('2d');
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  poner(pantallaPlana(0.598, 0.3364, 0.004, new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })), MON.x, MON.y, MON.z + 0.0115);
+  // cartel de la estación (para leerla de lejos)
+  const cartel = lienzo(512, 128, (c, W, H) => { c.fillStyle = '#111'; c.beginPath(); c.roundRect(0, 0, W, H, 28); c.fill();
+    c.fillStyle = '#c2d602'; c.beginPath(); c.arc(56, 64, 16, 0, 7); c.fill(); tx(c, e.nombre, 96, 66, 60, '#ecebe9', 800, 'left'); });
+  const placa = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.08), new THREE.MeshBasicMaterial({ map: cartel, transparent: true, toneMapped: false }));
+  poner(placa, MON.x - 0.14, 1.7, COC.z - 0.3);
+  const r = ranura(MESA4);
+  const punto = (px, py) => V(MON.x + (px / KW - 0.5) * 0.598, MON.y + (0.5 - py / KH) * 0.3364, MON.z + 0.013);
+  // lo que tiene que entrar en la zona segura cuando la cámara mira esta estación: pantalla + cartel
+  const borde = [V(MON.x - 0.306, MON.y - 0.19, MON.z), V(MON.x + 0.306, MON.y - 0.19, MON.z), V(MON.x + 0.306, MON.y + 0.19, MON.z), V(MON.x - 0.306, 1.74, COC.z - 0.3)];
+  return { ...e, MON, g, tex, r, borde, mesa4: punto(r.x + r.w / 2, r.y + r.h / 2) };
+});
+const pintarMonitor = (m, llego, marca, listo) => {
+  const g = m.g;
+  kdsGenerico(g, m.nombre, CONTENIDO[m.id].length + (llego > 0 ? 1 : 0), []);
+  CONTENIDO[m.id].forEach((d, n) => tarjetaGrande(g, n, d));
+  const r = m.r;
+  // lugar libre esperando la comanda
+  g.save(); g.globalAlpha = 1 - Math.min(1, llego); g.setLineDash([22, 16]); g.strokeStyle = '#3a3a3a'; g.lineWidth = 4; g.beginPath(); g.roundRect(r.x + 4, r.y + 4, r.w - 8, r.h - 8, 22); g.stroke(); g.restore();
+  if (llego > 0) { g.save(); g.globalAlpha = Math.min(1, llego);
+    tarjetaGrande(g, MESA4, { titulo: 'Mesa 4', tiempo: '1 min', items: MESA4_ITEMS[m.id], boton: listo > 0.5 ? 'LISTO' : 'EMPEZAR' }); g.restore(); }
+  if (marca > 0) { g.save(); g.globalAlpha = Math.min(1, marca); g.strokeStyle = '#c2d602'; g.lineWidth = 12; g.beginPath(); g.roundRect(r.x - 8, r.y - 8, r.w + 16, r.h + 16, 30); g.stroke(); g.restore(); }
+  m.tex.needsUpdate = true;
+};
+
+// ================= celular del mozo (sobre el pase de Fríos) con el aviso del salón =================
+const mozo = crearCelular(); esc.add(mozo.g);
+const MOZO_P = V(FRI.x - 0.05, 0.935, COC.z + 0.27);
+mozo.g.position.copy(MOZO_P).add(V(0, 0.03, 0)); mozo.g.rotation.set(-1.0, 0, 0);
+const sombrero = (c, x, y, s, col) => { c.fillStyle = col; c.beginPath(); c.arc(x - s * 0.35, y - s * 0.1, s * 0.32, 0, 7); c.arc(x + s * 0.35, y - s * 0.1, s * 0.32, 0, 7); c.arc(x, y - s * 0.3, s * 0.4, 0, 7); c.fill();
+  c.fillRect(x - s * 0.45, y, s * 0.9, s * 0.38); };
+const pintarMozo = (k) => {
+  // panel del salón en tema oscuro; la tarjeta de la mesa toma el ámbar del aviso (salon/page.tsx: hayListo)
+  const c = mozo.ctx; c.save(); c.fillStyle = '#0a0a0a'; c.fillRect(0, 0, PW, PH);
+  c.fillStyle = '#161616'; c.beginPath(); c.roundRect(24, 110, PW - 48, 150, 30); c.fill();
+  tx(c, 'Salón en vivo', 56, 168, 40, '#ffffff', 800, 'left'); tx(c, '12 mesas · 8 activas', 56, 214, 22, '#9a9a9a', 600, 'left');
+  c.fillStyle = '#0b2a1d'; c.beginPath(); c.roundRect(PW - 196, 150, 140, 44, 22); c.fill(); c.fillStyle = '#10b981'; c.beginPath(); c.arc(PW - 170, 172, 7, 0, 7); c.fill(); tx(c, 'En vivo', PW - 116, 172, 20, '#10b981', 700);
+  // grilla: mesa 3 | mesa 4 (alta, con el aviso) ; mesa 5 | mesa 6 ; mesa 7 | mesa 8
+  const normal = (x, y, n, est, punto) => { c.fillStyle = '#1a1a1a'; c.strokeStyle = '#2e2e2e'; c.lineWidth = 3; c.beginPath(); c.roundRect(x, y, 264, 190, 28); c.fill(); c.stroke();
+    tx(c, String(n), x + 28, y + 50, 46, '#fff', 800, 'left'); c.fillStyle = punto; c.beginPath(); c.arc(x + 76, y + 50, 8, 0, 7); c.fill();
+    tx(c, est, x + 28, y + 104, 20, est === 'LIBRE' ? '#8a8a8a' : '#c2d602', 800, 'left'); if (est !== 'LIBRE') tx(c, '1 pedido · $ 18.400', x + 28, y + 150, 19, '#9a9a9a', 600, 'left'); };
+  normal(24, 290, 3, 'OCUPADA', '#c2d602'); normal(24, 506, 5, 'OCUPADA', '#c2d602'); normal(24, 722, 6, 'LIBRE', '#555'); normal(312, 938, 7, 'OCUPADA', '#c2d602'); normal(24, 938, 8, 'LIBRE', '#555');
+  // mesa 4
+  const x = 312, y = 290, w = 264, h = 622, e = Math.min(1, Math.max(0, k));
+  if (e > 0) { c.strokeStyle = `rgba(245,165,36,${0.9 * e})`; c.lineWidth = 6; c.beginPath(); c.roundRect(x - 9, y - 9, w + 18, h + 18, 36); c.stroke(); }
+  c.fillStyle = e > 0 ? '#2b2112' : '#1a1a1a'; c.strokeStyle = e > 0 ? '#f5a524' : '#2e2e2e'; c.lineWidth = 4; c.beginPath(); c.roundRect(x, y, w, h, 28); c.fill(); c.stroke();
+  tx(c, '4', x + 28, y + 50, 46, '#fff', 800, 'left'); c.fillStyle = e > 0 ? '#f5a524' : '#c2d602'; c.beginPath(); c.arc(x + 76, y + 50, 8, 0, 7); c.fill();
+  if (e > 0) {
+    const rebote = Math.abs(Math.sin(k * 9)) * 10 * (1 - Math.min(1, k * 0.8));
+    c.fillStyle = '#f5a524'; c.beginPath(); c.arc(x + w - 6, y + 6 - rebote, 34, 0, 7); c.fill(); c.strokeStyle = '#ffffff'; c.lineWidth = 4; c.stroke();
+    sombrero(c, x + w - 6, y + 8 - rebote, 34, '#111');
+    tx(c, 'COMIDA LISTA', x + 28, y + 104, 20, '#ffffff', 800, 'left');
+    c.fillStyle = 'rgba(245,165,36,.16)'; c.beginPath(); c.roundRect(x + 18, y + 128, w - 36, 330, 18); c.fill();
+    ['1× Promo Smash', 'Triple', '2× Classic Smash', '1× Brownie con', 'Helado', '2× Coca-Cola', '500ml'].forEach((l, i) => tx(c, l, x + 36, y + 166 + i * 34, 21, '#fff', 700, 'left'));
+    tx(c, 'PARRILLA · FRÍOS', x + 36, y + 418, 16, '#f5c46b', 800, 'left'); tx(c, '· BARRA', x + 36, y + 440, 16, '#f5c46b', 800, 'left');
+    c.fillStyle = '#c2d602'; c.beginPath(); c.roundRect(x + 18, y + h - 96, w - 36, 72, 36); c.fill(); tx(c, 'Entregar', x + w / 2, y + h - 60, 28, '#111', 800);
+  } else { tx(c, 'OCUPADA', x + 28, y + 104, 20, '#c2d602', 800, 'left'); tx(c, 'En cocina', x + 28, y + 150, 19, '#9a9a9a', 600, 'left'); }
+  barraEstado(c, true); isla(c); c.restore(); mozo.tex.needsUpdate = true;
+};
+
+// bandeja completa: dos hamburguesas, el brownie y dos Coca-Cola
+const hamburguesaCompleta = hamburguesa;
+const bandeja = new THREE.Group(); esc.add(bandeja);
+poner(torneado([[0, 0], [0.24, 0], [0.245, 0.006], [0.24, 0.014], [0.236, 0.012], [0, 0.008]], M.bandeja), 0, 0, 0, bandeja);
+for (const [x, z] of [[-0.11, -0.04], [0.06, -0.09]]) { poner(torneado([[0, 0], [0.07, 0], [0.095, 0.012], [0.1, 0.016], [0.092, 0.016], [0.07, 0.006], [0, 0.006]], M.plato), x, 0.009, z, bandeja);
+  poner(hamburguesaCompleta(true), x, 0.016, z, bandeja); }
+{ const p = poner(torneado([[0, 0], [0.06, 0], [0.08, 0.01], [0.085, 0.014], [0.078, 0.014], [0.06, 0.005], [0, 0.005]], M.plato), -0.02, 0.009, 0.11, bandeja);
+  poner(caja(0.06, 0.03, 0.06, arcilla('#4a2a1a', 0.7), 0.006), -0.02, 0.03, 0.11, bandeja); poner(new THREE.Mesh(new THREE.SphereGeometry(0.022, 20, 12), arcilla('#f6efe0', 0.6)), -0.02, 0.058, 0.11, bandeja); }
+vaso(bandeja, 0.14, 0.06); vaso(bandeja, 0.17, -0.02);
+
+// ================= ZONA 3: el mostrador — terminal todo-en-uno de 15,6" =================
+// Pantalla 16:10 con bisel fino, cuerpo de aluminio cepillado, bisagra y pie inclinado (tipo terminal de punto de venta).
+const CJ = V(-2.35, 0, -1.15);
+const M_ALU = new THREE.MeshPhysicalMaterial({ color: '#dcdee1', metalness: 0.45, roughness: 0.42, roughnessMap: texCepillado, clearcoat: 0.15 });
+const M_BISEL = new THREE.MeshPhysicalMaterial({ color: '#0b0b0c', roughness: 0.38, clearcoat: 0.35, clearcoatRoughness: 0.4 });
+{
+  poner(caja(1.5, 0.92, 0.62, M.maderaOsc, 0.02), CJ.x, 0.46, CJ.z);
+  for (let i = 0; i < 9; i++) poner(caja(0.012, 0.8, 0.012, arcilla('#a8693a', 0.7), 0.004), CJ.x - 0.66 + i * 0.165, 0.46, CJ.z + 0.312);
+  poner(losa(1.56, 0.68, 0.04, 0.03, 0.01, M.blanco), CJ.x, 0.94, CJ.z);
+  mancha(CJ.x, CJ.z, 1.9, 0.95);
+}
+const TOPE_CJ = 0.96;
+const IPW = 0.336, IPH = 0.21;                 // pantalla activa (16:10)
+const TW = IPW + 0.02, TH = IPH + 0.03, TD = 0.022;   // cuerpo: bisel fino a los lados, mentón apenas más alto
+const ipad = new THREE.Group(); ipad.position.set(CJ.x + 0.02, TOPE_CJ, CJ.z - 0.04); ipad.rotation.y = 0.06; esc.add(ipad);
+poner(losa(0.24, 0.18, 0.014, 0.04, 0.005, M_ALU), 0, 0.007, 0.02, ipad);                                   // base
+const cuello = caja(0.09, 0.2, 0.014, M_ALU, 0.006); cuello.position.set(0, 0.105, -0.025); cuello.rotation.x = -0.22; ipad.add(cuello);
+{ const b = cil(0.011, 0.011, 0.1, M_ALU, 32); b.rotation.z = Math.PI / 2; b.position.set(0, 0.2, -0.047); ipad.add(b); }   // bisagra
+const ipadCuerpo = new THREE.Group(); ipadCuerpo.position.set(0, 0.215, -0.03); ipadCuerpo.rotation.x = -0.3; ipad.add(ipadCuerpo);
+{ const cuerpo = losa(TW, TH, TD, 0.014, 0.004, M_ALU); cuerpo.rotation.x = Math.PI / 2; ipadCuerpo.add(cuerpo);
+  const v = pantallaPlana(TW - 0.003, TH - 0.003, 0.0125, M_BISEL); v.position.z = TD / 2 + 0.0003; ipadCuerpo.add(v);
+  const lente = cil(0.0018, 0.0018, 0.001, arcilla('#222', 0.3), 16); lente.rotation.x = Math.PI / 2; lente.position.set(0, TH / 2 - 0.0065, TD / 2 + 0.0006); ipadCuerpo.add(lente); }
+const IW = 2560, IH = 1600, ipC = document.createElement('canvas'); ipC.width = IW; ipC.height = IH; const ig = ipC.getContext('2d');
+const texIpad = new THREE.CanvasTexture(ipC); texIpad.colorSpace = THREE.SRGBColorSpace; texIpad.anisotropy = 16;
+{ const p = pantallaPlana(IPW, IPH, 0.004, new THREE.MeshBasicMaterial({ map: texIpad, toneMapped: false })); p.position.set(0, 0.004, TD / 2 + 0.0005); ipadCuerpo.add(p);
+  const ref = lienzo(512, 320, (c, w, h) => { const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.38, 'rgba(255,255,255,0)');
+    gr.addColorStop(0.47, 'rgba(255,255,255,0.09)'); gr.addColorStop(0.6, 'rgba(255,255,255,0.02)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, w, h); });
+  const r2 = pantallaPlana(TW - 0.003, TH - 0.003, 0.0125, new THREE.MeshBasicMaterial({ map: ref, transparent: true, depthWrite: false, toneMapped: false })); r2.position.z = TD / 2 + 0.0009; ipadCuerpo.add(r2); }
+// utilería del mostrador: impresora de tickets con el ticket de la Mesa 4 y una taza
+{
+  const imp = new THREE.Group(); imp.position.set(CJ.x + 0.4, TOPE_CJ, CJ.z - 0.02); imp.rotation.y = -0.25; esc.add(imp);
+  poner(caja(0.13, 0.1, 0.15, arcilla('#2a2a2c', 0.45), 0.02), 0, 0.05, 0, imp); poner(caja(0.125, 0.012, 0.09, arcilla('#3a3a3d', 0.4), 0.006), 0, 0.104, -0.025, imp);
+  poner(caja(0.09, 0.004, 0.006, arcilla('#111', 0.6), 0.001), 0, 0.1, 0.03, imp);
+  const texTicket = lienzo(240, 420, (g, W, H) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H); tx(g, 'MESA 4', W / 2, 46, 34, '#111', 800);
+    g.fillStyle = '#c2d602'; g.fillRect(40, 76, W - 80, 6); ['1× Promo Smash', '2× Classic Smash', '1× Brownie', '2× Coca-Cola'].forEach((l, i) => tx(g, l, 22, 118 + i * 38, 20, '#222', 700, 'left'));
+    g.fillStyle = '#ddd'; g.fillRect(22, 280, W - 44, 2); tx(g, 'TOTAL', 22, 318, 22, '#111', 800, 'left'); tx(g, '$ 35.800', W - 22, 318, 24, '#111', 800, 'right'); tx(g, 'Mercado Pago', W / 2, 372, 18, '#666', 700); });
+  const geo = new THREE.PlaneGeometry(0.08, 0.14, 8, 20); { const P = geo.attributes.position; for (let i = 0; i < P.count; i++) { const y = P.getY(i) + 0.07; P.setZ(i, 0.35 * y * y); } geo.computeVertexNormals(); }
+  const tk = sombra(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ map: texTicket, roughness: 0.9, side: THREE.DoubleSide }))); tk.position.set(0, 0.17, 0.032); tk.rotation.x = -0.15; imp.add(tk);
+  const taza = new THREE.Group(); taza.position.set(CJ.x - 0.42, TOPE_CJ, CJ.z + 0.05); esc.add(taza);
+  taza.add(torneado([[0, 0], [0.07, 0], [0.075, 0.008], [0.068, 0.01], [0, 0.006]], M.plato));
+  poner(torneado([[0, 0], [0.032, 0], [0.042, 0.075], [0.039, 0.075], [0.029, 0.006], [0, 0.006]], M.plato), 0, 0.008, 0, taza);
+  poner(cil(0.036, 0.036, 0.002, arcilla('#3b2416', 0.3), 32), 0, 0.07, 0, taza);
+  const asa = new THREE.Mesh(new THREE.TorusGeometry(0.018, 0.005, 10, 24, Math.PI * 1.2), M.plato); asa.position.set(0.045, 0.045, 0); asa.rotation.z = -Math.PI * 0.6; sombra(asa); taza.add(asa);
+}
+// ---- pantalla: se diseña en 1280×800 y se dibuja al doble (2560×1600) para que se lea nítida ----
+const logoColmen = (g) => { g.font = '800 30px "DM Sans"'; const w = g.measureText('Colmen').width; tx(g, 'Colmen', 32, 48, 30, '#111', 800, 'left'); g.fillStyle = '#c2d602'; g.beginPath(); g.arc(32 + w + 7, 58, 5.5, 0, 7); g.fill(); };
+const barraLateral = (g, activo) => {
+  g.fillStyle = '#ffffff'; g.fillRect(0, 0, 220, 800); g.fillStyle = '#e7e5df'; g.fillRect(220, 0, 2, 800); logoColmen(g);
+  ['Pedidos', 'Mesas', 'Cocina', 'Caja', 'Carta', 'Fidelización'].forEach((s, i) => { const y = 130 + i * 56;
+    if (s === activo) { g.fillStyle = '#c2d602'; g.beginPath(); g.roundRect(16, y - 23, 188, 46, 14); g.fill(); }
+    tx(g, s, 36, y, 21, '#111', s === activo ? 800 : 600, 'left'); });
+};
+const encabezado = (g, chico, grande) => { g.fillStyle = '#111'; g.beginPath(); g.roundRect(244, 24, 1012, 104, 22); g.fill();
+  tx(g, chico, 274, 58, 17, '#bdbbb6', 600, 'left'); tx(g, grande, 274, 98, 38, '#fff', 800, 'left');
+  g.fillStyle = '#20301f'; g.beginPath(); g.roundRect(1110, 58, 120, 38, 19); g.fill(); g.fillStyle = '#10b981'; g.beginPath(); g.arc(1132, 77, 6, 0, 7); g.fill(); tx(g, 'En vivo', 1182, 78, 17, '#10b981', 700); };
+const pintarIpad = (tocar, estado) => {
+  const g = ig; g.save(); g.setTransform(2, 0, 0, 2, 0, 0); g.fillStyle = '#f4f3ef'; g.fillRect(0, 0, 1280, 800);
+  barraLateral(g, 'Mesas'); encabezado(g, 'jueves 16 de octubre', 'Salón en vivo');
+  const est = { 1: 'OCUPADA', 2: 'OCUPADA', 3: 'LIBRE', 5: 'OCUPADA', 6: 'LIBRE', 7: 'OCUPADA', 8: 'OCUPADA' }, imp = { 1: '$ 18.400', 2: '$ 9.200', 5: '$ 22.600', 7: '$ 12.400', 8: '$ 31.000' };
+  const w = 241, h = 306;
+  for (let n = 1; n <= 8; n++) {
+    const x = 244 + ((n - 1) % 4) * (w + 16), y = 148 + Math.floor((n - 1) / 4) * (h + 16), esta = n === 4;
+    g.fillStyle = esta && estado === 'pagada' ? '#eef7d2' : '#ffffff'; g.strokeStyle = esta ? '#c2d602' : '#e2e0da'; g.lineWidth = esta ? 5 : 2;
+    g.beginPath(); g.roundRect(x, y, w, h, 20); g.fill(); g.stroke();
+    tx(g, String(n), x + 22, y + 46, 44, '#111', 800, 'left');
+    if (!esta) { const s = est[n]; g.fillStyle = s === 'LIBRE' ? '#c9c7c2' : '#9ab000'; g.beginPath(); g.arc(x + 62 + (n > 9 ? 22 : 0), y + 46, 7, 0, 7); g.fill();
+      tx(g, s, x + 22, y + 96, 17, s === 'LIBRE' ? '#8a8883' : '#5f6d00', 800, 'left');
+      if (s !== 'LIBRE') { tx(g, '1 pedido', x + 22, y + 136, 18, '#8a8883', 600, 'left'); tx(g, imp[n], x + w - 20, y + 136, 20, '#111', 800, 'right'); }
+      continue; }
+    const etiqueta = estado === 'cuenta' ? 'PIDIÓ LA CUENTA' : estado === 'pagando' ? 'PAGANDO' : 'PAGADA';
+    tx(g, etiqueta, x + 22, y + 96, 17, '#111', 800, 'left'); tx(g, '1 pedido', x + 22, y + 136, 18, '#8a8883', 600, 'left'); tx(g, TOTAL, x + w - 20, y + 136, 20, '#111', 800, 'right');
+    if (estado === 'cuenta') { g.fillStyle = '#c2d602'; g.beginPath(); g.roundRect(x + 14, y + h - 92, w - 28, 74, 37); g.fill(); tx(g, 'Habilitar pago', x + w / 2, y + h - 55, 24, '#111', 800);
+      if (tocar > 0 && tocar < 1) { g.fillStyle = `rgba(17,17,17,${0.22 * (1 - tocar)})`; g.beginPath(); g.arc(x + w / 2, y + h - 55, 28 + 44 * tocar, 0, 7); g.fill(); } }
+    else if (estado === 'pagando') { g.fillStyle = '#f2f1ec'; g.beginPath(); g.roundRect(x + 14, y + h - 92, w - 28, 74, 37); g.fill(); tx(g, 'Esperando pago…', x + w / 2, y + h - 55, 20, '#5d5b56', 700); }
+    else { tilde(g, x + 46, y + h - 62, 26, '#c2d602', '#111'); tx(g, 'Pagada', x + 82, y + h - 74, 22, '#111', 800, 'left'); tx(g, 'Mercado Pago', x + 82, y + h - 46, 16, '#5d5b56', 700, 'left'); }
+  }
+  g.restore(); texIpad.needsUpdate = true;
+};
+// Fidelización en el mismo panel: el pago de la Mesa 4 ya cargó los puntos (k: 0 → 1)
+const pintarFidelizacion = (k) => {
+  const g = ig; g.save(); g.setTransform(2, 0, 0, 2, 0, 0); g.fillStyle = '#f4f3ef'; g.fillRect(0, 0, 1280, 800);
+  barraLateral(g, 'Fidelización'); encabezado(g, 'Programa de puntos · Smash House', 'Fidelización');
+  const nueva = easeOut(tramo(k, 0.15, 0.55)), suma = easeOut(tramo(k, 0.3, 0.8));
+  const kpi = [['Clientes en el programa', (1284 + (nueva > 0.5 ? 1 : 0)).toLocaleString('es-AR')], ['Puntos entregados hoy', Math.round(4552 + 358 * suma).toLocaleString('es-AR')], ['Premios canjeados', '96']];
+  kpi.forEach(([a, b], i) => { const x = 244 + i * 344; g.fillStyle = '#fff'; g.beginPath(); g.roundRect(x, 148, 324, 124, 20); g.fill(); tx(g, a, x + 24, 184, 18, '#5d5b56', 700, 'left'); tx(g, b, x + 24, 236, 44, '#111', 800, 'left'); });
+  tx(g, 'Actividad en vivo', 244, 316, 24, '#111', 800, 'left');
+  const filas = [['#93 · Delivery', '+214 pts', ''], ['Mesa 2', '+180 pts', ''], ['#102 · Para llevar', '+96 pts', '']];
+  const fila = (y, a, b, c, resalta) => { g.fillStyle = resalta ? '#111' : '#fff'; g.beginPath(); g.roundRect(244, y, 1012, 88, 18); g.fill();
+    tx(g, a, 274, y + 34, 24, resalta ? '#fff' : '#111', 800, 'left'); if (c) tx(g, c, 274, y + 64, 17, resalta ? '#bdbbb6' : '#8a8883', 600, 'left');
+    g.fillStyle = resalta ? '#c2d602' : '#eef7d2'; g.beginPath(); g.roundRect(1080, y + 22, 152, 44, 22); g.fill(); tx(g, b, 1156, y + 45, 21, '#111', 800); };
+  const y0 = 342, baja = 104 * nueva;
+  filas.forEach(([a, b], i) => fila(y0 + i * 104 + baja, a, b, i === 0 ? 'hace 4 min' : i === 1 ? 'hace 9 min' : 'hace 12 min', false));
+  if (nueva > 0) { g.globalAlpha = nueva; fila(y0, 'Mesa 4 · Mercado Pago $ 35.800', '+358 pts', 'Recién · desbloqueó un Smash gratis', true); g.globalAlpha = 1; }
+  g.restore(); texIpad.needsUpdate = true;
+};
+
+// ================= ZONA 0: comandas de papel que se pierden =================
+const texPapel = (lineas, rot) => lienzo(300, 420, (g, W, H) => { g.fillStyle = '#f6f0dc'; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(80,120,170,.25)'; g.lineWidth = 2;
+  for (let y = 70; y < H; y += 46) { g.beginPath(); g.moveTo(16, y); g.lineTo(W - 16, y); g.stroke(); }
+  g.save(); g.translate(W / 2, H / 2); g.rotate(rot); g.translate(-W / 2, -H / 2);
+  lineas.forEach((l, i) => { g.font = `italic 700 ${i ? 30 : 38}px "DM Sans"`; g.fillStyle = l.startsWith('~') ? '#b03a2e' : '#2a2a2a'; g.textAlign = 'left'; g.fillText(l.replace('~', ''), 26, 58 + i * 50); });
+  g.restore(); });
+const papeles = [
+  { tex: texPapel(['Mesa 4', '2 smash dob…', '1 papas', '~¿o eran 3?'], -0.03), x: -0.16, z: 0.2 },
+  { tex: texPapel(['Mesa 7', 'sin cebolla', '1 limonada', '~¿qué mesa?'], 0.04), x: 0.17, z: 0.22 },
+  { tex: texPapel(['Mesa 2', '3 classic', '~se cayó'], -0.05), x: 0.36, z: 0.62 },
+].map((p, i) => { const m = sombra(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.14, 0.0012, 8, 8, 1),
+  [M.hueso, M.hueso, M.hueso, M.hueso, new THREE.MeshStandardMaterial({ map: p.tex, roughness: 0.9 }), M.hueso])); esc.add(m); return { ...p, m, i }; });
+const animarPapeles = (t) => papeles.forEach((p) => {
+  const k = Math.min(1, Math.max(0, (t - 0.3 - p.i * 0.45) / 2.6)); const e = 1 - Math.pow(1 - k, 2);
+  p.m.visible = t < 5.6;
+  const piso = p.i === 2 ? 0.002 : TOPE + 0.002 + p.i * 0.0015;
+  p.m.position.set(p.x + Math.sin(k * 7 + p.i) * 0.06 * (1 - k), 1.55 - e * (1.55 - piso), p.z + Math.cos(k * 5 + p.i) * 0.04 * (1 - k));
+  p.m.rotation.set(-Math.PI / 2 + Math.sin(k * 9 + p.i) * 0.9 * (1 - k), 0, (p.i - 1) * 0.35 + Math.sin(k * 6 + p.i) * 1.2 * (1 - k));
+});
+
+// ================= comandas: una sale de la mesa y se parte en tres =================
+const texComanda = (titulo, lineas, pie) => lienzo(300, 460, (g, W, H) => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, W, H - 14);
+  for (let x = 0; x < W; x += 20) { g.beginPath(); g.moveTo(x, H - 14); g.lineTo(x + 10, H); g.lineTo(x + 20, H - 14); g.fill(); }
+  tx(g, titulo, W / 2, 58, 46, '#111', 800); g.fillStyle = '#c2d602'; g.fillRect(40, 96, W - 80, 8);
+  lineas.forEach((l, i) => tx(g, l, 26, 150 + i * 44, 23, '#111', 700, 'left'));
+  g.setLineDash([10, 10]); g.strokeStyle = '#bbb'; g.lineWidth = 3; g.beginPath(); g.moveTo(28, 345); g.lineTo(W - 28, 345); g.stroke();
+  tx(g, pie, W / 2, 395, 26, '#5d5b56', 800); });
+const geoComanda = new THREE.PlaneGeometry(0.07, 0.107, 10, 14); { const P = geoComanda.attributes.position; for (let i = 0; i < P.count; i++) { const y = P.getY(i); P.setZ(i, -0.25 * (y + 0.0535) ** 2); } geoComanda.computeVertexNormals(); }
+const comanda = (tex) => { const m = sombra(new THREE.Mesh(geoComanda, new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, side: THREE.DoubleSide, transparent: true, alphaTest: 0.5 }))); esc.add(m); return m; };
+const madre = comanda(texComanda('MESA 4', ['1× Promo Smash Triple', '2× Classic Smash', '1× Brownie con Helado', '2× Coca-Cola 500ml'], '3 estaciones'));
+const hijas = [
+  comanda(texComanda('MESA 4', ['1× Promo Smash Triple', '2× Classic Smash'], 'Parrilla')),
+  comanda(texComanda('MESA 4', ['1× Brownie con Helado'], 'Fríos')),
+  comanda(texComanda('MESA 4', ['2× Coca-Cola 500ml'], 'Barra')),
+];
+const SPLIT = V(0.45, 1.62, -1.55);
+const LLEGA = [13.25, 14.25, 15.15];      // cuando la voz nombra cada estación
+const ease = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * x * (x * (x * 6 - 15) + 10));
+const easeOut = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : 1 - Math.pow(1 - x, 3));
+const tramo = (t, a, b) => (t - a) / (b - a);
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+const bez = (a, b, c, k) => a.clone().multiplyScalar((1 - k) * (1 - k)).add(b.clone().multiplyScalar(2 * (1 - k) * k)).add(c.clone().multiplyScalar(k * k));
+const posMadre = (k) => bez(V(0.045, 0.95, 0.15), V(0.3, 1.5, -0.6), SPLIT, ease(k));
+const posHija = (i, k) => bez(SPLIT, SPLIT.clone().lerp(monitores[i].mesa4, 0.5).add(V(0, 0.18, 0.25)), monitores[i].mesa4.clone().add(V(0, 0, 0.03)), ease(k));
+
+// ================= monedas de puntos =================
+const geoMoneda = new THREE.CylinderGeometry(0.012, 0.012, 0.0025, 32);
+const matMoneda = arcilla('#c2d602', 0.35, { metalness: 0.3, clearcoat: 0.6 });
+const monedas = Array.from({ length: 16 }, (_, i) => { const m = sombra(new THREE.Mesh(geoMoneda, matMoneda)); esc.add(m);
+  return { m, a: azar() * Math.PI * 2, v: 0.12 + azar() * 0.1, sube: 0.18 + azar() * 0.16, giro: 4 + azar() * 6, d: azar() * 0.35 }; });
+
+// ================= tiempos y cámara =================
+const mezcla = (A, B, k) => ({ p: A.p.clone().lerp(B.p, k), m: A.m.clone().lerp(B.m, k) });
+const CEL_MESA = { p: V(-0.14, TOPE + 0.0042, 0.13), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0.5)) };
+const CEL_QR = { p: V(0.045, 0.93, 0.12), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.47, -0.05, 0)) };
+const CEL_CUENTA = { p: V(-0.02, 0.95, 0.2), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.42, 0.12, 0)) };
+const BANDEJA0 = V(FRI.x + 0.25, 0.925, COC.z + 0.24), BANDEJA1 = V(0.12, TOPE, -0.05);
+const posBandeja = (k) => { const p = BANDEJA0.clone().lerp(BANDEJA1, k); p.y += Math.sin(k * Math.PI) * 0.45; return p; };
+
+// ---- encuadre dentro de la zona segura de Reels ----
+// Todo lo que se LEE (pantallas, comandas, carteles) se proyecta adentro de este rectángulo del cuadro de 1080×1920:
+// debajo del título (termina en ~520 px), arriba del texto del posteo (420 px abajo) y lejos de la columna
+// de me gusta / comentar / compartir (140 px a la derecha). ZONA_CHIP deja libre además el chip de abajo.
+const ZONA = { x0: 90, x1: 915, y0: 550, y1: 1460 };
+const ZONA_CHIP = { ...ZONA, y1: 1350 };
+const proyectar = (puntos, camara = cam) => { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (const q of puntos) { const v = q.clone().project(camara); const x = (v.x + 1) * 540, y = (1 - v.y) * 960; x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+  return { x0, x1, y0, y1 }; };
+const encuadrar = (puntos, dir, zona = ZONA, llenar = 1) => {
+  const d = dir.clone().normalize(); const m = puntos.reduce((a, q) => a.add(q), V(0, 0, 0)).multiplyScalar(1 / puntos.length); let dist = 1;
+  const z = { x0: zona.x0 + (zona.x1 - zona.x0) * (1 - llenar) / 2, x1: zona.x1 - (zona.x1 - zona.x0) * (1 - llenar) / 2, y0: zona.y0 + (zona.y1 - zona.y0) * (1 - llenar) / 2, y1: zona.y1 - (zona.y1 - zona.y0) * (1 - llenar) / 2 };
+  for (let i = 0; i < 60; i++) {
+    cam.position.copy(m).addScaledVector(d, dist); cam.lookAt(m); cam.updateMatrixWorld(); const b = proyectar(puntos);
+    dist *= Math.pow(Math.max((b.x1 - b.x0) / (z.x1 - z.x0), (b.y1 - b.y0) / (z.y1 - z.y0)), 0.7);
+    const porPx = 2 * dist * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) / 1920;
+    m.addScaledVector(V(1, 0, 0).applyQuaternion(cam.quaternion), ((b.x0 + b.x1) / 2 - (z.x0 + z.x1) / 2) * porPx * 0.7)
+     .addScaledVector(V(0, 1, 0).applyQuaternion(cam.quaternion), -((b.y0 + b.y1) / 2 - (z.y0 + z.y1) / 2) * porPx * 0.7);
+  }
+  return { p: m.clone().addScaledVector(d, dist), m };
+};
+const esquinas = (pos, quat, w, h, z = 0) => [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => V(a * w / 2, b * h / 2, z).applyQuaternion(quat).add(pos));
+const CEL_W = 0.0716, CEL_H = 0.1476;
+const normal = (q) => V(0, 0, 1).applyQuaternion(q);
+const mesaYAtril = [V(-0.37, TOPE, -0.37), V(0.37, TOPE, -0.37), V(0.37, TOPE, 0.37), V(-0.37, TOPE, 0.37), V(0.05, TOPE + 0.16, -0.17)];
+const cartelQR = atril.userData.cartel; atril.updateMatrixWorld(true);
+const bordeCartel = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => cartelQR.localToWorld(V(a * 0.046, b * 0.06, 0)));
+const linea3 = monitores.flatMap((m) => m.borde);
+mozo.g.updateMatrixWorld(true); ipad.updateMatrixWorld(true);
+const bordeTerminal = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => ipadCuerpo.localToWorld(V(a * TW / 2, b * TH / 2, 0)));
+const pieTerminal = [[-1, 1], [1, 1]].map(([a, b]) => ipad.localToWorld(V(a * 0.12, 0, 0.11)));
+const T = {
+  general: encuadrar(mesaYAtril, V(0.87, 0.84, 1.33), ZONA, 0.92),
+  general2: encuadrar(mesaYAtril, V(0.66, 0.64, 1.18), ZONA, 1.0),
+  alzar: encuadrar([...bordeCartel, ...esquinas(CEL_QR.p, CEL_QR.q, CEL_W, CEL_H)], V(0.75, 0.5, 1), ZONA, 0.88),
+  pov: encuadrar(esquinas(CEL_QR.p, CEL_QR.q, CEL_W, CEL_H), normal(CEL_QR.q).add(V(-0.01, -0.1, 0))),
+  cocina: encuadrar(linea3, V(0.18, 0.22, 1), ZONA, 0.95),
+  parrilla: encuadrar(monitores[0].borde, V(0.02, 0.06, 1), ZONA_CHIP), frios: encuadrar(monitores[1].borde, V(0.02, 0.06, 1), ZONA_CHIP), barra: encuadrar(monitores[2].borde, V(0.02, 0.06, 1), ZONA_CHIP),
+  linea: encuadrar(linea3, V(-4.25, 1.27, 3.55), ZONA_CHIP),
+  mozo: encuadrar(esquinas(mozo.g.position, mozo.g.quaternion, CEL_W, CEL_H), V(0.1, 0.84, 0.6)),
+  servida: encuadrar([...mesaYAtril.slice(0, 4), V(0.12, TOPE + 0.12, -0.05)], V(0.7, 0.32, 0.95), ZONA, 0.95),
+  ipad: encuadrar([...bordeTerminal, ...pieTerminal], V(0.16, 0.3, 1)),
+  fid: encuadrar(bordeTerminal, V(0.06, 0.26, 1), ZONA_CHIP),
+  cuenta: encuadrar(esquinas(CEL_CUENTA.p, CEL_CUENTA.q, CEL_W, CEL_H), normal(CEL_CUENTA.q).add(V(-0.32, 0.04, 0))),
+  vuelta: encuadrar(mesaYAtril, V(0.93, 0.4, 1.2), ZONA, 0.95),
+};
+const GUION = [
+  [0, T.general], [3.6, T.general2], [4.6, T.alzar], [5.5, T.alzar], [6.15, T.pov], [10.9, T.pov],
+  // 10.9 → 12.75 persigue a la comanda y abre a la cocina entera (ver camEn); después travelling por las tres estaciones
+  [12.75, T.cocina], [13.2, T.parrilla], [13.75, T.parrilla], [14.25, T.frios], [14.65, T.frios], [15.15, T.barra], [15.8, T.barra],
+  [17.0, T.linea], [18.5, T.linea], [19.2, T.mozo], [20.6, T.mozo],
+  // 20.6 → 22.7 acompaña a la bandeja (ver camEn)
+  [22.7, T.servida], [23.6, T.servida], [23.601, T.ipad], [25.0, T.ipad], [25.001, T.cuenta], [34.65, T.cuenta], [34.651, T.fid], [39.6, T.fid], [40.6, T.vuelta], [48.8, T.vuelta],
+];
+const sigueMadre = (t) => { const tk = posMadre(clamp01(tramo(t, 11.0, 12.3))); return { p: tk.clone().add(V(0.12, 0.1, 0.8)), m: tk.clone().add(V(0, 0.04, 0)) }; };
+const camEn = (t) => {
+  if (t >= 10.9 && t < 11.7) return mezcla(T.pov, sigueMadre(t), ease(tramo(t, 10.9, 11.5)));
+  if (t >= 11.7 && t < 12.75) return mezcla(sigueMadre(t), T.cocina, ease(tramo(t, 11.7, 12.45)));
+  if (t >= 20.6 && t < 22.7) {
+    const tb = posBandeja(ease(tramo(t, 20.6, 22.5))), sigue = { p: tb.clone().add(V(0.4, 0.35, 0.9)), m: tb.clone() };
+    return mezcla(mezcla(T.mozo, sigue, ease(tramo(t, 20.6, 21.2))), T.servida, ease(tramo(t, 22.0, 22.7)));
+  }
+  let i = 0; while (i < GUION.length - 2 && t >= GUION[i + 1][0]) i++;
+  const [t0, A] = GUION[i], [t1, B] = GUION[i + 1];
+  return mezcla(A, B, ease(tramo(t, t0, t1)));
+};
+
+// ---- la cámara del celular ve la escena de verdad: el atril, la mesa, el QR ----
+const camQR = new THREE.PerspectiveCamera(58, PW / PH, 0.01, 30);
+const lente = V(-CEL_W / 2 + 0.022, CEL_H / 2 - 0.022, -0.006);
+const verPorElCelular = () => {
+  celu.g.updateMatrixWorld(true); camQR.position.copy(celu.g.localToWorld(lente.clone())); camQR.quaternion.copy(celu.g.quaternion); camQR.updateMatrixWorld(); camQR.updateProjectionMatrix();
+  celu.g.visible = false; r.setViewport(0, 0, PW, PH); r.setScissor(0, 0, PW, PH); r.setScissorTest(true); r.render(esc, camQR);
+  celu.ctx.drawImage(r.domElement, 0, 1920 - PH, PW, PH, 0, 0, PW, PH);
+  r.setScissorTest(false); r.setViewport(0, 0, 1080, 1920); celu.g.visible = true;
+  cartelQR.updateMatrixWorld(true);
+  // dónde cae el QR en la pantalla del celular (el dibujo del QR ocupa 70..450 × 150..530 del cartel de 520×680)
+  const qr = [[70, 150], [450, 150], [450, 530], [70, 530]].map(([x, y]) => cartelQR.localToWorld(V((x / 520 - 0.5) * 0.092, (0.5 - y / 680) * 0.12, 0)));
+  const b = proyectar(qr, camQR); return { x0: b.x0 / 1080 * PW, x1: b.x1 / 1080 * PW, y0: b.y0 / 1920 * PH, y1: b.y1 / 1920 * PH };
+};
+
+// ---- verificación: qué cae fuera de la zona segura (lo usa la prueba con ?chequeo=1) ----
+window.chequeo = () => {
+  cam.updateMatrixWorld(); const caja = (n, pts) => { const b = proyectar(pts); const dentro = b.x1 > 0 && b.x0 < 1080 && b.y1 > 0 && b.y0 < 1920;
+    return dentro ? { n, x0: Math.round(b.x0), x1: Math.round(b.x1), y0: Math.round(b.y0), y1: Math.round(b.y1) } : null; };
+  return [caja('celular', esquinas(celu.g.position, celu.g.quaternion, CEL_W, CEL_H)), caja('mozo', esquinas(mozo.g.position, mozo.g.quaternion, CEL_W, CEL_H)),
+    caja('terminal', bordeTerminal), caja('cartelQR', bordeCartel),
+    ...monitores.map((m) => caja(m.id, m.borde))].filter(Boolean);
+};
+
+// ================= textos =================
+const $ = (id) => document.getElementById(id);
+const lineas = (el, k) => el.querySelectorAll('.linea > span').forEach((s, i) => { const e = easeOut((k - i * 0.12) / 0.55); s.style.transform = `translateY(${(1 - e) * 110}%)`; });
+const titulo = (t, id, entra, sale) => { const el = $(id); lineas(el, tramo(t, entra, entra + 0.75)); el.style.opacity = t < entra ? 0 : 1 - ease(tramo(t, sale, sale + 0.3)); };
+const aparece = (t, el, a, dy = 40) => { const k = easeOut(tramo(t, a, a + 0.5)); el.style.opacity = k; el.style.transform = `translateY(${(1 - k) * dy}px)`; };
+const chip = (t, id, a, b) => { const k = easeOut(tramo(t, a, a + 0.45)) * (1 - ease(tramo(t, b, b + 0.3))); $(id).style.opacity = k; $(id).style.transform = `translateY(${(1 - k) * 30}px)`; };
+
+// Inserto de fidelización (5,3 s desde 34,3): la cámara va a la terminal en Fidelización; todo lo demás queda
+// congelado y después sigue corrido 5,3 s (cierre incluido). La cámara y lo nuevo usan el tiempo real.
+const INS = 34.3, DI = 5.3;
+window.render = (t) => {
+  const tReal = t; const c = camEn(t); t = t < INS ? t : t < INS + DI ? INS : t - DI; const resp = V(Math.sin(tReal * 0.9) * 0.004, Math.sin(tReal * 1.3 + 1) * 0.003, 0);
+  cam.position.copy(c.p).add(resp); cam.lookAt(c.m);
+  cam.near = Math.max(0.02, Math.min(0.15, cam.position.distanceTo(c.m) - 0.25)); cam.updateProjectionMatrix();
+  animarPapeles(t); animarCocina(t);
+
+  // ---- celular del comensal ----
+  if (t < 23.5) {
+    const kc = ease(tramo(t, 4.9, 5.9));
+    celu.g.position.copy(CEL_MESA.p).lerp(CEL_QR.p, kc); celu.g.position.y += Math.sin(kc * Math.PI) * 0.05; celu.g.quaternion.copy(CEL_MESA.q).slerp(CEL_QR.q, kc);
+    if (t > 11.3) { const kb = ease(tramo(t, 11.3, 12.1)); celu.g.position.copy(CEL_QR.p).lerp(CEL_MESA.p, kb); celu.g.quaternion.copy(CEL_QR.q).slerp(CEL_MESA.q, kb); }
+    else if (t > 5.4) { // en la mano: respira apenas, y un golpecito (háptico) cuando detecta el código
+      const en = clamp01(tramo(t, 5.4, 5.9)); celu.g.rotateX(0.007 * Math.sin(t * 1.7) * en); celu.g.rotateY(0.009 * Math.sin(t * 1.25 + 1) * en);
+      const h = tramo(t, 6.62, 6.82); if (h > 0 && h < 1) celu.g.rotateZ(0.014 * Math.sin(h * Math.PI * 6) * (1 - h)); }
+    if (t < 5.3) pintarCelular('bloqueo'); else if (t < 8.15) pintarCelular('camara', t); else pintarCelular('carta', ease(tramo(t, 8.6, 10.6)));
+  } else {
+    const ku = ease(tramo(t, 25.0, 25.9)); celu.g.position.copy(CEL_MESA.p).lerp(CEL_CUENTA.p, ku); celu.g.position.y += Math.sin(ku * Math.PI) * 0.04; celu.g.quaternion.copy(CEL_MESA.q).slerp(CEL_CUENTA.q, ku);
+    if (t < 27.0) pintarCelular('cuenta', tramo(t, 26.5, 27.0)); else if (t < 29.6) pintarCelular('pagado'); else pintarCelular('puntos', tramo(t, 29.7, 31.4));
+  }
+
+  // ---- comandas ----
+  const km = tramo(t, 11.0, 12.3); madre.visible = km > 0 && km < 1;
+  if (madre.visible) { const e = ease(km); madre.position.copy(posMadre(km)); madre.rotation.set(-0.25 * (1 - e), Math.sin(e * Math.PI) * 0.6, Math.sin(e * Math.PI * 2) * 0.2); madre.scale.setScalar(1); }
+  hijas.forEach((h, i) => { const sale = 12.3, k = tramo(t, sale, LLEGA[i]); h.visible = k >= 0 && k < 1;
+    if (h.visible) { const e = ease(k); h.position.copy(posHija(i, k)); h.rotation.set(-0.15 * (1 - e), (i - 1) * 0.5 * Math.sin(e * Math.PI), Math.sin(e * Math.PI * 2) * 0.2); h.scale.setScalar(1 - 0.5 * ease(tramo(k, 0.78, 1))); } });
+  const LISTO = [17.55, 17.85, 18.15];
+  monitores.forEach((m, i) => pintarMonitor(m, easeOut(tramo(t, LLEGA[i] - 0.05, LLEGA[i] + 0.3)), easeOut(tramo(t, LLEGA[i] - 0.05, LLEGA[i] + 0.4)) * (t < 22 ? 1 : 0), easeOut(tramo(t, LISTO[i], LISTO[i] + 0.25))));
+
+  // ---- aviso al mozo ----
+  pintarMozo(t < 19.1 ? 0 : (t - 19.1) / 1.2);
+
+  // ---- bandeja ----
+  bandeja.visible = t > 18.3; const kb = ease(tramo(t, 20.6, 22.5)); bandeja.position.copy(posBandeja(kb)); bandeja.rotation.y = kb * 0.6;
+
+  // ---- iPad del encargado ----
+  pintarIpad(tramo(t, 24.35, 24.75), t < 24.6 ? 'cuenta' : t < 27.05 ? 'pagando' : 'pagada');
+  if (tReal >= INS) pintarFidelizacion(tramo(tReal, INS + 1.0, INS + 3.4));
+
+  // ---- monedas de puntos ----
+  monedas.forEach((o) => { const k = tramo(t, 29.9 + o.d, 31.6 + o.d); o.m.visible = k > 0 && k < 1;
+    if (o.m.visible) { const e = easeOut(k); o.m.position.copy(CEL_CUENTA.p).add(V(Math.cos(o.a) * o.v * e, 0.04 + o.sube * Math.sin(e * Math.PI * 0.85), Math.sin(o.a) * o.v * 0.5 * e + 0.04));
+      o.m.rotation.set(Math.PI / 2 + k * o.giro, k * o.giro * 0.5, 0); o.m.scale.setScalar(1 - ease(tramo(k, 0.75, 1)) * 0.9); } });
+
+  r.render(esc, cam);
+
+  // ---- textos (entran apenas antes de que la voz los diga) ----
+  titulo(t, 't0', 0.25, 4.7); titulo(t, 't1', 5.1, 10.7); titulo(t, 't2', 11.3, 16.9); titulo(t, 't3', 18.6, 22.6);
+  titulo(t, 't4', 23.8, 29.3); titulo(t, 't5', 29.9, 34.3);
+  chip(t, 'chip-1', 15.7, 16.9); chip(t, 'chip-2', 27.7, 29.3);
+  if (tReal >= INS && tReal < INS + DI) $('t5').style.opacity = 1 - ease(tramo(tReal, INS, INS + 0.3));
+  titulo(tReal, 't6', INS + 0.45, INS + DI - 0.35); chip(tReal, 'chip-3', INS + 1.3, INS + DI - 0.35);
+  const kc2 = ease(tramo(t, 34.6, 35.2)); $('cierre').style.opacity = kc2; $('velo').style.opacity = 1 - kc2; $('logo').style.opacity = 1 - kc2;
+  aparece(t, $('c-logo'), 34.9); aparece(t, $('c-f1'), 35.9); aparece(t, $('c-f2'), 36.95); aparece(t, $('c-plan'), 38.3); aparece(t, $('c-cta'), 40.0); aparece(t, $('c-web'), 40.6);
+};
+window.render(0);
+window.listo = true;
+</script>
+</body></html>
