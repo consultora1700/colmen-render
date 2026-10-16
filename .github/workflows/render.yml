@@ -10,7 +10,9 @@ on:
   push:
     paths: ['pedido.json']
 
-concurrency: { group: render-${{ github.ref }}, cancel-in-progress: true }
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   plan:
