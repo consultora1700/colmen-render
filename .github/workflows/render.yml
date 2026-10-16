@@ -1,0 +1,70 @@
+# Renderiza una escena en paralelo: N máquinas dibujan un tramo de cuadros cada una y al final se arma el MP4 mudo.
+# Se dispara a mano (Actions → render → Run workflow) o con un push que cambie pedido.json.
+# La voz y la música NO están en este repo: se mezclan después en el servidor.
+name: render
+on:
+  workflow_dispatch:
+    inputs:
+      escena: { description: 'Archivo dentro de escenas/', default: 'escena3.html' }
+      partes: { description: 'Cantidad de máquinas en paralelo', default: '12' }
+  push:
+    paths: ['pedido.json']
+
+concurrency: { group: render-${{ github.ref }}, cancel-in-progress: true }
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      escena: ${{ steps.p.outputs.escena }}
+      tramos: ${{ steps.p.outputs.tramos }}
+      partes: ${{ steps.p.outputs.partes }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ESC='${{ inputs.escena }}'; P='${{ inputs.partes }}'
+          else
+            ESC=$(jq -r .escena pedido.json); P=$(jq -r .partes pedido.json)
+          fi
+          test -f "escenas/$ESC" || { echo "no existe escenas/$ESC"; exit 1; }
+          echo "escena=$ESC" >> "$GITHUB_OUTPUT"; echo "partes=$P" >> "$GITHUB_OUTPUT"
+          echo "tramos=$(jq -cn --argjson p "$P" '[range(0;$p)]')" >> "$GITHUB_OUTPUT"
+
+  cuadros:
+    needs: plan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix: { tramo: '${{ fromJSON(needs.plan.outputs.tramos) }}' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node render.mjs "${{ needs.plan.outputs.escena }}" cuadros "${{ matrix.tramo }}/${{ needs.plan.outputs.partes }}"
+      - uses: actions/upload-artifact@v4
+        with: { name: 'cuadros-${{ matrix.tramo }}', path: cuadros/, retention-days: 1, compression-level: 0 }
+
+  video:
+    needs: [plan, cuadros]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with: { pattern: 'cuadros-*', path: cuadros, merge-multiple: true }
+      - name: Armar el MP4 (mismos parámetros que el render local)
+        run: |
+          N=$(ls cuadros/*.jpg | wc -l); ULT=$(ls cuadros/*.jpg | sort | tail -1 | xargs basename .jpg)
+          echo "cuadros: $N (último $ULT)"; test "$((10#$ULT + 1))" = "$N" || { echo "faltan cuadros"; exit 1; }
+          NOMBRE=$(basename "${{ needs.plan.outputs.escena }}" .html)
+          node_modules/ffmpeg-static/ffmpeg -v error -y -framerate 30 -i cuadros/%05d.jpg -c:v libx264 -profile:v high \
+            -pix_fmt yuv420p -crf 18 -preset slow -movflags +faststart "video-mudo-$NOMBRE.mp4"
+          ls -la *.mp4
+      - uses: actions/upload-artifact@v4
+        with: { name: video, path: 'video-mudo-*.mp4', retention-days: 7, compression-level: 0 }

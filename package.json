@@ -1,0 +1,10 @@
+{
+  "name": "colmen-render",
+  "private": true,
+  "type": "module",
+  "description": "Render en paralelo de las escenas 3D de los reels de Colmen (GitHub Actions)",
+  "dependencies": {
+    "ffmpeg-static": "5.3.0",
+    "playwright": "1.58.0"
+  }
+}
