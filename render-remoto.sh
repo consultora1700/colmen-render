@@ -15,7 +15,8 @@ api() { curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd
 
 cd "$AQUI"
 cp "$ESCENA" "escenas/$NOMBRE"
-[ -d "$(dirname "$ESCENA")/img" ] && cp -r "$(dirname "$ESCENA")/img/." escenas/img/
+# solo las imágenes que la escena carga (el repo es público: nada que no se use)
+for f in $(grep -oE "img/[A-Za-z0-9_./-]+\.(png|jpg|webp|glb)" "$ESCENA" | sort -u); do mkdir -p "escenas/$(dirname "$f")"; cp "$(dirname "$ESCENA")/$f" "escenas/$f"; done
 printf '{ "escena": "%s", "partes": %s, "pedido": "%s" }\n' "$NOMBRE" "$PARTES" "$(date -u +%FT%TZ)" > pedido.json
 git add -A escenas pedido.json
 git -c user.name="Colmen render" -c user.email="consultora1700@users.noreply.github.com" commit -q -m "render: $NOMBRE en $PARTES partes"
