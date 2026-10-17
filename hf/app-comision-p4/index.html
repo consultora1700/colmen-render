@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <title>Lo que te come la app</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+      @font-face {
+        font-family: "DM Sans";
+        src: url("assets/dmsans.woff2") format("woff2");
+        font-weight: 400 800;
+        font-display: block;
+      }
+      :root {
+        --fondo: #0a0a0a;
+        --tinta: #ecebe9;
+        --tenue: rgba(236, 235, 233, 0.62);
+        --lima: #c2d602;
+        --sup: #161616;
+        --borde: rgba(236, 235, 233, 0.12);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--fondo); }
+      body { font-family: "DM Sans", system-ui, sans-serif; color: var(--tinta); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--fondo); }
+      #gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+      .velo { position: absolute; inset: 0; pointer-events: none; }
+      .velo-arriba { position: absolute; left: 0; right: 0; top: 0; height: 430px; background: linear-gradient(#0a0a0a 0%, rgba(10,10,10,.82) 52%, rgba(10,10,10,0) 100%); }
+      .velo-abajo { position: absolute; left: 0; right: 0; bottom: 0; height: 330px; background: linear-gradient(rgba(10,10,10,0), rgba(10,10,10,.9) 60%, #0a0a0a); }
+      .placa { position: absolute; inset: 0; }
+      .kicker { position: absolute; left: 72px; top: 76px; font-size: 26px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--lima); }
+      .tit { position: absolute; left: 72px; right: 72px; top: 122px; font-size: 82px; font-weight: 800; line-height: 1.02; letter-spacing: -1.6px; }
+      .tit .l { display: block; }
+      .tit em { font-style: normal; color: var(--lima); }
+      .sub { position: absolute; left: 72px; right: 110px; font-size: 34px; font-weight: 500; line-height: 1.3; color: var(--tenue); }
+      .sub b { color: var(--tinta); font-weight: 700; }
+      .pie { position: absolute; left: 72px; right: 72px; bottom: 64px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+      .pie img { height: 38px; width: auto; display: block; }
+      .desliza { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 30px; color: #111; background: var(--lima); padding: 12px 20px 12px 26px; border-radius: 999px; }
+      .desliza svg { width: 30px; height: 30px; display: block; }
+      .nota { position: absolute; left: 72px; right: 72px; bottom: 122px; font-size: 22px; font-weight: 500; color: rgba(236,235,233,.5); }
+      .vende { position: absolute; display: flex; flex-direction: column; padding: 18px 28px; border-radius: 22px; background: var(--lima); color: #111; transform-origin: 50% 0%; }
+      .vende .nom { font-size: 28px; font-weight: 700; }
+      .vende .pre { font-size: 56px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+      .tarjeta { position: absolute; display: flex; flex-direction: column; padding: 18px 26px; border-radius: 22px; background: rgba(22,22,22,.94); border: 2px solid var(--borde); }
+      .tarjeta .nom { font-size: 28px; font-weight: 600; color: var(--tenue); white-space: nowrap; }
+      .tarjeta .pre { font-size: 58px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; white-space: nowrap; }
+      .contador { position: absolute; left: 72px; bottom: 170px; display: flex; align-items: baseline; gap: 18px; }
+      .contador .nom { font-size: 36px; font-weight: 600; color: var(--tenue); }
+      .contador .num { display: inline-block; font-size: 92px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -2px; color: var(--lima); }
+      .gran { position: absolute; left: 72px; font-size: 168px; font-weight: 800; line-height: 1; letter-spacing: -5px; font-variant-numeric: tabular-nums; }
+      .leyenda { position: absolute; left: 72px; right: 72px; font-size: 36px; font-weight: 600; color: var(--tenue); }
+      .grilla { position: absolute; left: 72px; right: 72px; display: grid; grid-template-columns: repeat(15, 1fr); gap: 14px; }
+      .grilla i { display: block; aspect-ratio: 1; border-radius: 50%; border: 3px solid rgba(236,235,233,.2); }
+      .grilla i.on { border-color: var(--lima); background: radial-gradient(circle at 50% 50%, #f1c45e 0 40%, #d49a3c 41% 62%, #c2d602 63%); }
+      .remate { position: absolute; left: 72px; right: 72px; font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
+      .remate em { font-style: normal; color: var(--lima); }
+      .opcion { position: absolute; left: 72px; right: 72px; display: flex; align-items: center; gap: 26px; padding: 26px 30px; border-radius: 24px; background: var(--sup); border: 2px solid var(--borde); }
+      .opcion .ico { flex: 0 0 64px; height: 64px; border-radius: 18px; background: rgba(194,214,2,.14); display: flex; align-items: center; justify-content: center; }
+      .opcion .ico svg { width: 36px; height: 36px; display: block; }
+      .opcion .txt { display: block; font-size: 36px; font-weight: 700; line-height: 1.2; }
+      .opcion .txt em { font-style: normal; color: var(--lima); }
+      .panel { position: absolute; left: 72px; right: 72px; top: 380px; border-radius: 32px; background: #141414; border: 2px solid rgba(236,235,233,.14); padding: 34px; box-shadow: 0 40px 90px rgba(0,0,0,.6); }
+      .panel .cab { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+      .panel .plato { font-size: 36px; font-weight: 800; }
+      .panel .eti { font-size: 24px; font-weight: 700; color: #111; background: var(--lima); padding: 8px 16px; border-radius: 999px; }
+      .renglon { display: flex; align-items: center; gap: 18px; margin-top: 26px; font-size: 34px; font-weight: 600; }
+      .renglon svg { flex: 0 0 40px; width: 40px; height: 40px; display: block; }
+      .renglon b { color: var(--lima); font-weight: 800; }
+      .cta { position: absolute; left: 72px; right: 72px; bottom: 150px; display: flex; align-items: center; gap: 26px; }
+      .chip { background: var(--lima); color: #111; font-weight: 800; font-size: 40px; padding: 22px 36px; border-radius: 999px; white-space: nowrap; }
+      .web { font-size: 34px; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1350">
+      <canvas id="gl" width="1080" height="1350" class="clip" data-start="0" data-duration="6" data-track-index="0"></canvas>
+      <div id="velo" class="velo clip" data-start="0" data-duration="6" data-track-index="1">
+        <div class="velo-arriba"></div>
+        <div class="velo-abajo"></div>
+      </div>
+
+      <!-- 4 · por tu tienda -->
+      <section id="p4" class="placa clip" data-start="0" data-duration="6" data-track-index="2">
+        <div class="kicker">Por tu tienda</div>
+        <h2 class="tit"><span class="l">Con Colmen, la pizza</span><span class="l"><em>te queda entera.</em></span></h2>
+        <div class="tarjeta" id="p4-app" style="left: 600px; top: 350px"><span class="nom">Comisión por venta</span><span class="pre">$0</span></div>
+        <div class="contador"><span class="nom">Te quedan</span><span class="num" id="p4-num">$15.000</span></div>
+        <div class="nota">Si te pagan con Mercado Pago, MP cobra su comisión por el cobro.</div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /></div>
+      </section>
+
+      
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+      import { porciones } from "./assets/porciones.js";
+      // el render espera a que el modelo esté cargado y cortado
+      let listo; window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["pizza"] = new Promise((ok) => (listo = ok));
+      // ── utilidades deterministas
+      const cl = (x) => Math.max(0, Math.min(1, x));
+      const pr = (t, a, d) => cl((t - a) / d);
+      const eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const eo = (x) => 1 - Math.pow(1 - x, 3);
+      const ei = (x) => x * x * x;
+      const mix = (a, b, k) => a + (b - a) * k;
+      const plata = (n) => "$" + Math.round(n).toLocaleString("es-AR");
+
+      // ── motor
+      const canvas = document.getElementById("gl");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1);
+      renderer.setSize(1080, 1350, false);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      const escena = new THREE.Scene();
+      escena.background = new THREE.Color(0x0a0a0a);
+      escena.fog = new THREE.Fog(0x0a0a0a, 11, 22);
+      const cam = new THREE.PerspectiveCamera(30, 1080 / 1350, 0.05, 60);
+
+      // misma luz en clave baja que el carrusel de la hamburguesa
+      const hemi = new THREE.HemisphereLight(0xfff0dc, 0x0a0a0a, 0.3); escena.add(hemi);
+      const key = new THREE.SpotLight(0xffe2bf, 70, 20, 0.6, 0.75, 1.6);
+      key.position.set(-2.6, 6.2, 3.2); key.target.position.set(0, 0, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
+      escena.add(key, key.target);
+      const rim = new THREE.SpotLight(0xc2d602, 9, 14, 0.6, 0.9, 1.6);
+      rim.position.set(3.2, 2.2, -3.4); rim.target.position.set(0, 0, 0); escena.add(rim, rim.target);
+      const relleno = new THREE.PointLight(0xffd7a8, 2.4, 9, 2); relleno.position.set(2.4, 1.6, 3.6); escena.add(relleno);
+      const mesada = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.MeshStandardMaterial({ color: 0x151311, roughness: 0.85 }));
+      mesada.rotation.x = -Math.PI / 2; mesada.receiveShadow = true; escena.add(mesada);
+
+      // ── pizza REAL: modelo "Pizza" de erebus3d (Sketchfab, CC BY). Trae la pizza y la tabla;
+      // la pizza se corta en 8 porciones con cortes rectos y tapa en el corte (assets/porciones.js).
+      const gl = await new GLTFLoader().loadAsync("assets/pizza.glb");
+      gl.scene.updateMatrixWorld(true);
+      let tabla, pizza;
+      gl.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        const g = o.geometry.clone(); g.applyMatrix4(o.matrixWorld);
+        if (o.material.isMeshStandardMaterial) o.material.envMapIntensity = 0;
+        if (o.geometry.attributes.position.count < 10000) tabla = { g, m: o.material }; else pizza = { g, m: o.material };
+      });
+      pizza.g.computeBoundingBox();
+      const bb = pizza.g.boundingBox, cx = (bb.min.x + bb.max.x) / 2, cz = (bb.min.z + bb.max.z) / 2;
+      pizza.g.translate(-cx, -bb.min.y, -cz); tabla.g.translate(-cx, -bb.min.y, -cz);
+      {
+        // la pizza viene hundida en la tabla: bajar la tabla hasta que su superficie quede bajo la pizza
+        const P = tabla.g.attributes.position, RR = Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z) / 2; let sup = -Infinity;
+        for (let i = 0; i < P.count; i++) if (Math.hypot(P.getX(i), P.getZ(i)) < RR * 0.95) sup = Math.max(sup, P.getY(i));
+        tabla.g.translate(0, -Math.max(0, sup), 0);
+      }
+      // las 2 porciones de la app (0 y 1) quedan adelante a la derecha, mirando a cámara
+      const { porciones: PZ, R } = porciones(pizza.g, 8, -0.15);
+      const ESC = 1.3 / R;
+      const raiz = new THREE.Group(); raiz.scale.setScalar(ESC); escena.add(raiz);
+      tabla.g.computeBoundingBox(); raiz.position.y = -tabla.g.boundingBox.min.y * ESC;
+      const tablaM = new THREE.Mesh(tabla.g, tabla.m); tablaM.receiveShadow = true; raiz.add(tablaM);
+      const capMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, side: THREE.DoubleSide });
+      const porc = PZ.map((p) => {
+        const g = new THREE.Group();
+        const m = new THREE.Mesh(p.geo, pizza.m); m.castShadow = m.receiveShadow = true; g.add(m);
+        for (const tp of p.tapas) { const c = new THREE.Mesh(tp, capMat); c.castShadow = true; g.add(c); }
+        raiz.add(g); return { g, mitad: p.mitad };
+      });
+
+      // ── cámara por placa
+      const CAMS = [
+        { p: [0.0, 5.0, 6.4], m: [0, 0.75, -0.3] },   // 1 portada: pizza abajo, título arriba
+        { p: [0.2, 5.2, 6.6], m: [0.2, 0.55, -0.3] },  // 2 la app se lleva
+        { p: [0.0, 9.5, 6.0], m: [0, -1.6, -1.2] },   // 3 en un mes: lejos y en penumbra
+        { p: [0.2, 5.2, 6.6], m: [0.2, 0.55, -0.3] },  // 4 por tu tienda
+        { p: [0.0, 9.5, 6.0], m: [0, -1.6, -1.2] },  // 5
+        { p: [0.0, 9.5, 6.0], m: [0, -1.6, -1.2] },  // 6
+      ];
+      const nivel = [1, 1, 0.07, 1, 0.12, 0.3];
+      const placaDe = (t) => Math.min(5, Math.floor(t / 6));
+      const estado = (t) => {
+        const k = placaDe(t), u = t - k * 6, a = CAMS[Math.max(0, k - 1)], b = CAMS[k];
+        const w = k === 0 ? 1 : eio(pr(u, 0, 0.9));
+        const v = (q) => [0, 1, 2].map((i) => mix(a[q][i], b[q][i], w));
+        const dim = k === 0 ? 1 : mix(nivel[k - 1], nivel[k], w);
+        return { k, u, p: v("p"), m: v("m"), dim };
+      };
+      // dónde está cada porción de la app: 0 = en la pizza, 1 = afuera, rumbo a la app (arriba a la derecha)
+      const fuera = (t) => {
+        if (t < 6) return 0;
+        if (t < 18) return pr(t, 7.0, 2.2);
+        return 1 - pr(t, 19.0, 1.8);
+      };
+      const aplicar = (t) => {
+        const s = estado(t);
+        const push = 1 - 0.04 * eio(pr(s.u, 0.9, 5.1));
+        const az = Math.sin(t * 0.11) * 0.12;
+        const dx = s.p[0] - s.m[0], dz = s.p[2] - s.m[2];
+        const rx = dx * Math.cos(az) - dz * Math.sin(az), rz = dx * Math.sin(az) + dz * Math.cos(az);
+        cam.position.set(s.m[0] + rx * push, s.m[1] + (s.p[1] - s.m[1]) * push, s.m[2] + rz * push);
+        cam.lookAt(s.m[0], s.m[1], s.m[2]);
+        raiz.rotation.y = 0;
+        const f = fuera(t);
+        porc.forEach((p, i) => {
+          if (i > 1) return;
+          // primero se separa hacia afuera, después vuela arriba a la derecha (hacia la tarjeta de la app)
+          const sep = eo(cl(f / 0.35)), vuelo = ei(cl((f - 0.35) / 0.65));
+          const d = R * (0.22 * sep), h = R * (0.12 * sep);
+          p.g.position.set(Math.cos(p.mitad) * d + R * 5.5 * vuelo, h + R * 4.2 * vuelo, Math.sin(p.mitad) * d - R * 3.0 * vuelo);
+          p.g.rotation.set(-0.5 * vuelo, 0.6 * vuelo * (i ? 1 : 0.7), 0.35 * vuelo);
+          p.g.visible = vuelo < 0.999;
+        });
+        key.intensity = 70 * s.dim; rim.intensity = 9 * s.dim; relleno.intensity = 2.4 * s.dim; hemi.intensity = 0.3 * s.dim;
+        renderer.render(escena, cam);
+      };
+
+      // ── grilla de 75 pizzas de la placa 3
+      const bolitas = [];
+
+      // ── contadores (función pura del tiempo)
+      const contar = (t) => {
+                const v3 = 1500000 * eio(pr(t, 13.0, 2.6));
+                const on = Math.floor(v3 / 20000 + 1e-6);
+        bolitas.forEach((b, i) => b.classList.toggle("on", i < on));
+        document.getElementById("p4-num").textContent = plata(15000 + 5000 * eo(pr(t, 20.1, 0.9)));
+      };
+      const dibujar = (t) => { t = Math.min(23.999, t + 18); aplicar(t); contar(t); };
+
+      // ── timeline GSAP para la tipografía y las tarjetas
+      const tl = gsap.timeline({ paused: true });
+      // 1
+                  // 2
+                                    // 3
+                                          // 4
+      tl.fromTo("#p4 .tit .l", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 0.05);
+      tl.fromTo("#p4 .contador", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.50);
+      tl.fromTo("#p4-app", { opacity: 0, scale: 0.8, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2)" }, 2.60);
+      tl.fromTo("#p4-num", { scale: 1 }, { scale: 1.1, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "0% 50%" }, 3.00);
+      tl.fromTo("#p4 .nota", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 3.40);
+      // 5
+                        // 6
+                        
+      tl.eventCallback("onUpdate", () => dibujar(tl.time()));
+      window.addEventListener("hf-seek", (e) => dibujar(e.detail.time));
+      dibujar(0);
+      tl.seek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      listo();
+    </script>
+  </body>
+</html>
