@@ -78,6 +78,7 @@
       .rep .cobra .y { font-size: 20px; color: #e8d2a8; margin-top: 2px; }
       .rep .prods { position: absolute; left: 26px; right: 26px; top: 580px; font-size: 22px; color: #b0b0b0; display: flex; justify-content: space-between; }
       .rep .acc { position: absolute; left: 0; right: 0; bottom: 0; height: 108px; background: var(--lima); color: #111; display: grid; place-items: center; font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+      .rep .acc .accl { position: absolute; inset: 0; display: grid; place-items: center; }
       .aviso { position: absolute; left: 14px; right: 14px; top: 40px; padding: 16px 18px; border-radius: 22px; background: #262626; border: 1.5px solid #3a3a3a; display: flex; gap: 14px; align-items: center; box-shadow: 0 16px 34px rgba(0,0,0,.6); }
       .aviso .i { width: 50px; height: 50px; border-radius: 14px; background: var(--lima); display: grid; place-items: center; flex: none; }
       .aviso .i svg { width: 30px; height: 30px; }
@@ -170,7 +171,7 @@
               </div>
               <div class="cobra"><div class="x">● COBRÁS $18.400</div><div class="y">en efectivo</div></div>
               <div class="prods"><span>3 productos</span><span>⌄</span></div>
-              <div class="acc">LLEGUÉ</div>
+              <div class="acc"><span id="p5-b1" class="accl">RETIRÉ EL PEDIDO</span><span id="p5-b2" class="accl">LLEGUÉ</span><span id="p5-b3" class="accl">✓ ENTREGADO</span></div><div class="dedo" id="p5-dedo" style="background: rgba(255,255,255,.6); border-color: #111; box-shadow: 0 0 24px rgba(0,0,0,.4); left: 50%; bottom: 0; top: auto; margin: 0 0 20px -35px"></div>
             </div>
             <div id="p5-aviso" class="aviso"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3" /><circle cx="18" cy="17" r="3" /><path d="M9 17h6l-2-7h-3M15 10h3l2 4" /></svg></div><div><div class="t1">Te asignaron un pedido</div><div class="t2">#CO-0024 · Av. Rivadavia</div></div></div>
           </div>
@@ -243,10 +244,12 @@
       const pdf = `<div class="pdf" id="p2-pdf"><div class="barra">carta.pdf <span style="margin-left:auto">1 / 4</span></div><div class="hoja"><h6>— CARTA —</h6>${Array.from({ length: 30 }, (_, i) => `<p><span>${["Milanesa napolitana c/ guarnición", "Ravioles de ricota s/ salsa", "Bife de chorizo 400 g", "Ensalada mixta", "Flan casero c/ dulce", "Gaseosa línea Coca 1,5 L"][i % 6]}</span><span>$${(4100 + ((i * 937) % 9000)).toLocaleString("es-AR")}</span></p>`).join("")}</div><div class="hoja2"></div></div>`;
       iphone("p2-tel", img("assets/carta-2.jpg", "p2-c2") + img("assets/carta-1.jpg", "p2-c1") + pdf);
       const g3 = iphone("p3-tel", [1, 2, 3, 4, 5, 6].map((i) => img(`assets/tp-${i}.jpg`, `p3-f${i}`)).join("") + `<div class="dedo" id="p3-dedo"></div>`);
-      iphone("p5-tel", Array.from({ length: 40 }, (_, i) => img(`assets/mapa/m${String(i).padStart(2, "0")}.jpg`, `p5-m${i}`, "opacity:0")).join(""));
+      iphone("p5-tel", Array.from({ length: 120 }, (_, i) => img(`assets/mapa/m${String(i).padStart(3, "0")}.jpg`, `p5-m${i}`, "opacity:0")).join(""));
 
       const tp = [1, 2, 3, 4, 5, 6].map((i) => document.getElementById(`p3-f${i}`));
-      const mapa = Array.from({ length: 40 }, (_, i) => document.getElementById(`p5-m${i}`));
+      const mapa = Array.from({ length: 120 }, (_, i) => document.getElementById(`p5-m${i}`));
+      const sio = (x) => 0.5 - 0.5 * Math.cos(Math.PI * x);
+      const dedo5 = document.getElementById("p5-dedo");
       const dedo = document.getElementById("p3-dedo");
       // toques del mozo (segundos absolutos, posición relativa a la pantalla del celular)
       const toques = [
@@ -265,8 +268,13 @@
         dedo.style.top = dy * 100 + "%";
         dedo.style.transform = `scale(${1.25 - 0.25 * d})`;
         // 5 · la moto avanza en el mapa (40 cuadros entre 24,6 s y 29,4 s)
-        const m = Math.min(39, Math.floor(pr(t, 24.6, 4.8) * 39.999));
+        // 120 cuadros en 3,8 s ≈ 31 fps, con arranque y frenada suaves (la moto sale cuando el repartidor toca "Retiré")
+        const m = Math.min(119, Math.round(sio(pr(t, 25.55, 3.8)) * 119));
         mapa.forEach((f, i) => (f.style.opacity = i === m ? 1 : 0));
+        let d5 = 0;
+        [25.35, 29.5].forEach((a) => { const u = (t - a + 0.25) / 0.55; if (u > 0 && u < 1) d5 = Math.sin(u * Math.PI); });
+        dedo5.style.opacity = d5;
+        dedo5.style.transform = `scale(${1.25 - 0.25 * d5})`;
       };
 
       const tl = gsap.timeline({ paused: true });
@@ -301,12 +309,20 @@
       tl.fromTo("#p4-e1", { scale: 1 }, { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, 20.3);
       // 5
       entra("#p5 .tit .l", 24.05);
-      tl.fromTo("#p5-tel", { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 24.2);
-      tl.fromTo("#p5-and", { x: 140, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 24.5);
-      tl.fromTo("#p5-aviso", { y: -160, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }, 25.4);
-      tl.to("#p5-aviso", { y: -160, opacity: 0, duration: 0.4, ease: "power2.in" }, 27.4);
-      tl.fromTo("#p5-c1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 25.8);
-      tl.fromTo("#p5-c2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 26.3);
+      tl.fromTo("#p5-tel", { y: 90, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.9, ease: "expo.out" }, 24.15);
+      tl.fromTo("#p5-and", { y: 90, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.9, ease: "expo.out" }, 24.3);
+      tl.fromTo("#p5-tel", { y: 0 }, { y: -14, duration: 4.6, ease: "sine.inOut" }, 25.05);
+      tl.fromTo("#p5-and", { y: 0 }, { y: 14, duration: 4.6, ease: "sine.inOut" }, 25.2);
+      // el repartidor recibe el aviso, toca "Retiré" y la moto sale; al llegar toca "Llegué"
+      tl.fromTo("#p5-aviso", { yPercent: -150, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 24.6);
+      tl.to("#p5-aviso", { yPercent: -150, opacity: 0, duration: 0.45, ease: "power3.in" }, 25.15);
+      tl.set("#p5-b2, #p5-b3", { opacity: 0 }, 24);
+      tl.to("#p5-b1", { yPercent: -60, opacity: 0, duration: 0.3, ease: "power2.in" }, 25.4);
+      tl.fromTo("#p5-b2", { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 25.6);
+      tl.to("#p5-b2", { yPercent: -60, opacity: 0, duration: 0.3, ease: "power2.in" }, 29.55);
+      tl.fromTo("#p5-b3", { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 29.7);
+      tl.fromTo("#p5-c1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 25.9);
+      tl.fromTo("#p5-c2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 26.1);
       // 6
       entra("#p6 .tit .l", 30.05);
       tl.fromTo("#p6 .sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 30.35);
