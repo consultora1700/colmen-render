@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <title>Tecnología en tu local</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "DM Sans";
+        src: url("assets/dmsans.woff2") format("woff2");
+        font-weight: 400 800;
+        font-display: block;
+      }
+      :root {
+        --fondo: #0a0a0a;
+        --tinta: #ecebe9;
+        --tenue: rgba(236, 235, 233, 0.62);
+        --lima: #c2d602;
+        --sup: #161616;
+        --borde: rgba(236, 235, 233, 0.12);
+        --ambar: #f5a524;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1350px; overflow: hidden; background: var(--fondo); }
+      body { font-family: "DM Sans", system-ui, sans-serif; color: var(--tinta); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--fondo); }
+      .placa { position: absolute; inset: 0; overflow: hidden; }
+      .halo { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(194,214,2,.16), rgba(194,214,2,0)); pointer-events: none; }
+      .kicker { position: absolute; left: 72px; top: 76px; font-size: 26px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--lima); }
+      .tit { position: absolute; left: 72px; right: 72px; top: 122px; font-size: 76px; font-weight: 800; line-height: 1.03; letter-spacing: -1.6px; }
+      .tit .l { display: block; }
+      .tit em { font-style: normal; color: var(--lima); }
+      .sub { position: absolute; left: 72px; right: 72px; font-size: 34px; font-weight: 500; line-height: 1.3; color: var(--tenue); }
+      .sub b { color: var(--tinta); font-weight: 700; }
+      .pie { position: absolute; left: 72px; right: 72px; bottom: 64px; height: 44px; display: flex; align-items: center; justify-content: space-between; }
+      .pie img { height: 38px; width: auto; display: block; }
+      .desliza { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 30px; color: #111; background: var(--lima); padding: 12px 20px 12px 26px; border-radius: 999px; }
+      .desliza svg { width: 30px; height: 30px; display: block; }
+
+      /* equipos */
+      .tel { position: absolute; filter: drop-shadow(0 50px 70px rgba(0,0,0,.65)); }
+      .tel .pant { position: absolute; overflow: hidden; background: #fff; }
+      .tel .pant img, .tel .pant .cuadro { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+      .tel .marco { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+      .monitor { position: absolute; border-radius: 16px; background: linear-gradient(160deg,#2a2a2a,#0b0b0b 30%,#050505 70%,#1d1d1d); box-shadow: inset 0 0 0 2px #3b3b3b, 0 50px 90px rgba(0,0,0,.7); }
+      .monitor .pant { position: absolute; left: 16px; top: 16px; right: 16px; bottom: 26px; overflow: hidden; border-radius: 4px; }
+      .monitor .pant img { width: 100%; height: 100%; display: block; object-fit: cover; }
+      .android { position: absolute; border-radius: 54px; background: #1c1c1c; box-shadow: inset 0 0 0 3px #3a3a3a, inset 0 0 0 9px #0c0c0c, 0 50px 80px rgba(0,0,0,.7); }
+      .android .pant { position: absolute; left: 14px; top: 14px; right: 14px; bottom: 14px; border-radius: 42px; overflow: hidden; background: #111; }
+      .android .cam { position: absolute; left: 50%; top: 18px; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: #000; box-shadow: inset 0 0 0 3px #222; z-index: 5; }
+      .dedo { position: absolute; width: 70px; height: 70px; margin: -35px 0 0 -35px; border-radius: 50%; background: rgba(194,214,2,.45); border: 4px solid var(--lima); box-shadow: 0 0 30px rgba(194,214,2,.6); opacity: 0; }
+      .chipv { position: absolute; display: flex; align-items: center; gap: 16px; padding: 16px 30px 16px 16px; border-radius: 999px; background: rgba(28,28,28,.92); border: 2px solid rgba(236,235,233,.18); box-shadow: 0 24px 50px rgba(0,0,0,.55); font-size: 32px; font-weight: 700; white-space: nowrap; }
+      .chipv .ico { width: 52px; height: 52px; border-radius: 50%; background: var(--lima); color: #111; display: grid; place-items: center; flex: none; }
+      .chipv .ico.mal { background: #e5484d; color: #fff; }
+      .chipv .ico svg { width: 30px; height: 30px; display: block; }
+
+      /* PDF feo */
+      .pdf { position: absolute; inset: 0; background: #525659; }
+      .pdf .barra { position: absolute; left: 0; right: 0; top: 0; height: 9%; background: #323639; color: #ddd; font-size: 15px; display: flex; align-items: flex-end; padding: 0 16px 10px; gap: 10px; }
+      .pdf .hoja { position: absolute; left: 7%; top: 13%; width: 86%; height: 62%; background: #fbfbf8; padding: 16px 14px; box-shadow: 0 4px 10px rgba(0,0,0,.4); }
+      .pdf .hoja h6 { font-family: Georgia, serif; font-size: 15px; text-align: center; color: #333; margin-bottom: 10px; letter-spacing: 2px; }
+      .pdf .hoja p { display: flex; justify-content: space-between; font-family: Georgia, serif; font-size: 7.5px; color: #555; line-height: 1.75; border-bottom: 1px dotted #bbb; }
+      .pdf .hoja2 { position: absolute; left: 7%; top: 78%; width: 86%; height: 30%; background: #fbfbf8; }
+
+      /* app del repartidor (recreada según la spec del APK) */
+      .rep { position: absolute; inset: 0; background: #111; color: #ecebe9; font-family: "DM Sans", sans-serif; }
+      .rep .top { position: absolute; left: 0; right: 0; top: 0; padding: 62px 26px 18px; display: flex; align-items: center; gap: 16px; font-size: 26px; font-weight: 700; border-bottom: 1px solid #222; font-variant-numeric: tabular-nums; }
+      .rep .dir { position: absolute; left: 26px; right: 26px; top: 150px; }
+      .rep .dir .a { font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -.5px; }
+      .rep .dir .b { font-size: 26px; font-weight: 500; margin-top: 8px; }
+      .rep .dir .c { font-size: 22px; color: #b0b0b0; margin-top: 6px; }
+      .rep .bts { position: absolute; left: 26px; right: 26px; top: 340px; display: flex; gap: 14px; }
+      .rep .bts div { flex: 1; height: 76px; border-radius: 16px; background: #1a1a1a; border: 1.5px solid #2c2c2c; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 24px; font-weight: 700; }
+      .rep .bts svg { width: 26px; height: 26px; }
+      .rep .cobra { position: absolute; left: 26px; right: 26px; top: 446px; padding: 18px 22px; border-radius: 16px; background: rgba(245,165,36,.14); border: 2px solid var(--ambar); }
+      .rep .cobra .x { font-size: 26px; font-weight: 800; color: var(--ambar); font-variant-numeric: tabular-nums; }
+      .rep .cobra .y { font-size: 20px; color: #e8d2a8; margin-top: 2px; }
+      .rep .prods { position: absolute; left: 26px; right: 26px; top: 580px; font-size: 22px; color: #b0b0b0; display: flex; justify-content: space-between; }
+      .rep .acc { position: absolute; left: 0; right: 0; bottom: 0; height: 108px; background: var(--lima); color: #111; display: grid; place-items: center; font-size: 28px; font-weight: 800; letter-spacing: 1px; }
+      .aviso { position: absolute; left: 14px; right: 14px; top: 40px; padding: 16px 18px; border-radius: 22px; background: #262626; border: 1.5px solid #3a3a3a; display: flex; gap: 14px; align-items: center; box-shadow: 0 16px 34px rgba(0,0,0,.6); }
+      .aviso .i { width: 50px; height: 50px; border-radius: 14px; background: var(--lima); display: grid; place-items: center; flex: none; }
+      .aviso .i svg { width: 30px; height: 30px; }
+      .aviso .t1 { font-size: 21px; font-weight: 800; }
+      .aviso .t2 { font-size: 18px; color: #b0b0b0; margin-top: 2px; }
+
+      /* plata */
+      .caja { position: absolute; left: 72px; right: 72px; border-radius: 28px; background: #141414; border: 2px solid rgba(236,235,233,.13); padding: 26px 30px; box-shadow: 0 30px 70px rgba(0,0,0,.55); }
+      .caja .cab { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .caja .cab .n { display: flex; align-items: center; gap: 14px; font-size: 32px; font-weight: 800; }
+      .caja .cab .n svg { width: 36px; height: 36px; display: block; }
+      .caja .cab .tot { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.5px; }
+      .caja .exp { font-size: 22px; color: rgba(236,235,233,.55); margin-top: 6px; }
+      .fila { display: flex; align-items: center; gap: 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(236,235,233,.09); }
+      .fila .q { flex: 1; min-width: 0; }
+      .fila .q .a { font-size: 28px; font-weight: 700; }
+      .fila .q .b { font-size: 21px; color: rgba(236,235,233,.55); margin-top: 2px; font-variant-numeric: tabular-nums; }
+      .fila .m { font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; }
+      .fila .bt { font-size: 21px; font-weight: 700; padding: 10px 18px; border-radius: 12px; border: 2px solid rgba(236,235,233,.25); }
+      .eti { font-size: 17px; font-weight: 700; letter-spacing: 2px; color: rgba(236,235,233,.55); text-transform: uppercase; text-align: right; }
+
+      /* cierre */
+      .modulos { position: absolute; left: 72px; right: 72px; top: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      .modulos div { display: flex; align-items: center; gap: 20px; padding: 26px 26px; border-radius: 24px; background: var(--sup); border: 2px solid var(--borde); font-size: 36px; font-weight: 800; }
+      .modulos svg { width: 44px; height: 44px; flex: none; }
+      .cta { position: absolute; left: 72px; right: 72px; bottom: 150px; display: flex; align-items: center; gap: 26px; }
+      .chip { background: var(--lima); color: #111; font-weight: 800; font-size: 40px; padding: 22px 36px; border-radius: 999px; white-space: nowrap; }
+      .web { font-size: 36px; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="42" data-width="1080" data-height="1350">
+      <!-- 1 · portada -->
+      <section id="p1" class="placa clip" data-start="0" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 120px; top: 520px; width: 1000px; height: 1000px"></div>
+        <div id="p1-mon" class="monitor" style="left: 250px; top: 600px; width: 880px; height: 521px"><div class="pant"><img src="assets/kds.jpg" alt="" /></div></div>
+        <div id="p1-tel" class="tel" data-alto="760" style="left: 80px; top: 470px"></div>
+        <div class="kicker">Tecnología en tu local</div>
+        <h1 class="tit"><span class="l">Lo que cambia cuando</span><span class="l">tu local tiene un</span><span class="l"><em>sistema de verdad.</em></span></h1>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /><div id="p1-desliza" class="desliza">Deslizá<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></div></div>
+      </section>
+
+      <!-- 2 · la carta -->
+      <section id="p2" class="placa clip" data-start="6" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 280px; top: 560px; width: 900px; height: 900px"></div>
+        <div class="kicker">01 · La carta</div>
+        <h2 class="tit"><span class="l">Nada de PDF feo.</span></h2>
+        <p class="sub" style="top: 222px">Escanean el QR y se abre <b>la carta del día</b>: fotos, precios, y piden desde el celular.</p>
+        <div id="p2-tel" class="tel" data-alto="900" style="left: 318px; top: 400px"></div>
+        <div id="p2-mal" class="chipv" style="left: 72px; top: 520px"><span class="ico mal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></span>carta.pdf</div>
+        <div id="p2-bien" class="chipv" style="left: 600px; top: 1040px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>Pedido a cocina</div>
+      </section>
+
+      <!-- 3 · el mozo -->
+      <section id="p3" class="placa clip" data-start="12" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 200px; top: 560px; width: 900px; height: 900px"></div>
+        <div class="kicker">02 · El mozo</div>
+        <h2 class="tit"><span class="l">¿No quieren pedir</span><span class="l">por el celular?</span></h2>
+        <p class="sub" style="top: 300px">El mozo lo carga <b>desde el suyo</b> y la comanda sale igual a cocina.</p>
+        <div id="p3-tel" class="tel" data-alto="860" style="left: 318px; top: 450px"></div>
+        <div id="p3-ok" class="chipv" style="left: 560px; top: 1150px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>Enviado a cocina</div>
+      </section>
+
+      <!-- 4 · la cocina -->
+      <section id="p4" class="placa clip" data-start="18" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 90px; top: 520px; width: 900px; height: 900px"></div>
+        <div class="kicker">03 · La cocina</div>
+        <h2 class="tit"><span class="l">Cada estación</span><span class="l">ve solo <em>lo suyo.</em></span></h2>
+        <p class="sub" style="top: 300px">Cada comanda llega a la pantalla de la estación que la prepara.</p>
+        <div id="p4-mon" class="monitor" style="left: 40px; top: 560px; width: 1000px; height: 592px"><div class="pant"><img src="assets/kds.jpg" alt="" /></div></div>
+        <div id="p4-e1" class="chipv" style="left: 72px; top: 1180px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-4 2-5 0 2 1 3 2 3 0-3-1-5 1-8z" /></svg></span>Parrilla</div>
+        <div id="p4-e2" class="chipv" style="left: 400px; top: 1180px; opacity: .5"><span class="ico" style="background:#333;color:#ecebe9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1 18H8zM7.5 9h9" /></svg></span>Barra</div>
+        <div id="p4-e3" class="chipv" style="left: 690px; top: 1180px; opacity: .5"><span class="ico" style="background:#333;color:#ecebe9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14l-2 9H7zM8 11a4 4 0 0 1 8 0" /></svg></span>Postres</div>
+      </section>
+
+      <!-- 5 · el delivery -->
+      <section id="p5" class="placa clip" data-start="24" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 0px; top: 560px; width: 900px; height: 900px"></div>
+        <div class="kicker">04 · El delivery</div>
+        <h2 class="tit"><span class="l">Mientras tanto, el</span><span class="l">delivery <em>sigue saliendo.</em></span></h2>
+        <div id="p5-tel" class="tel" data-alto="820" style="left: 72px; top: 345px"></div>
+        <div id="p5-and" class="android" style="left: 600px; top: 375px; width: 390px; height: 790px">
+          <div class="pant">
+            <div class="rep">
+              <div class="top"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6" /></svg>#CO-0024</div>
+              <div class="dir"><div class="a">Av. Rivadavia 4821</div><div class="b">Piso 3, depto B</div><div class="c">Marina S.</div></div>
+              <div class="bts">
+                <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>Llamar</div>
+                <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8z" /></svg>Navegar</div>
+              </div>
+              <div class="cobra"><div class="x">● COBRÁS $18.400</div><div class="y">en efectivo</div></div>
+              <div class="prods"><span>3 productos</span><span>⌄</span></div>
+              <div class="acc">LLEGUÉ</div>
+            </div>
+            <div id="p5-aviso" class="aviso"><div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3" /><circle cx="18" cy="17" r="3" /><path d="M9 17h6l-2-7h-3M15 10h3l2 4" /></svg></div><div><div class="t1">Te asignaron un pedido</div><div class="t2">#CO-0024 · Av. Rivadavia</div></div></div>
+          </div>
+          <div class="cam"></div>
+        </div>
+        <div id="p5-c1" class="chipv" style="left: 60px; top: 1205px; font-size: 28px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg></span>Tu cliente lo sigue en vivo</div>
+        <div id="p5-c2" class="chipv" style="left: 600px; top: 1205px; font-size: 28px"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5" /><path d="M11 18h2" /></svg></span>App del repartidor</div>
+      </section>
+
+      <!-- 6 · la plata -->
+      <section id="p6" class="placa clip" data-start="30" data-duration="6" data-track-index="1">
+        <div class="kicker">05 · La plata</div>
+        <h2 class="tit"><span class="l"><em>Cuentas claras.</em></span></h2>
+        <p class="sub" style="top: 222px">Sabés dónde está cada peso, sin esperar al cierre.</p>
+        <div id="p6-a" class="caja" style="top: 360px">
+          <div class="cab"><div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3" /><circle cx="18" cy="17" r="3" /><path d="M9 17h6l-2-7h-3M15 10h3l2 4" /></svg>En la calle</div><div class="tot" style="color: #f5a524">$ 59.800</div></div>
+          <div class="exp">Efectivo que cada repartidor todavía no rindió.</div>
+          <div class="fila"><div class="q"><div class="a">Lucas</div><div class="b">3 pedidos</div></div><div class="m">$ 41.200</div><div class="bt">Recibir</div></div>
+          <div class="fila"><div class="q"><div class="a">Martín</div><div class="b">2 pedidos</div></div><div class="m">$ 18.600</div><div class="bt">Recibir</div></div>
+        </div>
+        <div id="p6-b" class="caja" style="top: 735px">
+          <div class="cab"><div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16M6 10v9M18 10v9M3 6h18" /></svg>Mesas abiertas</div></div>
+          <div class="fila"><div class="q"><div class="a">Mesa 3</div><div class="b">2 pedidos</div></div><div class="m">$ 37.400</div></div>
+          <div class="fila"><div class="q"><div class="a">Mesa 7</div><div class="b">1 pedido</div></div><div class="m">$ 22.900</div></div>
+        </div>
+        <div id="p6-c" class="caja" style="top: 1065px">
+          <div class="cab"><div class="n"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>Mozos al cerrar</div><div class="eti">A rendir</div></div>
+          <div class="fila"><div class="q"><div class="a">Sofía</div><div class="b">5 mesas</div></div><div class="m">$ 64.300</div></div>
+        </div>
+      </section>
+
+      <!-- 7 · cierre -->
+      <section id="p7" class="placa clip" data-start="36" data-duration="6" data-track-index="1">
+        <div class="halo" style="left: 90px; top: 300px; width: 900px; height: 900px"></div>
+        <h2 class="tit" style="top: 110px"><span class="l">Salón, cocina,</span><span class="l">delivery y caja.</span><span class="l"><em>En un solo sistema.</em></span></h2>
+        <div class="modulos">
+          <div id="p7-m1"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><path d="M14 14h3v3M21 14v7h-7" /></svg>Carta QR</div>
+          <div id="p7-m2"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5" /><path d="M11 18h2" /></svg>Mozos</div>
+          <div id="p7-m3"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>Cocina</div>
+          <div id="p7-m4"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3" /><circle cx="18" cy="17" r="3" /><path d="M9 17h6l-2-7h-3M15 10h3l2 4" /></svg>Delivery</div>
+          <div id="p7-m5" style="grid-column: span 2"><svg viewBox="0 0 24 24" fill="none" stroke="#c2d602" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2" /><circle cx="12" cy="12.5" r="2.5" /><path d="M6 9.5h.01M18 15.5h.01" /></svg>Caja y cuentas claras</div>
+        </div>
+        <p id="p7-rem" class="sub" style="top: 1000px; font-size: 44px; font-weight: 800; color: var(--tinta); line-height: 1.15">Colmen, el sistema que <span style="color: var(--lima)">tu negocio necesita.</span></p>
+        <div id="p7-cta" class="cta" style="bottom: 140px"><div class="chip">Probalo gratis 14 días</div><div class="web">colmen.com.ar</div></div>
+        <div class="pie"><img src="assets/logo.png" alt="Colmen" /></div>
+      </section>
+    </div>
+
+    <script>
+      let listo;
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["equipos"] = new Promise((ok) => (listo = ok));
+
+      const cl = (x) => Math.max(0, Math.min(1, x));
+      const pr = (t, a, d) => cl((t - a) / d);
+
+      // ── iPhone (marco real 1646×3354, pantalla 76,64 de 1492×3236)
+      function iphone(id, capas) {
+        const e = document.getElementById(id), alto = +e.dataset.alto, s = alto / 3354;
+        const sw = 1492 * s, sh = 3236 * s;
+        e.style.width = 1646 * s + "px";
+        e.style.height = alto + "px";
+        e.innerHTML = `<div class="pant" style="left:${76 * s}px;top:${64 * s}px;width:${sw}px;height:${sh}px;border-radius:${sw * 0.128}px">${capas}</div><img class="marco" src="assets/iphone15pro-negro.webp" alt="">`;
+        return { sw, sh, x: 76 * s, y: 64 * s };
+      }
+      const img = (src, id = "", st = "") => `<img src="${src}" ${id ? `id="${id}"` : ""} style="${st}" alt="">`;
+
+      iphone("p1-tel", img("assets/carta-1.jpg"));
+      const pdf = `<div class="pdf" id="p2-pdf"><div class="barra">carta.pdf <span style="margin-left:auto">1 / 4</span></div><div class="hoja"><h6>— CARTA —</h6>${Array.from({ length: 30 }, (_, i) => `<p><span>${["Milanesa napolitana c/ guarnición", "Ravioles de ricota s/ salsa", "Bife de chorizo 400 g", "Ensalada mixta", "Flan casero c/ dulce", "Gaseosa línea Coca 1,5 L"][i % 6]}</span><span>$${(4100 + ((i * 937) % 9000)).toLocaleString("es-AR")}</span></p>`).join("")}</div><div class="hoja2"></div></div>`;
+      iphone("p2-tel", img("assets/carta-2.jpg", "p2-c2") + img("assets/carta-1.jpg", "p2-c1") + pdf);
+      const g3 = iphone("p3-tel", [1, 2, 3, 4, 5, 6].map((i) => img(`assets/tp-${i}.jpg`, `p3-f${i}`)).join("") + `<div class="dedo" id="p3-dedo"></div>`);
+      iphone("p5-tel", Array.from({ length: 40 }, (_, i) => img(`assets/mapa/m${String(i).padStart(2, "0")}.jpg`, `p5-m${i}`, "opacity:0")).join(""));
+
+      const tp = [1, 2, 3, 4, 5, 6].map((i) => document.getElementById(`p3-f${i}`));
+      const mapa = Array.from({ length: 40 }, (_, i) => document.getElementById(`p5-m${i}`));
+      const dedo = document.getElementById("p3-dedo");
+      // toques del mozo (segundos absolutos, posición relativa a la pantalla del celular)
+      const toques = [
+        [13.3, 0.22, 0.671], [13.85, 0.22, 0.671], [14.4, 0.22, 0.751], [14.95, 0.22, 0.751], [15.5, 0.22, 0.512], [16.2, 0.5, 0.948],
+      ];
+
+      const dibujar = (t) => {
+        // 3 · cuadros reales de "Tomar pedido": cambia el cuadro al tocar
+        let k = 0;
+        toques.slice(0, 5).forEach(([a]) => { if (t >= a + 0.12) k++; });
+        tp.forEach((f, i) => (f.style.opacity = i === k ? 1 : 0));
+        let d = 0, dx = 0.5, dy = 0.5;
+        toques.forEach(([a, x, y]) => { const u = (t - a + 0.25) / 0.55; if (u > 0 && u < 1) { d = Math.sin(u * Math.PI); dx = x; dy = y; } });
+        dedo.style.opacity = d;
+        dedo.style.left = dx * 100 + "%";
+        dedo.style.top = dy * 100 + "%";
+        dedo.style.transform = `scale(${1.25 - 0.25 * d})`;
+        // 5 · la moto avanza en el mapa (40 cuadros entre 24,6 s y 29,4 s)
+        const m = Math.min(39, Math.floor(pr(t, 24.6, 4.8) * 39.999));
+        mapa.forEach((f, i) => (f.style.opacity = i === m ? 1 : 0));
+      };
+
+      const tl = gsap.timeline({ paused: true });
+      const entra = (sel, at, st = 0.12) => tl.fromTo(sel, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: st }, at);
+      // 1
+      entra("#p1 .tit .l", 0.15);
+      tl.fromTo("#p1-mon", { x: 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, 0.5);
+      tl.fromTo("#p1-tel", { y: 160, opacity: 0, rotation: -4 }, { y: 0, opacity: 1, rotation: 0, duration: 0.9, ease: "power3.out" }, 0.8);
+      tl.fromTo("#p1-tel", { y: 0 }, { y: -18, duration: 4, ease: "sine.inOut" }, 1.7);
+      tl.fromTo("#p1-desliza", { x: -16 }, { x: 0, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 7 }, 1.6);
+      // 2
+      entra("#p2 .tit .l", 6.05);
+      tl.fromTo("#p2 .sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 6.35);
+      tl.fromTo("#p2-tel", { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 6.2);
+      tl.fromTo("#p2-mal", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 6.9);
+      tl.fromTo("#p2-pdf", { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 100% 0%)", duration: 0.7, ease: "power2.inOut" }, 8.2);
+      tl.to("#p2-mal", { opacity: 0.25, duration: 0.4 }, 8.3);
+      tl.fromTo("#p2-c1", { opacity: 1 }, { opacity: 0, duration: 0.5 }, 10.0);
+      tl.fromTo("#p2-bien", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.8)" }, 10.4);
+      // 3
+      entra("#p3 .tit .l", 12.05);
+      tl.fromTo("#p3 .sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 12.4);
+      tl.fromTo("#p3-tel", { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 12.25);
+      tl.fromTo("#p3-ok", { opacity: 0, y: 30, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 16.45);
+      // 4
+      entra("#p4 .tit .l", 18.05);
+      tl.fromTo("#p4 .sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 18.4);
+      tl.fromTo("#p4-mon", { y: 120, opacity: 0, scale: 0.94 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" }, 18.3);
+      tl.fromTo("#p4-e1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4 }, 19.3);
+      tl.fromTo("#p4-e2", { opacity: 0, y: 24 }, { opacity: 0.5, y: 0, duration: 0.4 }, 19.5);
+      tl.fromTo("#p4-e3", { opacity: 0, y: 24 }, { opacity: 0.5, y: 0, duration: 0.4 }, 19.7);
+      tl.fromTo("#p4-e1", { scale: 1 }, { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1 }, 20.3);
+      // 5
+      entra("#p5 .tit .l", 24.05);
+      tl.fromTo("#p5-tel", { x: -120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 24.2);
+      tl.fromTo("#p5-and", { x: 140, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 24.5);
+      tl.fromTo("#p5-aviso", { y: -160, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" }, 25.4);
+      tl.to("#p5-aviso", { y: -160, opacity: 0, duration: 0.4, ease: "power2.in" }, 27.4);
+      tl.fromTo("#p5-c1", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 25.8);
+      tl.fromTo("#p5-c2", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, 26.3);
+      // 6
+      entra("#p6 .tit .l", 30.05);
+      tl.fromTo("#p6 .sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 30.35);
+      ["#p6-a", "#p6-b", "#p6-c"].forEach((id, i) => tl.fromTo(id, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 30.7 + i * 0.9));
+      // 7
+      entra("#p7 .tit .l", 36.05);
+      ["#p7-m1", "#p7-m2", "#p7-m3", "#p7-m4", "#p7-m5"].forEach((id, i) => tl.fromTo(id, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, 36.7 + i * 0.18));
+      tl.fromTo("#p7-rem", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 38.0);
+      tl.fromTo("#p7-cta", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" }, 38.6);
+
+      tl.eventCallback("onUpdate", () => dibujar(tl.time()));
+      window.addEventListener("hf-seek", (e) => dibujar(e.detail.time));
+      dibujar(0);
+      tl.seek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      Promise.all([...document.images].map((i) => (i.complete ? 1 : new Promise((r) => { i.onload = i.onerror = r; })))).then(() => listo());
+    </script>
+  </body>
+</html>
