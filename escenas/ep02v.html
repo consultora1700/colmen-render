@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>EP.02 DiDi vs Uber</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+
+:root{--didi:#ff7a00}
+.hl{background:var(--didi)}
+.logo{position:absolute;width:440px;height:330px;border-radius:44px;display:flex;flex-direction:column;justify-content:center;align-items:center;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.logo b{font:900 140px/1 'Inter Tight';color:#fff}
+.logo i{font:700 26px 'Inter Tight';font-style:normal;color:rgba(255,255,255,.75);margin-top:18px;letter-spacing:.04em}
+.cmp{position:absolute;width:440px;border-radius:36px;padding:28px;min-height:560px}
+.cmp .h{display:flex;justify-content:space-between;align-items:center}
+.cmp .h b{font:900 54px 'Inter Tight';letter-spacing:-.02em}
+.cmp .mapa{position:relative;height:300px;border-radius:22px;overflow:hidden;margin-top:20px}
+.cmp .s{font:800 32px/1.2 'Inter Tight';margin-top:22px}
+.cmp .s span{font-weight:600;color:var(--mute)}
+.cmp .campo{height:64px;border-radius:14px;border:2px solid #ddd;margin-top:16px;padding:0 18px;font:600 26px/60px 'Inter Tight';color:#aaa;letter-spacing:.05em}
+.cmp .pago{height:76px;border-radius:16px;margin-top:16px;color:#fff;text-align:center;font:800 32px/76px 'Inter Tight'}
+.bola{position:absolute;width:320px;height:320px;border-radius:50%;display:grid;place-items:center;font:900 72px 'Inter Tight';color:#fff;letter-spacing:-.02em;box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.chip{padding:18px 34px;border-radius:40px;background:#1c1917;border:2px solid #3a3530;font:800 40px 'Inter Tight'}
+.barra{position:absolute;left:90px;right:90px}
+.barra .et{font:700 30px 'Inter Tight';color:var(--mute)}.barra .et b{color:var(--paper)}
+.barra .bb{height:56px;margin-top:12px;width:620px;border-radius:12px;background:#1c1917;overflow:hidden}
+.barra .bb i{display:block;height:100%;width:0;border-radius:12px}
+.barra .vv{position:absolute;right:0;top:46px;font:900 40px 'Inter Tight';font-variant-numeric:tabular-nums}
+.fila{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid #e3ded4;margin-top:34px;padding-top:24px;gap:20px}
+.fila span{font:600 32px 'Inter Tight';color:#555}.fila b{font:900 44px 'Inter Tight';letter-spacing:-.02em;white-space:nowrap}
+.pais{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:150px 1fr;gap:30px;align-items:center;padding:24px;border-radius:32px;background:#1c1917}
+.pais .fl{position:relative;width:150px;height:100px;border-radius:12px;overflow:hidden}
+.pais b{display:block;font:900 48px 'Inter Tight';letter-spacing:-.02em}.pais span{display:block;font:600 30px/1.25 'Inter Tight';color:var(--mute);margin-top:6px}
+.bur{position:absolute;left:24px;right:24px;display:flex;gap:16px;align-items:flex-start}
+.bur.der{justify-content:flex-end}
+.bur .ava{width:70px;height:70px;border-radius:12px;display:grid;place-items:center;font:800 32px 'Inter Tight';color:#fff;flex:none}
+.bur .sobre{width:500px;border-radius:14px;background:#f59a46;color:#fff;display:flex;gap:18px;align-items:center;padding:20px}
+.bur .sobre .ic{width:64px;height:76px;border-radius:10px;background:#e64340;display:grid;place-items:center;font:900 36px 'Inter Tight';color:#ffd77a;flex:none}
+.bur .sobre b{display:block;font:800 30px 'Inter Tight'}.bur .sobre span{display:block;font:600 24px 'Inter Tight';opacity:.9;margin-top:4px}
+.bur .txt{max-width:560px;border-radius:14px;background:#95ec69;padding:20px 24px;font:600 30px/1.3 'Inter Tight'}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-heart" viewBox="0 0 24 24"><path fill="#fff" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+    <symbol id="i-com" viewBox="0 0 24 24"><path fill="#fff" d="M12 3C6.5 3 2 6.8 2 11.5c0 2.4 1.2 4.6 3.1 6.1L4.5 21l4-2c1.1.3 2.3.5 3.5.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></symbol>
+    <symbol id="i-sav" viewBox="0 0 24 24"><path fill="#fff" d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.5L5 22V3a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-sha" viewBox="0 0 24 24"><path fill="#fff" d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c.5-6 3.5-11 12-12V4z"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path fill="#25f4ee" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(-.8 .8)"/><path fill="#fe2c55" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(.8 -.8)"/><path fill="#fff" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z"/></symbol>
+    
+  <symbol id="autoTop" viewBox="0 0 40 70"><rect x="2" y="2" width="36" height="66" rx="12" fill="currentColor"/><rect x="7" y="14" width="26" height="14" rx="4" fill="#9fb4c4"/><rect x="7" y="46" width="26" height="10" rx="3" fill="#9fb4c4" opacity=".7"/></symbol>
+  <symbol id="taxiTop" viewBox="0 0 40 70"><rect x="2" y="2" width="36" height="66" rx="12" fill="#ffc21a"/><rect x="7" y="14" width="26" height="14" rx="4" fill="#3b4a55"/><rect x="7" y="46" width="26" height="10" rx="3" fill="#3b4a55"/><rect x="12" y="31" width="16" height="8" rx="2" fill="#111"/></symbol>
+  <symbol id="tilde" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="cruz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="#fff" stroke-width="3" stroke-linecap="round"/></symbol>
+  <pattern id="calles" width="120" height="120" patternUnits="userSpaceOnUse"><rect width="120" height="120" fill="#e9e6df"/><rect x="0" y="52" width="120" height="16" fill="#fff"/><rect x="52" y="0" width="16" height="120" fill="#fff"/><rect x="10" y="10" width="34" height="34" rx="4" fill="#dcd8ce"/><rect x="76" y="76" width="34" height="34" rx="4" fill="#d3e6cf"/></pattern>
+</defs></svg>
+
+<!-- 1 · gancho: Uber vs DiDi -->
+<div class="sc" id="s1"><div class="cam" id="s1cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <span class="m d" style="font-size:96px"><span>Uber inventó</span></span>
+    <span class="m d" style="font-size:96px"><span>el negocio.</span></span>
+    <span class="m d" style="font-size:96px" id="h1b"><span><span class="hl">DiDi lo copió…</span></span></span>
+  </div>
+  <div class="logo" id="lgU" style="left:90px;top:900px;background:#000;border:3px solid #333"><b style="font-weight:700;letter-spacing:-.04em">Uber</b><i>2009 · Estados Unidos</i></div>
+  <div class="logo" id="lgD" style="left:550px;top:900px;background:var(--didi)"><b style="letter-spacing:-.02em">DiDi</b><i>2012 · China</i></div>
+  <div class="abs" id="h1c" style="left:90px;top:1290px;width:900px">
+    <span class="m d" style="font-size:80px"><span>…y lo sacó <span class="hl">de China.</span></span></span>
+  </div>
+</div></div>
+
+<!-- 2 · 2009: Uber crea el negocio -->
+<div class="sc" id="s2"><div class="cam" id="s2cam">
+  <div class="abs" style="inset:0;background:radial-gradient(70% 50% at 50% 70%,#22201e,var(--ink) 70%)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--mute)">2009 · San Francisco</div>
+    <span class="m d" style="font-size:80px;margin-top:14px"><span>Uber crea el negocio:</span></span>
+    <span class="m d" style="font-size:80px"><span>pedís un auto <span class="hl ink" style="background:#fff;color:#000">desde el celular.</span></span></span>
+  </div>
+  <div style="position:absolute;left:280px;top:820px;perspective:1600px">
+    <div class="phone" id="ph2">
+      <div class="scr">
+        <div class="isla"></div>
+        <svg class="abs" style="left:-120px;top:-120px;width:760px;height:1300px" id="mapa2"><rect width="760" height="1300" fill="url(#calles)"/>
+          <path id="ruta2" d="M292 652 L292 532 L412 532 L412 412" stroke="#111" stroke-width="10" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <circle cx="292" cy="652" r="18" fill="#111"/><circle cx="292" cy="652" r="7" fill="#fff"/>
+        </svg>
+        <svg class="abs car2" style="left:60px;top:150px;width:40px;height:70px;color:#111"><use href="#autoTop"/></svg>
+        <svg class="abs car2" style="left:340px;top:250px;width:40px;height:70px;color:#111;transform:rotate(90deg)"><use href="#autoTop"/></svg>
+        <svg class="abs car2" style="left:420px;top:700px;width:40px;height:70px;color:#111"><use href="#autoTop"/></svg>
+        <svg class="abs car2" style="left:170px;top:880px;width:40px;height:70px;color:#111;transform:rotate(90deg)"><use href="#autoTop"/></svg>
+        <div class="abs" style="left:0;right:0;bottom:0;height:330px;background:#fff;border-radius:40px 40px 0 0;padding:34px 30px;box-shadow:0 -10px 30px rgba(0,0,0,.15)">
+          <div style="font:800 34px 'Inter Tight';color:#111">¿A dónde vas?</div>
+          <div style="margin-top:18px;height:64px;border-radius:16px;background:#eee;display:flex;align-items:center;padding:0 20px;font:600 26px 'Inter Tight';color:#666">Market St 1455</div>
+          <div id="pedir" style="margin-top:22px;height:80px;border-radius:16px;background:#000;color:#fff;text-align:center;font:800 32px/80px 'Inter Tight'">Pedir viaje</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- 3 · 2012: Cheng Wei funda DiDi -->
+<div class="sc" id="s3"><div class="cam" id="s3cam">
+  <div class="abs" style="inset:0;background:linear-gradient(180deg,#1a0f07,#2b1608 60%,#120a05)"></div>
+  <svg class="abs" style="left:0;top:1180px;width:1080px;height:400px" id="sky3">
+    <g fill="#3a2010"><rect x="20" y="120" width="90" height="280"/><rect x="120" y="60" width="70" height="340"/><rect x="200" y="160" width="110" height="240"/><rect x="330" y="20" width="80" height="380"/><rect x="420" y="100" width="120" height="300"/><rect x="560" y="0" width="70" height="400"/><rect x="640" y="140" width="110" height="260"/><rect x="770" y="70" width="90" height="330"/><rect x="880" y="130" width="180" height="270"/></g>
+  </svg>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">2012 · Beijing</div>
+    <span class="m d" style="font-size:80px;margin-top:14px"><span>Un ex empleado de Alibaba</span></span>
+    <span class="m d" style="font-size:80px"><span>lanza <span class="hl" style="background:var(--didi)">DiDi.</span></span></span>
+  </div>
+  <div class="perfil" id="perfil3" style="top:900px">
+    <div class="av" style="background:conic-gradient(from 200deg,#ff7a00,#ffb547,#ff7a00)"><div style="background-image:url(img/cheng.jpg)"></div></div>
+    <div><div class="n">Cheng Wei</div><div class="r">Fundador de DiDi · 8 años en Alibaba</div><div class="kk" style="color:#ff7a00">Arranca con taxis</div></div>
+    <div class="btn" style="background:#ff7a00">Seguir</div>
+  </div>
+</div></div>
+
+<!-- 4 · 2014: Uber entra a China y pierde -->
+<div class="sc" id="s4"><div class="cam" id="s4cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--mute)">2014</div>
+    <span class="m d" style="font-size:84px;margin-top:14px"><span>Uber entra a China…</span></span>
+    <span class="m d" style="font-size:84px"><span>y empieza a <span class="hl" style="background:#ef4444">perder.</span></span></span>
+  </div>
+  <div class="abs" id="cita4" style="left:90px;right:90px;top:840px;border-radius:44px;background:#1c1917;padding:44px">
+    <div style="display:flex;align-items:center;gap:22px">
+      <div style="width:110px;height:110px;border-radius:50%;background:url(img/kalanick.jpg) center/cover;border:4px solid #fff"></div>
+      <div><div style="font:800 40px 'Inter Tight'">Travis Kalanick</div><div style="font:600 27px 'Inter Tight';color:var(--mute);margin-top:4px">CEO de Uber · febrero 2016</div></div>
+    </div>
+    <div style="font:800 52px/1.15 'Inter Tight';margin-top:30px;letter-spacing:-.015em">“Somos rentables en EE.UU., pero <span style="color:#ff6b5b">perdemos más de US$ 1.000 millones al año en China.</span>”</div>
+  </div>
+  <div class="src" style="top:1440px" id="src4">fuente: CNBC / CNN Money, feb. 2016</div>
+</div></div>
+
+<!-- Q · quiz -->
+<div class="sc" id="sq"><div class="cam" id="sqcam">
+  <div class="abs" style="inset:0;background:linear-gradient(160deg,#1b1714,#0c0b0a)"></div>
+  <div class="abs k" style="left:90px;top:505px;color:var(--didi)" id="sqk">Adiviná antes de seguir</div>
+  <div class="stk" id="quiz" style="top:580px">
+    <div class="q" style="background:linear-gradient(120deg,#ff7a00,#ff4b1f)">Uber tenía la marca y la plata.<br>¿Cómo le ganó DiDi?</div>
+    <div class="ops">
+      <div class="op" id="qa"><div class="l">A</div><span>Inventó algo nuevo</span></div>
+      <div class="op" id="qb"><div class="fill"></div><div class="l">B</div><span>Adaptó el modelo a China</span></div>
+      <div class="op" id="qc"><div class="l">C</div><span>Uber no compitió</span></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- J1 · taxis -->
+<div class="sc" id="j1"><div class="cam" id="j1cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">Jugada 1 de 4</div>
+    <span class="m d" style="font-size:76px;margin-top:14px"><span>Sumó a los taxistas</span></span>
+    <span class="m d" style="font-size:76px"><span><span class="hl" style="background:var(--didi)">en vez de pelearlos.</span></span></span>
+  </div>
+  <div class="cmp" id="j1a" style="left:90px;top:820px;background:#1c1917">
+    <div class="h"><b>Uber</b><svg width="44" height="44"><use href="#cruz"/></svg></div>
+    <div class="mapa"><svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#calles)"/></svg>
+      <svg class="abs" style="left:60px;top:60px;width:30px;height:52px;color:#111"><use href="#autoTop"/></svg>
+      <svg class="abs" style="left:250px;top:200px;width:30px;height:52px;color:#111"><use href="#autoTop"/></svg></div>
+    <div class="s">Solo autos particulares.<br><span>En China, pocos tenían auto.</span></div>
+  </div>
+  <div class="cmp" id="j1b" style="left:550px;top:820px;background:#2a1606;border:3px solid var(--didi)">
+    <div class="h"><b style="color:var(--didi)">DiDi</b><svg width="44" height="44"><use href="#tilde"/></svg></div>
+    <div class="mapa" id="taxis"><svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#calles)"/></svg></div>
+    <div class="s">Los taxis de la calle,<br><span>adentro de la app.</span></div>
+  </div>
+</div></div>
+
+<!-- J2 · pagos -->
+<div class="sc" id="j2"><div class="cam" id="j2cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">Jugada 2 de 4</div>
+    <span class="m d" style="font-size:76px;margin-top:14px"><span>Cobró como</span></span>
+    <span class="m d" style="font-size:76px"><span><span class="hl" style="background:var(--didi)">paga China.</span></span></span>
+  </div>
+  <div class="cmp" id="j2a" style="left:90px;top:820px;background:#fff;color:#111">
+    <div class="h"><b>Uber</b><svg width="44" height="44"><use href="#cruz"/></svg></div>
+    <div style="font:800 28px 'Inter Tight';margin-top:20px">Agregá una tarjeta</div>
+    <div class="campo">•••• •••• •••• ••••</div><div class="campo" style="width:55%">MM/AA</div>
+    <div class="s" style="color:#444">Solo tarjeta de crédito.<br><span style="color:#777">Casi nadie pagaba así online.</span></div>
+  </div>
+  <div class="cmp" id="j2b" style="left:550px;top:820px;background:#fff;color:#111;border:3px solid var(--didi)">
+    <div class="h"><b style="color:var(--didi)">DiDi</b><svg width="44" height="44"><use href="#tilde"/></svg></div>
+    <div style="font:800 28px 'Inter Tight';margin-top:20px">Elegí cómo pagar</div>
+    <div class="pago" id="wx" style="background:#07c160">WeChat Pay</div><div class="pago" id="ali" style="background:#1677ff">Alipay</div>
+    <div class="s" style="color:#444">Las billeteras<br><span style="color:#777">que ya usaba todo el mundo.</span></div>
+  </div>
+</div></div>
+
+<!-- J3 · sobres rojos en WeChat -->
+<div class="sc" id="j3"><div class="cam" id="j3cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">Jugada 3 de 4</div>
+    <span class="m d" style="font-size:76px;margin-top:14px"><span>Regaló cupones que</span></span>
+    <span class="m d" style="font-size:76px"><span>se compartían <span class="hl" style="background:#07c160">en WeChat.</span></span></span>
+  </div>
+  <div class="abs" id="chat" style="left:90px;right:90px;top:800px;height:640px;border-radius:44px;background:#ededed;overflow:hidden;color:#111">
+    <div style="height:96px;background:#f7f7f7;border-bottom:1px solid #ddd;text-align:center;font:800 32px/96px 'Inter Tight'">Grupo de amigos (6)</div>
+    <div id="burbujas" style="position:absolute;left:0;right:0;top:96px;bottom:0"></div>
+  </div>
+</div></div>
+
+<!-- J4 · fusión con el rival -->
+<div class="sc" id="j4"><div class="cam" id="j4cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">Jugada 4 de 4 · 2015</div>
+    <span class="m d" style="font-size:76px;margin-top:14px"><span>Se unió a su rival</span></span>
+    <span class="m d" style="font-size:76px"><span>chino, <span class="hl" style="background:#f5b400;color:#1a1200">Kuaidi.</span></span></span>
+  </div>
+  <div class="bola" id="bD" style="left:150px;top:830px;background:var(--didi)">DiDi</div>
+  <div class="bola" id="bK" style="left:610px;top:830px;background:#f5b400;color:#1a1200">Kuaidi</div>
+  <div class="abs" id="fusion" style="left:190px;width:700px;top:880px;height:220px;border-radius:110px;background:linear-gradient(90deg,#ff7a00,#f5b400);display:grid;place-items:center;font:900 84px 'Inter Tight';letter-spacing:-.03em;color:#fff">Didi Kuaidi</div>
+  <div class="abs" id="detras" style="left:90px;right:90px;top:1180px;text-align:center">
+    <div style="font:700 34px 'Inter Tight';color:var(--mute)">Con dos gigantes detrás:</div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-top:22px"><div class="chip">Tencent</div><div class="chip">Alibaba</div></div>
+  </div>
+</div></div>
+
+<!-- R · resultado -->
+<div class="sc" id="sr"><div class="cam" id="srcam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <div class="k" style="color:var(--didi)">El resultado · 2015</div>
+    <div class="d" id="viajes" style="font-size:118px;margin-top:10px;font-variant-numeric:tabular-nums;color:var(--didi)">0</div>
+    <div style="font:800 46px 'Inter Tight';margin-top:4px">viajes de DiDi en un año.</div>
+  </div>
+  <div class="barra" style="top:960px"><div class="et"><b>DiDi</b> · solo 2015</div><div class="bb"><i id="brD" style="background:var(--didi)"></i></div><div class="vv" id="vD">1.430 M</div></div>
+  <div class="barra" style="top:1110px"><div class="et"><b>Uber</b> · todo el mundo, 2009–2015</div><div class="bb"><i id="brU" style="background:#fff"></i></div><div class="vv" id="vU">~1.000 M</div></div>
+  <div class="abs" id="cuota" style="left:90px;top:1270px;display:flex;align-items:center;gap:22px">
+    <div style="font:900 96px 'Inter Tight';letter-spacing:-.03em">85 %</div>
+    <div style="font:700 32px/1.2 'Inter Tight';color:var(--mute)">del mercado chino<br>en 2016 (según DiDi)</div>
+  </div>
+  <div class="src" style="top:1440px" id="srcr">fuentes: DiDi Kuaidi / Digital Trends, ene. 2016 · CKGSB</div>
+</div></div>
+
+<!-- T · el trato -->
+<div class="sc" id="st"><div class="cam" id="stcam">
+  <div class="abs" style="inset:0;background:#2a2622"></div>
+  <div class="abs" id="papel" style="left:110px;width:860px;top:500px;height:930px;background:#faf8f3;color:#111;border-radius:12px;padding:60px 56px;box-shadow:0 40px 90px rgba(0,0,0,.5)">
+    <div style="font:800 26px 'Inter Tight';letter-spacing:.14em;color:#888">ACUERDO · AGOSTO 2016</div>
+    <div style="font:900 74px/1.02 'Inter Tight';letter-spacing:-.03em;margin-top:22px">Uber le vende<br>Uber China a DiDi.</div>
+    <div class="fila" id="f1"><span>Uber se queda con</span><b>17,7 % de DiDi*</b></div>
+    <div class="fila" id="f2"><span>DiDi invierte en Uber</span><b>US$ 1.000 M</b></div>
+    <div class="fila" id="f3"><span>Valor del acuerdo</span><b>US$ 35.000 M</b></div>
+    <div style="font:600 21px 'Inter Tight';color:#888;margin-top:26px">* participación económica · fuentes: Reuters, TechCrunch</div>
+    <div class="abs" id="sello" style="right:56px;bottom:70px;padding:14px 26px;border:7px solid #ef4444;border-radius:14px;color:#ef4444;font:900 56px 'Inter Tight';letter-spacing:.02em">VENDIDO</div>
+  </div>
+</div></div>
+
+<!-- L · Latinoamérica -->
+<div class="sc" id="sl"><div class="cam" id="slcam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <span class="m d" style="font-size:84px"><span>Después vino</span></span>
+    <span class="m d" style="font-size:84px"><span>por <span class="hl" style="background:var(--didi)">Latinoamérica.</span></span></span>
+  </div>
+  <div class="pais" id="p1" style="top:800px"><div class="fl" style="background:#009c3b"><i style="position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-31px;background:#ffdf00;transform:rotate(45deg) scaleY(.62)"></i><i style="position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px;border-radius:50%;background:#002776"></i></div><div><b>Brasil · 2018</b><span>Compra 99, la app líder del país</span></div></div>
+  <div class="pais" id="p2" style="top:990px"><div class="fl" style="background:linear-gradient(90deg,#006847 33.3%,#fff 33.3% 66.6%,#ce1126 66.6%)"></div><div><b>México · 2018</b><span>Primer país con marca propia fuera de China</span></div></div>
+  <div class="pais" id="p3" style="top:1180px"><div class="fl" style="background:linear-gradient(180deg,#74acdf 33.3%,#fff 33.3% 66.6%,#74acdf 66.6%)"><i style="position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;border-radius:50%;background:#f6b40e"></i></div><div><b>Argentina · 2020</b><span>Llega a Buenos Aires y La Plata</span></div></div>
+  <div class="src" style="top:1440px" id="srcl">fuentes: Reuters, TechCrunch (ene. 2018) · iProUP (nov. 2020)</div>
+</div></div>
+
+<!-- P · encuesta + respuesta -->
+<div class="sc" id="sp"><div class="cam" id="spcam">
+  <div class="abs" style="inset:0;background:linear-gradient(160deg,#1b1714,#0c0b0a)"></div>
+  <div class="stk" id="poll" style="top:500px">
+    <div class="q" style="background:#111">¿Se puede ganar con algo<br>que ya existe?</div>
+    <div class="ops" style="grid-template-columns:1fr 1fr">
+      <div class="op" id="pa" style="justify-content:center"><div class="fill"></div><span>Sí</span></div>
+      <div class="op" id="pb" style="justify-content:center"><span>No</span></div>
+    </div>
+  </div>
+  <div class="abs" id="spr" style="left:90px;top:1000px;width:900px">
+    <span class="m d" style="font-size:80px"><span>DiDi no inventó nada.</span></span>
+    <span class="m d" style="font-size:80px"><span>Adaptó el modelo</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl" style="background:var(--didi)">mejor que Uber.</span></span></span>
+  </div>
+</div></div>
+
+<!-- 14 · cierre -->
+<div class="sc" id="s14"><div class="cam" id="s14cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:520px;width:900px">
+    <span class="m d" style="font-size:84px"><span>¿Qué marca cuento</span></span>
+    <span class="m d" style="font-size:84px"><span>en el <span class="hl" style="background:var(--didi)">EP.03?</span></span></span>
+  </div>
+  <div class="abs" id="caja" style="left:90px;right:90px;top:760px;height:120px;border-radius:60px;background:#1c1917;border:2px solid #34302c;display:flex;align-items:center;padding:0 22px;gap:20px">
+    <div style="width:76px;height:76px;border-radius:50%;background:url(img/avatar.png) center/cover;flex:none"></div>
+    <div id="tipeo" style="font:700 40px 'Inter Tight';color:#fff;white-space:nowrap;overflow:hidden"></div>
+    <div id="cursor" style="width:4px;height:48px;background:var(--didi);margin-left:-14px"></div>
+  </div>
+  <div class="abs" style="left:110px;top:900px;font:700 32px 'Inter Tight';color:var(--mute)" id="cajaL">Dejalo en los comentarios</div>
+  <div class="perfil" id="perfil14" style="top:1010px">
+    <div class="av"><div style="background-image:url(img/avatar.png)"></div></div>
+    <div><div class="n">Franco Valencia</div><div class="r">@francovalencia.ok</div><div class="kk">Historias reales de ventas</div></div>
+    <div class="btn" id="btn14"><span id="btn14t">Seguir</span></div>
+  </div>
+  <div class="src" style="top:1440px;width:900px;font-size:17px">Fotos: Travis Kalanick por cellanr (CC BY-SA 2.0, Wikimedia Commons) · Cheng Wei: prensa (CKGSB). Logos de sus dueños.</div>
+</div></div>
+
+<div id="dedo"></div><div id="onda"></div>
+<div id="hud"><div class="a">HISTORIAS DE VENTAS</div><div class="b" id="cap">EP.02</div><div class="r"></div><div class="p" id="prog"></div></div>
+<div id="vin"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+<script>
+(async () => {
+await document.fonts.ready;
+const DUR = 49.5; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const pos = (sel, fx = .78) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+
+// taxis del lado DiDi (jugada 1)
+const tx = $('#taxis');
+for (let i = 0; i < 9; i++) { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('class', 'abs taxi'); s.style.cssText = `left:${30 + (i % 3) * 110 + hash(i) * 30}px;top:${20 + Math.floor(i / 3) * 95 + hash(i + 4) * 20}px;width:30px;height:52px;transform:rotate(${(i % 2) * 90}deg)`; s.innerHTML = '<use href="#taxiTop"/>'; tx.appendChild(s); }
+// burbujas de chat (jugada 3)
+const BUR = [['Lin', 'izq', 'sobre'], ['Wei', 'der', 'txt:¡Gracias! Lo paso al grupo de la oficina'], ['Mei', 'izq', 'sobre'], ['Hao', 'izq', 'sobre']];
+const bw = $('#burbujas');
+BUR.forEach(([n, lado, tipo], i) => {
+  const d = document.createElement('div'); d.className = 'bur ' + lado; d.style.top = (24 + i * 130) + 'px';
+  const av = `<div class="ava" style="background:hsl(${hash(i + 2) * 360} 45% 62%)">${n[0]}</div>`;
+  const cuerpo = tipo === 'sobre' ? `<div class="sobre"><div class="ic">¥</div><div><b>DiDi · Sobre rojo</b><span>Descuento en tu próximo viaje</span></div></div>` : `<div class="txt">${tipo.slice(4)}</div>`;
+  d.innerHTML = lado === 'izq' ? av + cuerpo : cuerpo + av; bw.appendChild(d);
+});
+
+const QB = pos('#qb'), PA = pos('#pa', .5), BT = pos('#btn14', .5), PE = pos('#pedir', .5);
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+const ESC = { s1: [0, 3.6], s2: [3.4, 7.2], s3: [7.0, 10.6], s4: [10.4, 14.6], sq: [14.4, 18.0], j1: [17.8, 21.4], j2: [21.2, 24.8], j3: [24.6, 28.2], j4: [28.0, 31.6], sr: [31.4, 35.4], st: [35.2, 39.0], sl: [38.8, 42.6], sp: [42.4, 46.0], s14: [45.8, 49.5] };
+for (const [k, [a, b]] of Object.entries(ESC)) { tl.set('#' + k, { visibility: 'visible' }, a); tl.set('#' + k, { visibility: 'hidden' }, b); }
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.1, d = 0.7) => tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+const kick = (sel, t) => tl.fromTo(sel + ' .k', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .45, ease: 'power2.out' }, t);
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+// transiciones
+const iris = (k, t, x = 540, y = 960) => tl.fromTo('#' + k, { clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(1400px at ${x}px ${y}px)`, duration: .55, ease: E2 }, t);
+const barre = (k, t, dir) => { const desde = { izq: 'inset(0 0 0 100%)', der: 'inset(0 100% 0 0)', arr: 'inset(100% 0 0 0)', aba: 'inset(0 0 100% 0)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, t); };
+const latigo = (sale, entra, t) => { tl.to(`#${sale} .cam`, { x: -900, filter: 'blur(24px)', duration: .22, ease: 'power3.in' }, t - .2); tl.fromTo(`#${entra} .cam`, { x: 900, filter: 'blur(24px)' }, { x: 0, filter: 'blur(0px)', duration: .45, ease: E }, t); };
+const deriva = (k, t, d, s = 1.04) => tl.fromTo(`#${k} .cam`, { scale: 1 }, { scale: s, duration: d, ease: 'none' }, t);
+
+// 1 · gancho
+lineas('#s1', 0.1, 0.13);
+tl.fromTo('#lgU', { y: 160, opacity: 0, rotate: -6 }, { y: 0, opacity: 1, rotate: -2, duration: .6, ease: 'back.out(1.6)' }, 0.55);
+tl.fromTo('#lgD', { y: 160, opacity: 0, rotate: 6 }, { y: 0, opacity: 1, rotate: 2, duration: .6, ease: 'back.out(1.6)' }, 1.05);
+tl.to('#lgD', { x: -150, scale: 1.15, rotate: 0, duration: .5, ease: 'power3.inOut' }, 2.0);
+tl.to('#lgU', { x: -560, rotate: -24, opacity: 0, duration: .5, ease: 'power3.in' }, 2.0);
+tl.set('#h1c', { autoAlpha: 0 }, 0); tl.set('#h1c', { autoAlpha: 1 }, 2.2); lineas('#h1c', 2.25);
+deriva('s1', 0, 3.6, 1.05);
+latigo('s1', 's2', 3.4);
+// 2 · Uber 2009
+kick('#s2', 3.55); lineas('#s2', 3.65);
+tl.fromTo('#ph2', { y: 700, rotateX: 30 }, { y: 0, rotateX: 0, duration: .9, ease: E }, 3.5);
+toque(PE[0], PE[1], 5.6);
+tl.to('#pedir', { background: '#22c55e', duration: .2 }, 5.62);
+tl.to('#ruta2', { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' }, 5.7);
+tl.to('.car2', { x: (i) => [180, -60, -120, 100][i], y: (i) => [260, 120, -160, -280][i], duration: 1.3, ease: 'power2.inOut', stagger: .05 }, 5.7);
+// 3 · Cheng Wei 2012
+iris('s3', 7.0, 540, 1300);
+kick('#s3', 7.2); lineas('#s3', 7.3);
+tl.fromTo('#sky3 rect', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: .7, ease: E, stagger: .04 }, 7.1);
+tl.fromTo('#perfil3', { y: 400, autoAlpha: 0, rotate: 3 }, { y: 0, autoAlpha: 1, rotate: 0, duration: .7, ease: E }, 7.9);
+tl.fromTo('#perfil3 .av', { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(2)' }, 8.1);
+deriva('s3', 7.0, 3.6);
+// 4 · Uber pierde
+barre('s4', 10.4, 'arr');
+kick('#s4', 10.6); lineas('#s4', 10.7);
+tl.fromTo('#cita4', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, 11.5);
+tl.fromTo('#src4', { opacity: 0 }, { opacity: 1, duration: .3 }, 12.2);
+deriva('s4', 10.4, 4.2, 1.05);
+// Q · quiz
+iris('sq', 14.4);
+tl.fromTo('#sqk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, 14.6);
+tl.fromTo('#quiz', { scale: .6, y: 120, opacity: 0, rotate: -4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, 14.65);
+tl.fromTo('#quiz .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, 14.95);
+tl.to('#qa', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, 15.8);
+tl.to('#qc', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, 16.1);
+toque(QB[0], QB[1], 16.65);
+tl.to('#qb .fill', { width: '100%', duration: .45, ease: 'power3.out' }, 16.7);
+tl.set('#qb', { className: 'op ok', color: '#fff' }, 16.7);
+tl.to('#qa, #qc', { opacity: .4, duration: .3 }, 16.75);
+tl.to('#quiz', { scale: 1.04, duration: .12, yoyo: true, repeat: 1 }, 16.7);
+// jugadas: misma estructura
+const jugada = (k, t) => { barre(k, t, 'izq'); kick('#' + k, t + .2); lineas('#' + k, t + .3); deriva(k, t, 3.6); };
+jugada('j1', 17.8);
+tl.fromTo('#j1a', { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, 18.6);
+tl.fromTo('#j1b', { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, 19.1);
+tl.fromTo('.taxi', { scale: 0 }, { scale: 1, duration: .35, ease: 'back.out(3)', stagger: .07 }, 19.4);
+tl.to('#j1a', { opacity: .5, scale: .96, duration: .4 }, 20.3);
+jugada('j2', 21.2);
+tl.fromTo('#j2a', { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, 22.0);
+tl.fromTo('#j2b', { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, 22.5);
+tl.fromTo('#wx, #ali', { scale: .7, opacity: 0 }, { scale: 1, opacity: 1, duration: .4, ease: 'back.out(2.5)', stagger: .15 }, 22.9);
+tl.to('#j2a', { opacity: .5, scale: .96, duration: .4 }, 23.7);
+jugada('j3', 24.6);
+tl.fromTo('#chat', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, 25.2);
+tl.fromTo('.bur', { y: 60, autoAlpha: 0, scale: .9 }, { y: 0, autoAlpha: 1, scale: 1, duration: .4, ease: 'back.out(2)', stagger: .55 }, 25.6);
+jugada('j4', 28.0);
+tl.fromTo('#bD', { x: -400, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, 28.6);
+tl.fromTo('#bK', { x: 400, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, 28.75);
+tl.to('#bD', { x: 230, duration: .45, ease: 'power3.in' }, 29.6);
+tl.to('#bK', { x: -230, duration: .45, ease: 'power3.in' }, 29.6);
+tl.set('#bD, #bK', { autoAlpha: 0 }, 30.05);
+tl.fromTo('#fusion', { scale: .3, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .5, ease: 'back.out(2.2)' }, 30.05);
+tl.fromTo('#detras', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E }, 30.5);
+// R · resultado
+iris('sr', 31.4, 540, 600);
+kick('#sr', 31.6);
+tl.fromTo('#sr .d, #sr .d + div', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: E, stagger: .1 }, 31.6);
+tl.fromTo('#sr .barra', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E, stagger: .3 }, 32.6);
+tl.fromTo('#brD', { width: '0%' }, { width: '100%', duration: 1.0, ease: 'expo.inOut' }, 32.8);
+tl.fromTo('#brU', { width: '0%' }, { width: (1000 / 1430 * 100) + '%', duration: 1.0, ease: 'expo.inOut' }, 33.1);
+tl.fromTo('#cuota', { x: -80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, 34.0);
+tl.fromTo('#srcr', { opacity: 0 }, { opacity: 1, duration: .3 }, 34.2);
+deriva('sr', 31.4, 4);
+// T · el trato
+barre('st', 35.2, 'arr');
+tl.fromTo('#papel', { y: 300, rotate: -6 }, { y: 0, rotate: -1.5, duration: .7, ease: E }, 35.3);
+tl.fromTo('#st .fila', { x: 60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E, stagger: .35 }, 36.1);
+tl.fromTo('#sello', { scale: 2.6, rotate: -18, autoAlpha: 0 }, { scale: 1, rotate: -8, autoAlpha: 1, duration: .3, ease: 'power4.in' }, 37.6);
+tl.fromTo('#papel', { x: 0 }, { x: 10, duration: .05, yoyo: true, repeat: 5 }, 37.9);
+deriva('st', 35.2, 3.8, 1.05);
+// L · Latinoamérica
+latigo('st', 'sl', 38.8);
+lineas('#sl', 39.0);
+tl.fromTo('#sl .pais', { x: 200, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .55, ease: E, stagger: .5 }, 39.6);
+tl.fromTo('#srcl', { opacity: 0 }, { opacity: 1, duration: .3 }, 41.0);
+// P · encuesta
+iris('sp', 42.4);
+tl.fromTo('#poll', { scale: .6, y: 120, opacity: 0, rotate: 4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, 42.55);
+tl.fromTo('#poll .op', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, 42.85);
+toque(PA[0], PA[1], 43.7);
+tl.to('#pa .fill', { width: '100%', duration: .4, ease: 'power3.out' }, 43.75);
+tl.set('#pa', { className: 'op ok', color: '#fff' }, 43.75);
+tl.to('#pb', { opacity: .4, duration: .3 }, 43.8);
+tl.set('#spr', { autoAlpha: 0 }, 0); tl.set('#spr', { autoAlpha: 1 }, 44.0); lineas('#spr', 44.05, 0.16);
+// 14 · cierre
+barre('s14', 45.8, 'arr');
+lineas('#s14', 46.0);
+tl.fromTo('#caja, #cajaL', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: E, stagger: .1 }, 46.2);
+tl.fromTo('#perfil14', { y: 500, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, 46.6);
+toque(BT[0], BT[1], 48.4);
+tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, 48.45);
+tl.to('#hud', { opacity: 0, duration: .3 }, 49.1);
+
+const fmt = (v) => Math.round(v).toLocaleString('es-AR');
+const TIPEO = 'Starbucks… Mercado Libre… ¿cuál?';
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const vis = (k, t) => t >= ESC[k][0] && t < ESC[k][1];
+const CAP = [[0, 'EP.02'], [14.4, 'ADIVINÁ'], [17.8, 'LAS 4 JUGADAS'], [31.4, 'EP.02'], [42.4, 'ENCUESTA'], [45.8, 'EP.02']];
+
+window.render = (t) => {
+  tl.seek(t, false);
+  $('#prog').style.width = (t / DUR * 100) + '%';
+  $('#cap').textContent = CAP.filter(([a]) => t >= a).pop()[1];
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  if (vis('sr', t)) { const u = ease((t - 31.7) / 1.6); $('#viajes').textContent = u >= 1 ? '1.430.000.000' : fmt(1.43e9 * u); }
+  if (vis('s14', t)) {
+    const n = Math.floor(clamp((t - 46.6) / 1.5) * TIPEO.length); $('#tipeo').textContent = TIPEO.slice(0, n);
+    $('#cursor').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2;
+    $('#btn14t').textContent = t >= 48.45 ? 'Siguiendo' : 'Seguir';
+  }
+};
+// retiempo a la voz: tiempo nuevo → tiempo de la animación original (entrada y salida a 1x, el medio se estira)
+const SEG = [[0, 3.4, 0, 5.1, 1.8, 0.35], [3.4, 3.6, 5.1, 4.54, 1.8, 0.35], [7.0, 3.4, 9.64, 5.66, 1.8, 0.35], [10.4, 4.0, 15.3, 4.89, 1.8, 0.35], [14.4, 3.4, 20.19, 3.6, 1.8, 0.35], [17.8, 3.4, 23.79, 3.71, 1.8, 0.35], [21.2, 3.4, 27.5, 5.41, 1.8, 0.35], [24.6, 3.4, 32.91, 3.79, 1.8, 0.35], [28.0, 3.4, 36.7, 3.4, 1.8, 0.35], [31.4, 3.8, 40.1, 6.21, 1.8, 0.35], [35.2, 3.6, 46.31, 4.08, 1.8, 0.35], [38.8, 3.6, 50.39, 5.5, 1.8, 0.35], [42.4, 3.4, 55.89, 6.22, 1.8, 0.35], [45.8, 3.7, 62.11, 4.53, 1.8, 0]], DUR2 = 66.64;
+const aViejo = (t) => { let s = SEG[0]; for (const x of SEG) if (t >= x[2]) s = x;
+  const [a, o, A, n, e, z] = s, u = t - A;
+  if (u <= e) return a + u; if (u >= n - z) return a + o - (n - u);
+  return a + e + (u - e) * (o - z - e) / (n - z - e); };
+const renderViejo = window.render;
+window.render = (t) => { renderViejo(Math.min(aViejo(t), DUR - 0.001)); $('#prog').style.width = (t / DUR2 * 100) + '%'; };
+window.DURACION = DUR2;
+window.render(0); window.listo = true;
+})();
+
+</script>
+</body></html>
