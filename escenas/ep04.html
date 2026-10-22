@@ -140,34 +140,45 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 .menu .it i{position:absolute;left:-8px;right:-8px;top:52%;height:6px;border-radius:3px;background:var(--rojo);transform:scaleX(0);transform-origin:0 50%}
 .menu .it.fuera{color:#8a8178}
 .grande{font:900 300px/0.9 'Inter Tight';letter-spacing:-.05em}
-.yt{position:absolute;width:400px;border-radius:30px;background:#fff;color:#111;padding:26px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-.yt .lg{display:flex;align-items:center;gap:14px;font:900 44px 'Inter Tight';letter-spacing:-.03em}
-.yt .lg i{width:74px;height:52px;border-radius:14px;background:#ff0033;position:relative;display:block}
-.yt .lg i::after{content:'';position:absolute;left:28px;top:14px;border-left:22px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}
-.yt p{font:700 32px/1.25 'Inter Tight';margin-top:18px;color:#333}
-.conserva{position:absolute;width:300px;height:210px}
-.conserva .caja{position:absolute;left:0;bottom:0;width:300px;height:160px;border-radius:26px;background:linear-gradient(#2f7fd1,#1d5fa6);box-shadow:0 20px 40px rgba(0,0,0,.45)}
-.conserva .tapa{position:absolute;left:-10px;top:30px;width:320px;height:50px;border-radius:18px;background:#f4f4f4;transform-origin:0 100%}
-.conserva .asa{position:absolute;left:110px;top:0;width:80px;height:46px;border:10px solid #f4f4f4;border-bottom:0;border-radius:30px 30px 0 0}
-.pote{position:absolute;width:86px;height:96px;border-radius:12px 12px 22px 22px;background:linear-gradient(#fff 0 28%,#6b3b22 28% 60%,#f3e2c8 60%);box-shadow:0 10px 20px rgba(0,0,0,.4);border:3px solid rgba(255,255,255,.7)}
-.ofi{position:absolute;left:90px;width:560px;border-radius:30px;background:#eef1f5;color:#1b2533;padding:30px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-.ofi .t{font:800 26px 'Inter Tight';letter-spacing:.14em;color:#6b7686}
-.ofi .v{font:900 52px/1.05 'Inter Tight';letter-spacing:-.02em;margin-top:12px}
-.ofi .x{position:absolute;left:20px;right:20px;top:54%;height:10px;border-radius:5px;background:var(--rojo);transform:scaleX(0);transform-origin:0 50%}
-.sello{position:absolute;padding:14px 30px;border:6px solid var(--rojo);border-radius:16px;color:var(--rojo);font:900 50px 'Inter Tight';letter-spacing:.06em;background:rgba(255,255,255,.92);white-space:nowrap}
-.cal{position:absolute;left:90px;width:850px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-.cal div{position:relative;height:150px;border-radius:20px;overflow:hidden;background:#1c1917;border:2px solid #34302c}
-.cal div img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
-.cal div b{position:absolute;left:12px;top:10px;font:900 26px 'Inter Tight';z-index:2;text-shadow:0 2px 6px rgba(0,0,0,.8)}
-.cita{position:absolute;left:90px;width:860px;border-radius:36px;background:#fff;color:#111;padding:34px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-.cita .q{font:800 46px/1.18 'Inter Tight';letter-spacing:-.015em}
-.cita .q em{font-style:normal;background:var(--cel);padding:0 .12em;border-radius:8px}
-.cita .who{display:flex;align-items:center;gap:18px;margin-top:24px;font:700 28px 'Inter Tight';color:#555}
-.cita .who span{width:72px;height:72px;border-radius:50%;background:#ccc center/cover}
-.olor{position:absolute;width:40px;height:150px;border-left:8px solid rgba(255,255,255,.85);border-radius:50%;filter:blur(1px)}
-.reloj3{position:absolute;left:90px;width:880px;text-align:center;font:900 300px/1 'Inter Tight';letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 0 40px rgba(227,36,59,.6)}
+.sello{position:absolute;padding:14px 30px;border:6px solid var(--rojo);border-radius:16px;color:var(--rojo);font:900 50px 'Inter Tight';letter-spacing:.06em;background:rgba(255,255,255,.94);white-space:nowrap}
 .pin{position:absolute;left:90px;width:850px;display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:28px;background:#1c1917;font:800 40px 'Inter Tight'}
 .pin svg{width:46px;height:46px;flex:none}
+.tache{position:absolute;left:-10px;right:-10px;top:50%;height:16px;border-radius:8px;background:#fff;transform:scaleX(0) rotate(-4deg);transform-origin:0 50%;box-shadow:0 4px 0 rgba(0,0,0,.4)}
+.red{display:inline-flex;align-items:center;gap:12px;padding:14px 26px;border-radius:40px;font:800 38px 'Inter Tight';color:#fff}
+.stat{position:absolute;left:90px;width:850px;display:grid;grid-template-columns:310px 1fr;align-items:center;gap:26px;padding:26px 30px;border-radius:32px;background:#1c1917;border:2px solid #34302c}
+.stat b{font:900 92px/1 'Inter Tight';letter-spacing:-.04em;color:#fff;font-variant-numeric:tabular-nums;text-align:center}
+.stat span{font:800 44px/1.1 'Inter Tight'}
+.grid{position:absolute;left:90px;width:860px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.mv{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:9/16;background:#222}
+.mv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mv i{position:absolute;left:8px;bottom:8px;font:800 22px 'Inter Tight';font-style:normal;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.9)}
+.mv .aro{position:absolute;left:50%;top:38%;width:110px;height:110px;margin:-55px;border:5px solid #22c55e;border-radius:50%;opacity:0;box-shadow:0 0 20px rgba(34,197,94,.6)}
+.big3{position:absolute;width:270px;height:480px;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.55);border:5px solid transparent}
+.big3 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.big3 .nm{position:absolute;left:0;right:0;bottom:0;padding:50px 16px 16px;background:linear-gradient(transparent,rgba(0,0,0,.85));font:900 32px 'Inter Tight';color:#fff}
+.big3 .vv{position:absolute;left:12px;top:12px;padding:8px 14px;border-radius:14px;background:rgba(0,0,0,.7);font:900 30px 'Inter Tight';color:#fff;opacity:0}
+.big3.gana{border-color:#22c55e}
+.precio{position:absolute;padding:10px 34px;border-radius:26px;background:#ffd23f;color:#111;font:900 120px/1.05 'Inter Tight';letter-spacing:-.04em;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.cont{position:absolute;padding:18px 28px;border-radius:24px;background:#fff;color:#111;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.cont b{display:block;font:900 76px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.cont span{display:block;font:800 26px 'Inter Tight';color:#666;margin-top:6px;letter-spacing:.06em;text-transform:uppercase}
+.capt{position:absolute;left:90px;width:850px;border-radius:30px;background:#fff;color:#111;padding:30px 34px;font:700 40px/1.4 'Inter Tight';box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.capt .h{background:#ffd23f;border-radius:8px;padding:0 .12em}
+.capt small{display:block;font:700 26px 'Inter Tight';color:#999;margin-bottom:10px;letter-spacing:.04em}
+.nodo{position:absolute;width:240px;text-align:center}
+.nodo div{width:150px;height:150px;margin:0 auto;border-radius:40px;display:grid;place-items:center;font:900 40px 'Inter Tight';color:#fff;box-shadow:0 20px 40px rgba(0,0,0,.45)}
+.nodo b{display:block;font:800 32px 'Inter Tight';margin-top:14px}
+.flecha2{position:absolute;height:10px;border-radius:5px;background:#fff;transform-origin:0 50%}
+.promo{position:absolute;left:90px;width:850px;border-radius:36px;background:linear-gradient(135deg,#f6c9d6,#fbe3ea);color:#5a0f1e;padding:36px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.promo .t{font:900 34px 'Inter Tight';letter-spacing:.12em}
+.promo .v{font:900 82px/1 'Inter Tight';letter-spacing:-.03em;margin-top:12px;color:#e3243b}
+.promo p{font:700 34px/1.3 'Inter Tight';margin-top:14px}
+.dni{position:absolute;width:470px;height:290px;border-radius:24px;background:linear-gradient(135deg,#dfe9f3,#b9cde0);color:#1b2a3a;padding:24px;box-shadow:0 30px 60px rgba(0,0,0,.5);font:700 22px 'Inter Tight'}
+.dni .ft{position:absolute;left:24px;top:70px;width:130px;height:170px;border-radius:12px;background:#8aa3bb}
+.dni .nm{position:absolute;left:180px;top:90px;font:900 52px 'Inter Tight';letter-spacing:.04em}
+.dni small{position:absolute;left:180px;top:70px;font:700 18px 'Inter Tight';color:#4b6075;letter-spacing:.1em}
+.chk{position:absolute;left:90px;width:850px;display:flex;align-items:center;gap:26px;padding:24px 30px;border-radius:30px;background:#1c1917;font:900 56px 'Inter Tight';letter-spacing:-.02em}
+.chk svg{width:62px;height:62px;flex:none}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute"><defs>
@@ -182,172 +193,179 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <symbol id="pin" viewBox="0 0 24 24"><path fill="#e3243b" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></symbol>
 </defs></svg>
 
-<!-- 1 · gancho: ¿Suerte? (punto de llegada del loop) -->
+<!-- 1 · ¿Suerte? (punto de llegada del loop) -->
 <div class="sc" id="s1"><div class="cam">
   <div class="abs fondo"></div>
-  <div class="abs" id="t1" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:200px"><span><span class="hl">¿Suerte?</span></span></span></div>
-  <div class="foto pol" id="f1a" style="left:90px;top:800px;width:400px;height:500px"><img src="img/m2017.jpg" style="object-position:40% 50%"><i class="tag">2017</i></div>
-  <div class="foto pol" id="f1b" style="left:530px;top:780px;width:420px;height:520px"><img src="img/mcola2.jpg" style="object-position:30% 50%"><i class="tag rojo">Hoy</i></div>
-  <div class="chip blanco" id="c1a" style="left:90px;top:1330px;font-size:34px">Mini tortas en una conservadora</div>
-  <div class="pega" id="p1" style="left:520px;top:1200px">Cola en la esquina</div>
+  <div class="abs" id="t1" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:190px;position:relative"><span><span class="hl" style="position:relative">¿Suerte?<i class="tache" id="tc1"></i></span></span></span></div>
+  <div class="foto pol" id="f1" style="left:90px;top:760px;width:860px;height:480px"><img src="img/mcola2.jpg" style="object-position:50% 45%"><i class="tag rojo">Cola en la esquina</i></div>
+  <div class="abs" id="red1" style="left:90px;top:1290px;display:flex;gap:16px;flex-wrap:wrap">
+    <span class="red" style="background:#000;border:2px solid #333">TikTok</span><span class="red" style="background:linear-gradient(45deg,#f9a03f,#e1306c,#833ab4)">Instagram</span><span class="red" style="background:#fff;color:#111">Fue lo que hizo en redes</span>
+  </div>
 </div></div>
 
-<!-- 2 · 17 años, hobby, YouTube -->
-<div class="sc" id="s2"><div class="cam">
+<!-- 2a · quién es -->
+<div class="sc" id="s2a"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <div class="k" style="color:var(--cel)">2017 · 17 años</div>
-    <span class="m d" style="font-size:84px;margin-top:12px"><span>Hacía tortas</span></span>
-    <span class="m d" style="font-size:84px"><span><span class="hl">por hobby.</span></span></span>
+    <span class="m d" style="font-size:84px"><span>Empezó a los 17,</span></span>
+    <span class="m d" style="font-size:84px"><span>vendiendo <span class="hl">en la facu.</span></span></span>
   </div>
-  <div class="foto" id="f2" style="left:90px;top:760px;width:520px;height:660px"><img src="img/m2017.jpg"></div>
-  <div class="chip blanco" id="c2" style="left:90px;top:1330px;font-size:32px;padding:14px 22px"><span style="display:inline-block;width:46px;height:46px;border-radius:50%;background:url(img/caro.jpg) center/cover;vertical-align:-12px;margin-right:12px"></span>Carolina Infantino</div>
-  <div class="yt" id="yt2" style="left:560px;top:940px"><div class="lg"><i></i>YouTube</div><p>Aprendía todo mirando videos</p></div>
-  <div class="src" style="top:1440px">fuente: su publicación en TikTok (@madeline.cakess, feb. 2026)</div>
-</div></div>
-
-<!-- 3 · facultad + conservadora -->
-<div class="sc" id="s3"><div class="cam">
-  <div class="abs fondo"></div>
-  <div class="abs" style="left:90px;top:480px;width:880px">
-    <div class="k" style="color:var(--cel)">2018 · en la facultad</div>
-    <span class="m d" style="font-size:84px;margin-top:12px"><span>Vendía mini tortas</span></span>
-    <span class="m d" style="font-size:84px"><span>en <span class="hl">una conservadora.</span></span></span>
+  <div class="foto pol" id="f2a" style="left:90px;top:760px;width:440px;height:600px"><img src="img/slide0.jpg" style="object-position:50% 30%"></div>
+  <div class="perfil" id="pf2" style="left:470px;top:860px;width:480px;padding:26px;grid-template-columns:1fr;gap:14px;text-align:center">
+    <div class="av" style="width:150px;height:150px;margin:0 auto"><div style="background-image:url(img/caro.jpg)"></div></div>
+    <div><div class="n" style="font-size:40px">Carolina Infantino</div><div class="r" style="font-size:26px">@madeline.cakes</div></div>
   </div>
-  <div class="foto pol" id="f3a" style="left:90px;top:780px;width:410px;height:470px"><img src="img/mdelantal.jpg" style="object-position:50% 30%"></div>
-  <div class="foto pol" id="f3b" style="left:540px;top:800px;width:410px;height:450px"><img src="img/mpascuas.jpg"></div>
-  <div class="chip" id="c3" style="left:90px;top:1290px;font-size:34px">Administración de Empresas</div>
-  <div class="conserva" id="cons" style="left:640px;top:1290px"><div class="asa"></div><div class="caja"></div><div class="tapa" id="tapa"></div></div>
-  <div class="pote" id="po1" style="left:650px;top:1290px"></div><div class="pote" id="po2" style="left:745px;top:1270px"></div><div class="pote" id="po3" style="left:840px;top:1290px"></div>
 </div></div>
 
-<!-- 4 · el plan era otro -->
-<div class="sc" id="s4"><div class="cam">
+<!-- 2b · hoy -->
+<div class="sc" id="s2b"><div class="cam">
   <div class="abs fondo"></div>
-  <div class="abs" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:92px"><span>El plan era otro.</span></span></div>
-  <div class="foto pol" id="f4" style="left:520px;top:640px;width:430px;height:620px"><img src="img/muade.jpg" style="object-position:50% 40%"><i class="tag">UADE · 2022</i></div>
-  <div class="ofi" id="of4" style="top:1000px"><div class="t">PLAN A</div><div class="v">Trabajar en una multinacional</div><div class="x" id="x4"></div></div>
-  <div class="sello" id="se4" style="left:150px;top:1250px">PLAN B: Madeline</div>
+  <div class="abs" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:92px"><span><span class="hl">Hoy tiene:</span></span></span></div>
+  <div class="stat" id="st1" style="top:650px"><b>1</b><span>fábrica propia</span></div>
+  <div class="stat" id="st2" style="top:830px"><b>2</b><span>locales en CABA</span></div>
+  <div class="stat" id="st3" style="top:1010px"><b><span id="n700" style="font:inherit">0</span>k</b><span>seguidores entre<br>Instagram y TikTok</span></div>
+  <div class="foto" id="f2b" style="left:90px;top:1200px;width:860px;height:230px"><img src="img/mfabrica.jpg" style="object-position:50% 40%"></div>
 </div></div>
 
-<!-- Q · quiz -->
+<!-- Q · sus videos: ¿cuál tuvo más? -->
 <div class="sc" id="sq"><div class="cam">
   <div class="abs fondo"></div>
-  <div class="k abs" id="sqk" style="left:90px;top:480px;color:var(--cel)">Adiviná antes que yo</div>
-  <div class="stk" id="quiz" style="top:560px">
-    <div class="q" style="background:var(--rojo)">¿Cuándo explotó Madeline?</div>
-    <div class="ops">
-      <div class="op" id="qa"><div class="fill"></div><div class="l">A</div><span>Cuando abrió el local</span></div>
-      <div class="op" id="qb"><div class="fill"></div><div class="l">B</div><span>Cuando fue a la tele</span></div>
-      <div class="op" id="qc"><div class="fill"></div><div class="l">C</div><span>En la pandemia</span></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--cel)">Analicé sus videos</div>
+    <span class="m d" style="font-size:80px;margin-top:10px" id="hq1"><span>Uno normal: <span class="hl">~50 mil.</span></span></span>
+    <div id="hq2"><span class="m d" style="font-size:80px"><span>¿Cuál <span class="hl">explotó más?</span></span></span></div>
+  </div>
+  <div class="grid" id="gq" style="top:720px"></div>
+  <div class="big3" id="b1" style="left:90px;top:760px"><img src="img/cov0.jpg"><div class="vv" id="v1">1,5 M</div><div class="nm">Su historia</div></div>
+  <div class="big3" id="b2" style="left:385px;top:760px"><img src="img/cov1.jpg"><div class="vv" id="v2">2,1 M</div><div class="nm">El precio</div></div>
+  <div class="big3" id="b3" style="left:680px;top:760px"><img src="img/cov2.jpg"><div class="vv" id="v3">1 M</div><div class="nm">La apertura</div></div>
+  <div class="src" style="top:1440px">vistas en TikTok @madeline.cakess, consultadas el 22/10/2026</div>
+</div></div>
+
+<!-- L1 · decí el precio -->
+<div class="sc" id="l1"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Lección 1</div>
+    <span class="m d" style="font-size:96px;margin-top:10px"><span>Decí <span class="hl">el precio.</span></span></span>
+  </div>
+  <div class="phone" id="ph1" style="left:90px;top:680px;transform:scale(.68);transform-origin:0 0">
+    <div class="scr"><div class="isla"></div><img src="img/cov1.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      <div class="tk-rail"><div class="tk-av" style="background-image:url(img/logo-tt.jpg)"></div><svg><use href="#i-heart"/></svg><svg><use href="#i-com"/></svg><svg><use href="#i-sha"/></svg></div>
+      <div class="tk-cap"><b>@madeline.cakess</b>Ig: Madeline.cakes / $3900 la porción KEEEE</div><div class="tk-bar"><i id="tb1"></i></div></div>
+  </div>
+  <div class="precio" id="pr1" style="left:470px;top:780px">$3.900</div>
+  <div class="abs" id="pr1b" style="left:500px;top:940px;font:800 36px 'Inter Tight';color:var(--mute)">la porción</div>
+  <div class="cont" id="ct1" style="left:470px;top:1120px"><b id="n21">0</b><span>vistas</span></div>
+</div></div>
+
+<!-- L2 · apertura como evento -->
+<div class="sc" id="l2"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Lección 2</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Tu apertura,</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">un evento.</span></span></span>
+  </div>
+  <div class="phone" id="ph2" style="left:90px;top:760px;transform:scale(.62);transform-origin:0 0">
+    <div class="scr"><div class="isla"></div><img src="img/cov2.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      <div class="tk-cap"><b>@madeline.cakess</b>Francisco Bilbao 1599 CABA · los esperoooo</div><div class="tk-bar"><i id="tb2"></i></div></div>
+  </div>
+  <div class="cont" id="ct2" style="left:460px;top:800px"><b id="n10">0</b><span>vistas</span></div>
+  <div class="foto pol" id="f2c" style="left:440px;top:1000px;width:510px;height:400px"><img src="img/mcola1.jpg"><i class="tag rojo">Y después: la cola</i></div>
+</div></div>
+
+<!-- L3 · tu historia sin filtro -->
+<div class="sc" id="l3"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Lección 3</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Contá tu historia</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">sin filtro.</span></span></span>
+  </div>
+  <div class="abs" id="car3" style="left:90px;top:770px;width:860px;height:560px;overflow:hidden;border-radius:30px">
+    <div id="tira3" style="position:absolute;left:0;top:0;display:flex;gap:16px">
+      <div class="mv" style="width:420px;height:560px;aspect-ratio:auto"><img src="img/slide0.jpg"></div>
+      <div class="mv" style="width:420px;height:560px;aspect-ratio:auto"><img src="img/slide2.jpg"></div>
+      <div class="mv" style="width:420px;height:560px;aspect-ratio:auto"><img src="img/slide7.jpg"></div>
+      <div class="mv" style="width:420px;height:560px;aspect-ratio:auto"><img src="img/slide15.jpg"></div>
+      <div class="mv" style="width:420px;height:560px;aspect-ratio:auto"><img src="img/slide16.jpg"></div>
     </div>
   </div>
+  <div class="cont" id="ct3" style="left:540px;top:1260px"><b id="n15">0</b><span>vistas · 21 fotos</span></div>
 </div></div>
 
-<!-- J1 · desafío cuarentena -->
-<div class="sc" id="j1"><div class="cam">
+<!-- L4 · cara de la marca -->
+<div class="sc" id="l4"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <div class="k" style="color:var(--rojo)">Jugada 1 · idea de su mamá</div>
-    <span class="m d" style="font-size:80px;margin-top:12px"><span>Desafío cuarentena:</span></span>
-    <span class="m d" style="font-size:80px"><span><span class="hl">una receta por día.</span></span></span>
+    <div class="k" style="color:var(--rojo)">Lección 4</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Ponele <span class="hl">cara</span></span></span>
+    <span class="m d" style="font-size:80px"><span>a tu marca.</span></span>
   </div>
-  <div class="cal" id="cal" style="top:780px"></div>
-  <div class="pega" id="dia" style="left:600px;top:1300px">Día <span id="ndia">1</span></div>
+  <div class="grid" id="g4" style="top:770px"></div>
+  <div class="pega" id="p4" style="left:300px;top:1330px">12 de sus últimos 13 videos</div>
 </div></div>
 
-<!-- 7 · la casa quedó chica -->
-<div class="sc" id="s7"><div class="cam">
+<!-- L5 · cada video lleva a un lugar -->
+<div class="sc" id="l5"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <span class="m d" style="font-size:84px"><span>La casa de sus papás</span></span>
-    <span class="m d" style="font-size:84px"><span><span class="hl">quedó chica.</span></span></span>
+    <div class="k" style="color:var(--rojo)">Lección 5</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Cada video</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">lleva a un lugar.</span></span></span>
   </div>
-  <div class="foto" id="f7a" style="left:90px;top:740px;width:860px;height:440px"><img src="img/mnavidad.jpg" style="object-position:50% 40%"></div>
-  <div class="foto pol" id="f7b" style="left:560px;top:1060px;width:390px;height:300px"><img src="img/mpedidos.jpg"></div>
-  <div class="noti" id="n7a" style="top:760px;left:110px;width:620px"><div class="ic" style="background:url(img/logo-tt.jpg) center/cover"></div><div><div class="t1"><span>INSTAGRAM</span><span>ahora</span></div><div class="t2">+1 seguidor nuevo</div></div></div>
-  <div class="chip blanco" id="c7" style="left:90px;top:1240px;font-size:34px">¼ de la casa: cajas y heladeras</div>
+  <div class="capt" id="cp5" style="top:770px"><small>TEXTO DE SUS VIDEOS</small><span id="h5a">IG: Madeline.cakes</span> <span id="h5b"><svg style="width:34px;height:34px;vertical-align:-6px"><use href="#pin"/></svg>Ramón Falcón 1362 CABA <svg style="width:34px;height:34px;vertical-align:-6px"><use href="#pin"/></svg>Francisco Bilbao 1599 CABA</span></div>
+  <div class="nodo" id="nd1" style="left:60px;top:1150px"><div style="background:#000;border:3px solid #333">TT</div><b>TikTok</b></div>
+  <div class="nodo" id="nd2" style="left:420px;top:1150px"><div style="background:linear-gradient(45deg,#f9a03f,#e1306c,#833ab4)">IG</div><b>Instagram</b></div>
+  <div class="nodo" id="nd3" style="left:760px;top:1150px"><div style="background:#e3243b"><svg style="width:80px;height:80px"><use href="#pin"/></svg></div><b>El local</b></div>
+  <div class="flecha2" id="fa1" style="left:250px;top:1220px;width:180px"></div>
+  <div class="flecha2" id="fa2" style="left:610px;top:1220px;width:170px"></div>
 </div></div>
 
-<!-- J2 · auténtica + detrás de escena -->
-<div class="sc" id="j2"><div class="cam">
+<!-- L6 · promos que te obligan a ir -->
+<div class="sc" id="l6"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <div class="k" style="color:var(--rojo)">Jugada 2</div>
-    <span class="m d" style="font-size:80px;margin-top:12px"><span>Mostró <span class="hl">todo.</span></span></span>
+    <div class="k" style="color:var(--rojo)">Lección 6</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Promos que te</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">obliguen a ir.</span></span></span>
   </div>
-  <div class="cita" id="ci" style="top:680px"><div class="q">“Ser auténtica y <em>mostrar el detrás de escena</em> ha sido fundamental para ganar seguidores.”</div><div class="who"><span style="background-image:url(img/caro.jpg)"></span>Carolina Infantino · T5 Satelital, 2025</div></div>
-  <div class="reel" id="r1" style="left:90px;top:1080px;height:360px"><img src="img/mpascuas.jpg"><div class="pl"></div><b>El living</b></div>
-  <div class="reel" id="r2" style="left:380px;top:1080px;height:360px"><img src="img/mtele.jpg" style="object-position:50% 70%"><div class="pl"></div><b>La tele</b></div>
-  <div class="reel" id="r3" style="left:670px;top:1080px;height:360px"><img src="img/muade.jpg" style="object-position:50% 60%"><div class="pl"></div><b>La facu</b></div>
+  <div class="promo" id="pm6" style="top:770px"><div class="t">FELIZ PRIMAVERA</div><div class="v">Café gratis</div><p>De 15 h al cierre, presentando el DNI.<br>Solo si tu primer nombre es de flor.</p></div>
+  <div class="dni" id="dni6" style="left:470px;top:1130px"><div style="font:900 20px 'Inter Tight';letter-spacing:.14em">DOCUMENTO · EJEMPLO</div><div class="ft"></div><small>NOMBRE</small><div class="nm">ROSA</div></div>
+  <div class="src" style="top:1440px">fuente: su publicación del 16/09/2026</div>
 </div></div>
 
-<!-- J3a · local, olor, pizarras -->
-<div class="sc" id="j3a"><div class="cam">
+<!-- L7 · escuchar a la calle -->
+<div class="sc" id="l7"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <div class="k" style="color:var(--rojo)">Jugada 3 · escuchar a la calle</div>
-    <span class="m d" style="font-size:80px;margin-top:12px"><span>Alquiló un local.</span></span>
-    <div id="h3b"><span class="m d" style="font-size:80px"><span><span class="hl">Y puso precios.</span></span></span></div>
+    <div class="k" style="color:var(--cel)">Fuera de las redes</div>
+    <span class="m d" style="font-size:80px;margin-top:10px"><span>Escuchá</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">a la calle.</span></span></span>
   </div>
-  <div class="foto" id="f8a" style="left:90px;top:800px;width:860px;height:600px"><img src="img/malquilo.jpg" style="object-position:30% 60%"></div>
-  <div class="foto" id="f8b" style="left:90px;top:800px;width:860px;height:600px"><img src="img/mpizarra.jpg" style="object-position:50% 75%"></div>
-  <div class="olor" id="ol1" style="left:430px;top:900px"></div><div class="olor" id="ol2" style="left:500px;top:880px"></div><div class="olor" id="ol3" style="left:570px;top:900px"></div>
-  <div class="chip" id="c8a" style="left:120px;top:830px;font-size:32px">2022 · puertas cerradas</div>
-  <div class="pega" id="c8b" style="left:440px;top:1290px">Pizarras con precios</div>
-</div></div>
-
-<!-- J3b · la ventanita -->
-<div class="sc" id="j3b"><div class="cam">
-  <div class="abs fondo"></div>
-  <div class="abs" style="left:90px;top:480px;width:880px">
-    <span class="m d" style="font-size:80px"><span>Los vecinos pedían</span></span>
-    <span class="m d" style="font-size:80px"><span><span class="hl">una ventanita.</span></span></span>
-  </div>
-  <div class="phone" id="ph9" style="left:90px;top:700px;transform:scale(.62);transform-origin:0 0">
+  <div class="phone" id="ph7" style="left:90px;top:760px;transform:scale(.6);transform-origin:0 0">
     <div class="scr"><div class="isla"></div><img src="img/slide11.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></div>
   </div>
-  <div class="foto pol" id="f9" style="left:470px;top:780px;width:480px;height:560px"><img src="img/mventana.jpg" style="object-position:50% 60%"></div>
-  <div class="chip rojo" id="c9" style="left:470px;top:1360px;font-size:34px">4/4/2025 · café para llevar</div>
+  <div class="foto pol" id="f7" style="left:470px;top:800px;width:480px;height:540px"><img src="img/mventana.jpg" style="object-position:50% 60%"></div>
+  <div class="chip rojo" id="c7" style="left:470px;top:1360px;font-size:32px">Pedían una ventanita → abrió una</div>
 </div></div>
 
-<!-- 11 · la cola -->
+<!-- 11 · la receta -->
 <div class="sc" id="s11"><div class="cam">
   <div class="abs fondo"></div>
-  <div class="abs" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:88px"><span>Empezó <span class="hl">la cola.</span></span></span></div>
-  <div class="foto pol" id="k1" style="left:90px;top:660px;width:440px;height:360px"><img src="img/mcola1.jpg"></div>
-  <div class="foto pol" id="k2" style="left:520px;top:640px;width:430px;height:400px"><img src="img/mcola4.jpg" style="object-position:50% 70%"></div>
-  <div class="foto pol" id="k3" style="left:110px;top:1010px;width:420px;height:400px"><img src="img/mcola2.jpg"></div>
-  <div class="foto pol" id="k4" style="left:540px;top:1040px;width:410px;height:370px"><img src="img/mcola3.jpg" style="object-position:50% 80%"></div>
-  <div class="sello" id="e1" style="left:130px;top:880px">CON FRÍO</div>
-  <div class="sello" id="e2" style="left:560px;top:930px">CON CALOR</div>
-  <div class="sello" id="e3" style="left:320px;top:1200px">¡SIN STOCK!</div>
-</div></div>
-
-<!-- 12 · hoy -->
-<div class="sc" id="s12"><div class="cam">
-  <div class="abs fondo"></div>
-  <div class="abs" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:92px"><span><span class="hl">Hoy:</span></span></span></div>
-  <div class="foto" id="f12" style="left:90px;top:620px;width:860px;height:420px"><img src="img/mfabrica.jpg" style="object-position:50% 55%"><i class="tag rojo">Fábrica propia · 2025</i></div>
-  <div class="pin" id="pa" style="top:1070px"><svg><use href="#pin"/></svg>Francisco Bilbao 1599</div>
-  <div class="pin" id="pb" style="top:1170px"><svg><use href="#pin"/></svg>Ramón Falcón 1362</div>
-  <div class="mini" id="mi12" style="top:1280px"><div><b>325 mil</b><span>en Instagram</span></div><div><b>428 mil</b><span>en TikTok</span></div></div>
-</div></div>
-
-<!-- 13 · 3 AM -->
-<div class="sc" id="s13"><div class="cam">
-  <div class="abs" style="inset:0;background:#07060a"></div>
-  <div class="k abs" style="left:90px;top:520px;color:var(--cel)">Para hornear bizcochuelos</div>
-  <div class="reloj3" id="r13" style="top:720px">03<span id="dos">:</span>00</div>
-  <div class="abs" style="left:90px;top:1040px;width:880px;text-align:center;font:800 48px 'Inter Tight';color:var(--mute)">de la mañana</div>
-  <div class="pega" id="c13" style="left:300px;top:1200px">De lunes a lunes</div>
+  <div class="abs" style="left:90px;top:480px;width:880px"><span class="m d" style="font-size:92px"><span><span class="hl">La receta:</span></span></span></div>
+  <div class="chk" id="k1" style="top:660px"><svg><use href="#tilde"/></svg>Precio a la vista</div>
+  <div class="chk" id="k2" style="top:800px"><svg><use href="#tilde"/></svg>Historia sin filtro</div>
+  <div class="chk" id="k3" style="top:940px"><svg><use href="#tilde"/></svg>Una cara</div>
+  <div class="chk" id="k4" style="top:1080px"><svg><use href="#tilde"/></svg>Camino claro al local</div>
 </div></div>
 
 <!-- 14 · cierre que empalma con "¿Suerte?" -->
 <div class="sc" id="s14"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" style="left:90px;top:480px;width:880px">
-    <span class="m d" style="font-size:84px"><span>Y todavía le dicen</span></span>
+    <span class="m d" style="font-size:84px"><span>Y después le dicen</span></span>
     <span class="m d" style="font-size:84px"><span>que fue <span class="hl">pura…</span></span></span>
   </div>
   <div class="perfil" id="perfil14" style="top:880px">
@@ -355,10 +373,10 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
     <div><div class="n">Franco Valencia</div><div class="r">@francovalencia.ok</div></div>
     <div class="btn" id="btn14"><span id="btn14t">Seguir</span></div>
   </div>
-  <div class="src" style="top:1330px;width:880px;font-size:17px">Fotos: @madeline.cakes / @madeline.cakess · captura T5 Satelital. Fuentes: su publicación en TikTok (feb. 2026) y Agenda Económica (abr. 2025).</div>
+  <div class="src" style="top:1330px;width:880px;font-size:17px">Fotos y videos: @madeline.cakes / @madeline.cakess · captura T5 Satelital. Datos: sus publicaciones en TikTok y Agenda Económica (abr. 2025).</div>
 </div></div>
 
-<!-- imágenes que arma el script (para el render remoto): img/mpedidos.jpg img/mpascuas.jpg img/m2017.jpg img/mdelantal.jpg img/mnavidad.jpg img/mbudin.jpg img/mtele.jpg img/mpremio.jpg img/mobra.jpg img/minaug.jpg -->
+<!-- imágenes que arma el script (para el render remoto): img/cov3.jpg img/cov4.jpg img/cov5.jpg img/cov6.jpg img/cov7.jpg img/cov8.jpg img/cov9.jpg img/cov10.jpg img/cov11.jpg img/cov12.jpg -->
 <div id="dedo"></div><div id="onda"></div>
 <div id="vin"></div>
 <canvas id="grano" width="540" height="960"></canvas>
@@ -366,22 +384,25 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <script>
 (async () => {
 await document.fonts.ready;
-const T = {"seg": [{"k": "s1", "A": 0, "n": 6.687, "tv": 0.08, "va": 0.0}, {"k": "s2", "A": 6.687, "n": 6.437, "tv": 6.887, "va": 8.18}, {"k": "s3", "A": 13.124, "n": 6.631, "tv": 13.324, "va": 16.04}, {"k": "s4", "A": 19.756, "n": 3.719, "tv": 19.956, "va": 24.1}, {"k": "sq", "A": 23.474, "n": 3.93, "tv": 23.674, "va": 28.57}, {"k": "j1", "A": 27.404, "n": 5.641, "tv": 27.604, "va": 32.64}, {"k": "s7", "A": 33.045, "n": 5.993, "tv": 33.245, "va": 39.51}, {"k": "j2", "A": 39.037, "n": 4.641, "tv": 39.237, "va": 46.86}, {"k": "j3a", "A": 43.678, "n": 7.567, "tv": 43.878, "va": 52.54}, {"k": "j3b", "A": 51.245, "n": 5.326, "tv": 51.445, "va": 61.49}, {"k": "s11", "A": 56.571, "n": 4.594, "tv": 56.771, "va": 67.97}, {"k": "s12", "A": 61.165, "n": 5.946, "tv": 61.365, "va": 73.71}, {"k": "s13", "A": 67.111, "n": 3.743, "tv": 67.311, "va": 80.88}, {"k": "s14", "A": 70.854, "n": 3.641, "tv": 71.054, "va": 85.63}], "voz": [[0.0, 6.65, 0.08], [8.18, 14.43, 6.887], [16.04, 22.5, 13.324], [24.1, 27.09, 19.956], [28.57, 30.1, 23.674], [30.1, 31.14, 25.991], [32.64, 38.03, 27.604], [39.51, 45.28, 33.245], [46.86, 51.17, 39.237], [52.54, 60.01, 43.878], [61.49, 66.54, 51.445], [67.97, 72.23, 56.771], [73.71, 79.43, 61.365], [80.88, 84.22, 67.311], [85.63, 88.05, 71.054]], "dur": 74.495, "vel": 1.08};
+const T = {"seg": [{"k": "s1", "A": 0, "n": 7.595, "tv": 0.08, "va": 0.0}, {"k": "s2a", "A": 7.595, "n": 5.567, "tv": 7.795, "va": 8.95}, {"k": "s2b", "A": 13.161, "n": 5.407, "tv": 13.211, "va": 14.26}, {"k": "sq", "A": 18.569, "n": 9.154, "tv": 18.769, "va": 20.47}, {"k": "l1", "A": 27.723, "n": 7.174, "tv": 27.923, "va": 29.33}, {"k": "l2", "A": 34.897, "n": 6.567, "tv": 35.097, "va": 37.32}, {"k": "l3", "A": 41.463, "n": 4.539, "tv": 41.663, "va": 44.7}, {"k": "l4", "A": 46.002, "n": 4.641, "tv": 46.202, "va": 49.95}, {"k": "l5", "A": 50.643, "n": 5.326, "tv": 50.843, "va": 55.21}, {"k": "l6", "A": 55.969, "n": 4.807, "tv": 56.169, "va": 61.15}, {"k": "l7", "A": 60.776, "n": 6.631, "tv": 60.976, "va": 66.51}, {"k": "s11", "A": 67.408, "n": 4.641, "tv": 67.608, "va": 74.03}, {"k": "s14", "A": 72.049, "n": 3.854, "tv": 72.249, "va": 79.38}], "voz": [[0.0, 7.63, 0.08], [8.95, 14.26, 7.795], [14.26, 19.56, 13.211], [20.47, 28.25, 18.769], [29.33, 36.16, 27.923], [37.32, 43.71, 35.097], [44.7, 48.9, 41.663], [49.95, 54.26, 46.202], [55.21, 60.26, 50.843], [61.15, 65.64, 56.169], [66.51, 72.97, 60.976], [74.03, 78.34, 67.608], [79.38, 82.03, 72.249]], "dur": 75.902, "vel": 1.08};
 const DUR = T.dur; window.DURACION = DUR;
 const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
 const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
 const pos = (sel, fx = .78) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
 const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
 const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
 
-// calendario del desafío: 15 días con fotos de sus tortas
-const FOT = ['mpedidos', 'mpascuas', 'm2017', 'mdelantal', 'mnavidad', 'mbudin', 'mpremio', 'mtele', 'mobra', 'minaug'];
-const cal = $('#cal');
-for (let i = 0; i < 15; i++) { const d = document.createElement('div'); d.innerHTML = `<img src="img/${FOT[(i * 3) % FOT.length]}.jpg" style="object-position:${30 + hash(i) * 40}% ${30 + hash(i + 9) * 40}%"><b>Día ${i + 1}</b>`; cal.appendChild(d); }
+// sus últimos videos con sus vistas reales (TikTok, 22/10/2026)
+const VIS = [[3, '6 mil'], [4, '57 mil'], [5, '108 mil'], [6, '31 mil'], [7, '59 mil'], [8, '39 mil'], [9, '45 mil'], [10, '168 mil'], [11, '57 mil'], [12, '170 mil']];
+for (const [id, cara] of [['gq', false], ['g4', true]]) {
+  const g = $('#' + id);
+  VIS.forEach(([n, v]) => { const d = document.createElement('div'); d.className = 'mv'; d.innerHTML = `<img src="img/cov${n}.jpg"><i>${cara ? '' : v}</i>${cara && n !== 4 ? '<div class="aro"></div>' : ''}`; g.appendChild(d); });
+}
 await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
 
-const QC = pos('#qc'), BT = pos('#btn14', .5);
+const B2 = pos('#b2', .5), BT = pos('#btn14', .5);
 const tl = gsap.timeline({ paused: true });
 const E = 'expo.out', E2 = 'power4.inOut';
 T.seg.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < T.seg.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, s.B + 0.3); });
@@ -401,127 +422,115 @@ const iris = (k, x = 540, y = 960) => tl.fromTo('#' + k, { clipPath: `circle(0px
 const barre = (k, dir) => { const desde = { izq: 'inset(0 0 0 100%)', der: 'inset(0 100% 0 0)', arr: 'inset(100% 0 0 0)', aba: 'inset(0 0 100% 0)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, S[k].A); };
 const latigo = (sale, entra) => { const t = S[entra].A; tl.to(`#${sale} .cam`, { x: -900, filter: 'blur(24px)', duration: .22, ease: 'power3.in' }, t - .02); tl.fromTo(`#${entra} .cam`, { x: 900, filter: 'blur(24px)' }, { x: 0, filter: 'blur(0px)', duration: .45, ease: E }, t + .18); };
 const deriva = (k, s = 1.05) => tl.fromTo(`#${k} .cam`, { scale: 1 }, { scale: s, duration: S[k].n + .3, ease: 'none' }, S[k].A);
+const leccion = (k, tr) => { (tr || barre)(k, 'izq'); kick('#' + k, S[k].A + .2); lineas('#' + k, S[k].A + .3); deriva(k, 1.04); };
 
 // 1 · ¿Suerte?
 tl.fromTo('#t1 .m > span', { yPercent: 115, scale: 1.3 }, { yPercent: 0, scale: 1, duration: .55, ease: 'back.out(1.6)' }, 0.02);
-tl.fromTo('#f1a', { y: 260, rotate: -12, autoAlpha: 0 }, { y: 0, rotate: -4, autoAlpha: 1, duration: .7, ease: 'back.out(1.4)' }, W(1.0));
-pop('#c1a', W(2.9));
-tl.fromTo('#f1b', { y: 260, rotate: 12, autoAlpha: 0 }, { y: 0, rotate: 3, autoAlpha: 1, duration: .7, ease: 'back.out(1.4)' }, W(4.4));
-sella('#p1', W(5.8), -5);
+tl.fromTo('#f1', { y: 300, rotate: 6, autoAlpha: 0 }, { y: 0, rotate: -2, autoAlpha: 1, duration: .7, ease: 'back.out(1.3)' }, W(2.6));
+tl.to('#tc1', { scaleX: 1, duration: .3, ease: 'power2.out' }, W(5.1));
+tl.fromTo('#red1 > span', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)', stagger: .15 }, W(6.6));
 deriva('s1', 1.04);
-// 2 · 17 años
-latigo('s1', 's2');
-kick('#s2', W(8.4)); lineas('#s2', W(8.5));
-sube('#f2', S.s2.A + .3, 260);
-pop('#c2', W(8.6));
-tl.fromTo('#yt2', { x: 200, rotate: 8, autoAlpha: 0 }, { x: 0, rotate: 2, autoAlpha: 1, duration: .6, ease: 'back.out(1.5)' }, W(13.6));
-deriva('s2', 1.04);
-// 3 · facultad + conservadora
-iris('s3', 540, 1200);
-kick('#s3', S.s3.A + .2); lineas('#s3', S.s3.A + .3);
-tl.fromTo('#f3a', { y: 300, rotate: -10, autoAlpha: 0 }, { y: 0, rotate: -3, autoAlpha: 1, duration: .7, ease: 'back.out(1.3)' }, S.s3.A + .4);
-tl.fromTo('#f3b', { y: 300, rotate: 10, autoAlpha: 0 }, { y: 0, rotate: 3, autoAlpha: 1, duration: .7, ease: 'back.out(1.3)' }, S.s3.A + .6);
-pop('#c3', W(17.5));
-pop('#cons', W(19.2), 120);
-tl.fromTo('#tapa', { rotate: 0 }, { rotate: -28, duration: .3, ease: 'power2.out' }, W(20.4));
-tl.fromTo('#po1, #po2, #po3', { y: 140, autoAlpha: 0 }, { y: (i) => [-90, -140, -90][i], autoAlpha: 1, duration: .5, ease: 'back.out(2)', stagger: .12 }, W(20.5));
-deriva('s3', 1.04);
-// 4 · el plan era otro
-barre('s4', 'arr');
-lineas('#s4', S.s4.A + .2);
-tl.fromTo('#f4', { x: 300, rotate: 10, autoAlpha: 0 }, { x: 0, rotate: 3, autoAlpha: 1, duration: .7, ease: E }, S.s4.A + .3);
-tl.fromTo('#of4', { x: -200, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .6, ease: E }, W(25.4));
-tl.to('#x4', { scaleX: 1, duration: .35, ease: 'power2.out' }, S.s4.B - 1.0);
-tl.to('#of4', { opacity: .55, duration: .3 }, S.s4.B - .9);
-sella('#se4', S.s4.B - .7, -6);
-deriva('s4', 1.04);
-// Q · quiz
-iris('sq');
-tl.fromTo('#sqk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, S.sq.A + .2);
-tl.fromTo('#quiz', { scale: .6, y: 120, opacity: 0, rotate: -4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, S.sq.A + .25);
-tl.fromTo('#quiz .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, S.sq.A + .55);
-const RESP = W(30.42);
-tl.to('#qa', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - 1.0);
-tl.to('#qb', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - .65);
-toque(QC[0], QC[1], RESP - .05);
-tl.to('#qc .fill', { width: '100%', duration: .45, ease: 'power3.out' }, RESP);
-tl.set('#qc', { className: 'op ok', color: '#fff' }, RESP);
-tl.to('#qa, #qb', { opacity: .4, duration: .3 }, RESP + .05);
-tl.to('#quiz', { scale: 1.04, duration: .12, yoyo: true, repeat: 1 }, RESP);
-// J1 · desafío cuarentena
-const jugada = (k) => { barre(k, 'izq'); kick('#' + k, S[k].A + .2); lineas('#' + k, S[k].A + .3); deriva(k, 1.04); };
-jugada('j1');
-tl.fromTo('#cal > div', { scale: .6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(2)', stagger: .03 }, S.j1.A + .4);
-const D0 = W(36.2), D1 = S.j1.B - .2;
-tl.to('#cal img', { opacity: 1, duration: .2, stagger: (D1 - D0) / 15 }, D0);
-pop('#dia', D0 - .2);
-// 7 · casa chica
-latigo('j1', 's7');
-lineas('#s7', S.s7.A + .3);
-sube('#f7a', S.s7.A + .25, 240);
-tl.fromTo('#n7a', { y: -120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(40.6));
-tl.to('#n7a', { y: -40, autoAlpha: 0, duration: .3 }, W(42.3));
-tl.fromTo('#f7b', { y: 300, rotate: 10, autoAlpha: 0 }, { y: 0, rotate: 4, autoAlpha: 1, duration: .6, ease: 'back.out(1.4)' }, W(42.0));
-pop('#c7', W(43.8));
-deriva('s7', 1.04);
-// J2 · detrás de escena
-jugada('j2');
-tl.fromTo('#ci', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, W(47.0));
-tl.fromTo('#ci em', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: .4 }, W(49.7));
-tl.fromTo('#r1, #r2, #r3', { y: 300, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .55, ease: 'back.out(1.4)', stagger: .18 }, W(49.9));
-// J3a · local, olor, pizarras
-jugada('j3a');
-tl.set('#h3b', { autoAlpha: 0 }, 0); tl.set('#h3b', { autoAlpha: 1 }, W(58.4)); lineas('#h3b', W(58.4));
-sube('#f8a', S.j3a.A + .3, 240);
-tl.fromTo('#f8a img', { scale: 1.2 }, { scale: 1, duration: 4, ease: 'none' }, S.j3a.A);
-pop('#c8a', W(53.9));
-tl.fromTo('#ol1, #ol2, #ol3', { y: 80, autoAlpha: 0, scaleY: .5 }, { y: -60, autoAlpha: .9, scaleY: 1, duration: 1.1, ease: 'sine.out', stagger: .2 }, W(55.6));
-tl.to('#ol1, #ol2, #ol3', { autoAlpha: 0, duration: .4 }, W(57.6));
-tl.fromTo('#f8b', { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, W(58.6));
-tl.set('#f8b', { clipPath: 'inset(0 0 0 100%)' }, 0);
-sella('#c8b', W(59.4), -4);
-// J3b · ventanita
-barre('j3b', 'arr');
-lineas('#j3b', S.j3b.A + .2);
-tl.fromTo('#ph9', { y: 600 }, { y: 0, duration: .8, ease: E }, S.j3b.A + .3);
-tl.fromTo('#f9', { x: 400, rotate: 10, autoAlpha: 0 }, { x: 0, rotate: 3, autoAlpha: 1, duration: .6, ease: 'back.out(1.4)' }, W(64.5));
-pop('#c9', W(65.7));
-deriva('j3b', 1.04);
-// 11 · la cola
-iris('s11', 540, 1000);
+// 2a · quién es
+latigo('s1', 's2a');
+lineas('#s2a', S.s2a.A + .3);
+tl.fromTo('#f2a', { y: 300, rotate: -10, autoAlpha: 0 }, { y: 0, rotate: -3, autoAlpha: 1, duration: .7, ease: 'back.out(1.3)' }, S.s2a.A + .35);
+tl.fromTo('#pf2', { x: 300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .6, ease: E }, W(9.3));
+deriva('s2a', 1.04);
+// 2b · hoy
+barre('s2b', 'arr');
+lineas('#s2b', S.s2b.A + .15);
+tl.fromTo('#st1', { x: -200, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, W(15.2));
+tl.fromTo('#st2', { x: -200, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, W(16.2));
+tl.fromTo('#st3', { x: -200, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, W(17.4));
+sube('#f2b', W(15.4), 200);
+const C700 = [W(17.6), W(18.8)];
+deriva('s2b', 1.03);
+// Q · sus videos
+iris('sq', 540, 1000);
+kick('#sq', S.sq.A + .2);
+tl.set('#hq2', { autoAlpha: 0 }, 0);
+tl.fromTo('#hq1 > span', { yPercent: 115 }, { yPercent: 0, duration: .7, ease: E }, W(22.2));
+tl.fromTo('#gq .mv', { y: 120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)', stagger: .06 }, S.sq.A + .4);
+tl.to('#gq', { autoAlpha: 0, y: -80, duration: .4, ease: 'power2.in' }, W(25.3));
+tl.to('#hq1', { autoAlpha: 0, duration: .25 }, W(27.2));
+tl.set('#hq2', { autoAlpha: 1 }, W(27.3)); tl.fromTo('#hq2 .m > span', { yPercent: 115 }, { yPercent: 0, duration: .6, ease: E }, W(27.3));
+tl.fromTo('#b1, #b2, #b3', { y: 500, rotate: (i) => [-8, 0, 8][i], autoAlpha: 0 }, { y: 0, rotate: (i) => [-3, 0, 3][i], autoAlpha: 1, duration: .6, ease: 'back.out(1.4)', stagger: .2 }, W(25.6));
+const RESP = S.sq.B - .55;
+toque(B2[0], B2[1], RESP);
+tl.set('#b2', { className: 'big3 gana' }, RESP + .02);
+tl.to('#b2', { scale: 1.08, duration: .25, ease: 'back.out(2)' }, RESP);
+tl.to('#v1, #v2, #v3', { opacity: 1, duration: .25, stagger: .08 }, RESP + .05);
+tl.to('#b1, #b3', { opacity: .45, duration: .3 }, RESP + .1);
+// L1 · precio
+leccion('l1');
+tl.fromTo('#ph1', { y: 700 }, { y: 0, duration: .8, ease: E }, S.l1.A + .25);
+tl.fromTo('#tb1', { width: '0%' }, { width: '100%', duration: S.l1.n, ease: 'none' }, S.l1.A);
+tl.fromTo('#pr1', { scale: 3, rotate: -20, autoAlpha: 0 }, { scale: 1, rotate: -4, autoAlpha: 1, duration: .45, ease: 'back.out(2)' }, W(32.3));
+pop('#pr1b', W(33.4));
+pop('#ct1', W(34.4));
+const C21 = [W(34.7), W(35.9)];
+// L2 · apertura
+leccion('l2', (k) => latigo('l1', k));
+tl.fromTo('#ph2', { y: 700 }, { y: 0, duration: .8, ease: E }, S.l2.A + .3);
+tl.fromTo('#tb2', { width: '0%' }, { width: '100%', duration: S.l2.n, ease: 'none' }, S.l2.A);
+pop('#ct2', W(40.2));
+const C10 = [W(40.6), W(41.8)];
+tl.fromTo('#f2c', { x: 400, rotate: 10, autoAlpha: 0 }, { x: 0, rotate: 3, autoAlpha: 1, duration: .6, ease: 'back.out(1.4)' }, W(42.3));
+// L3 · historia
+leccion('l3', (k) => iris(k, 540, 1000));
+sube('#car3', S.l3.A + .3, 200);
+tl.fromTo('#tira3', { x: 0 }, { x: -1740, duration: S.l3.n - .4, ease: 'power1.inOut' }, S.l3.A + .5);
+pop('#ct3', W(47.2));
+const C15 = [W(47.3), W(48.5)];
+// L4 · cara
+leccion('l4');
+tl.fromTo('#g4 .mv', { scale: .5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .4, ease: 'back.out(1.8)', stagger: .05 }, S.l4.A + .3);
+tl.fromTo('#g4 .aro', { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: 'back.out(2)', stagger: .07 }, W(52.9));
+pop('#p4', W(53.6));
+// L5 · embudo
+leccion('l5', (k) => latigo('l4', k));
+sube('#cp5', S.l5.A + .35, 200);
+tl.fromTo('#h5a', { backgroundColor: 'rgba(255,210,63,0)' }, { backgroundColor: 'rgba(255,210,63,1)', duration: .3 }, W(58.2));
+tl.fromTo('#h5b', { backgroundColor: 'rgba(255,210,63,0)' }, { backgroundColor: 'rgba(255,210,63,1)', duration: .3 }, W(59.3));
+pop('#nd1', W(56.2)); tl.fromTo('#fa1', { scaleX: 0 }, { scaleX: 1, duration: .35 }, W(57.9)); pop('#nd2', W(58.2));
+tl.fromTo('#fa2', { scaleX: 0 }, { scaleX: 1, duration: .35 }, W(59.1)); pop('#nd3', W(59.4));
+// L6 · promo
+leccion('l6');
+tl.fromTo('#pm6', { y: 200, rotate: 3, autoAlpha: 0 }, { y: 0, rotate: -1, autoAlpha: 1, duration: .6, ease: 'back.out(1.4)' }, W(63.5));
+tl.fromTo('#dni6', { x: 500, rotate: 12, autoAlpha: 0 }, { x: 0, rotate: -5, autoAlpha: 1, duration: .6, ease: 'back.out(1.5)' }, W(64.6));
+// L7 · calle
+leccion('l7', (k) => barre(k, 'arr'));
+tl.fromTo('#ph7', { y: 600 }, { y: 0, duration: .8, ease: E }, S.l7.A + .3);
+tl.fromTo('#f7', { x: 400, rotate: 10, autoAlpha: 0 }, { x: 0, rotate: 3, autoAlpha: 1, duration: .6, ease: 'back.out(1.4)' }, W(71.6));
+pop('#c7', W(72.2));
+// 11 · la receta
+iris('s11', 540, 900);
 lineas('#s11', S.s11.A + .2);
-tl.fromTo('#k1, #k2, #k3, #k4', { y: -500, rotate: (i) => [-14, 12, -10, 14][i], autoAlpha: 0 }, { y: 0, rotate: (i) => [-4, 3, -2, 4][i], autoAlpha: 1, duration: .5, ease: 'bounce.out', stagger: .22 }, S.s11.A + .3);
-sella('#e1', W(69.9), -8); sella('#e2', W(70.6), 6); sella('#e3', W(71.8), -3);
-deriva('s11', 1.05);
-// 12 · hoy
-latigo('s11', 's12');
-lineas('#s12', S.s12.A + .3);
-sube('#f12', W(74.3), 220);
-pop('#pa', W(75.3)); pop('#pb', W(75.6));
-tl.fromTo('#mi12 > div', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E, stagger: .2 }, W(76.6));
-deriva('s12', 1.04);
-// 13 · 3 AM
-barre('s13', 'aba');
-kick('#s13', S.s13.A + .3);
-tl.fromTo('#r13', { scale: 1.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(81.7));
-tl.to('#r13', { x: 10, duration: .05, repeat: 9, yoyo: true }, W(82.0));
-sella('#c13', W(83.4), -5);
+tl.fromTo('#k1', { x: -300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(74.2));
+tl.fromTo('#k2', { x: -300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(75.0));
+tl.fromTo('#k3', { x: -300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(75.9));
+tl.fromTo('#k4', { x: -300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(76.8));
+deriva('s11', 1.04);
 // 14 · cierre → "¿Suerte?"
 barre('s14', 'arr');
 lineas('#s14', S.s14.A + .15, .15);
-sube('#perfil14', S.s14.A + .5, 400);
-toque(BT[0], BT[1], S.s14.A + 1.6);
-tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, S.s14.A + 1.65);
+sube('#perfil14', S.s14.A + .6, 400);
+toque(BT[0], BT[1], S.s14.A + 2.0);
+tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, S.s14.A + 2.05);
 
+const fmt = (v) => Math.round(v).toLocaleString('es-AR');
 const gr = $('#grano').getContext('2d'); const RUIDO = [];
 for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
 const vis = (k, t) => t >= S[k].A && t < S[k].B + .3;
+const cuenta = (C, max, t) => fmt(max * ease((t - C[0]) / (C[1] - C[0])));
 window.render = (t) => {
   tl.seek(t, false);
   gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
-  if (vis('j1', t)) $('#ndia').textContent = Math.max(1, Math.min(15, 1 + Math.floor((t - D0) / ((D1 - D0) / 15))));
-  if (vis('s13', t)) $('#dos').style.opacity = Math.floor(t * 2) % 2 ? .25 : 1;
-  if (vis('s14', t)) $('#btn14t').textContent = t >= S.s14.A + 1.65 ? 'Siguiendo' : 'Seguir';
+  if (vis('s2b', t)) $('#n700').textContent = '+' + cuenta(C700, 750, t);
+  if (vis('l1', t)) $('#n21').textContent = cuenta(C21, 2100000, t);
+  if (vis('l2', t)) $('#n10').textContent = cuenta(C10, 1000000, t);
+  if (vis('l3', t)) $('#n15').textContent = cuenta(C15, 1500000, t);
+  if (vis('s14', t)) $('#btn14t').textContent = t >= S.s14.A + 2.05 ? 'Siguiendo' : 'Seguir';
 };
 window.render(0); window.listo = true;
 })();
