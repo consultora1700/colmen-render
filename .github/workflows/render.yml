@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   plan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       escena: ${{ steps.p.outputs.escena }}
       tramos: ${{ steps.p.outputs.tramos }}
@@ -36,7 +36,7 @@ jobs:
 
   cuadros:
     needs: plan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: true
       matrix: { tramo: '${{ fromJSON(needs.plan.outputs.tramos) }}' }
@@ -52,7 +52,7 @@ jobs:
 
   video:
     needs: [plan, cuadros]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
