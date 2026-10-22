@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>El vaso que sobrevivió · EP. 01</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Rounded"; src: url("assets/rounded.woff2") format("woff2"); font-weight: 800; font-display: block; }
+      @font-face { font-family: "Inter"; src: url("assets/inter.woff2") format("woff2"); font-weight: 400 800; font-display: block; }
+      @font-face { font-family: "Mono"; src: url("assets/mono.woff2") format("woff2"); font-weight: 400 700; font-display: block; }
+      /* paleta de la marca personal (portfolio) + fuego */
+      :root {
+        --fondo: #1c1310;
+        --fondo2: #261a15;
+        --tinta: #f0e7db;
+        --tenue: rgba(240, 231, 219, 0.55);
+        --teal: #5ad0c4;
+        --ambar: #f0a33c;
+        --fuego: #ff6a2b;
+        --linea: rgba(240, 231, 219, 0.14);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--fondo); }
+      body { font-family: "Inter", system-ui, sans-serif; color: var(--tinta); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--fondo); }
+      .esc { position: absolute; inset: 0; overflow: hidden; background: var(--fondo); }
+      .grano { position: absolute; inset: 0; pointer-events: none; opacity: 0.08; mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+      .kicker { position: absolute; left: 90px; top: 500px; font: 700 30px "Mono", monospace; letter-spacing: 6px; color: var(--teal); text-transform: uppercase; }
+      .grande { position: absolute; left: 90px; right: 140px; top: 560px; font: 800 88px/1.03 "Rounded", sans-serif; letter-spacing: -1.5px; text-wrap: balance; }
+      .grande em { font-style: normal; color: var(--ambar); }
+      .pal { display: inline-block; }
+
+      /* ── 1 · auto en llamas */
+      .noche { position: absolute; inset: 0; background: radial-gradient(60% 40% at 50% 62%, rgba(255,106,43,.28), transparent 70%), linear-gradient(180deg, #120c0a 0%, #1c1310 55%, #120c0a 100%); }
+      .piso { position: absolute; left: 0; right: 0; top: 1430px; height: 3px; background: rgba(240,231,219,.12); }
+      .auto { position: absolute; left: 90px; top: 1100px; width: 900px; height: 340px; }
+      .humo { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(70,58,52,.75), rgba(70,58,52,0)); }
+      .llama { position: absolute; transform-origin: 50% 100%; }
+
+      /* ── 2 · interior: el vaso */
+      .interior { position: absolute; inset: 0; background: radial-gradient(55% 35% at 50% 62%, rgba(240,163,60,.22), transparent 70%), #0f0a08; }
+      .asiento { position: absolute; border-radius: 60px 60px 30px 30px; background: linear-gradient(180deg, #1a1412, #0b0807); box-shadow: inset 0 0 0 3px #231a16; }
+      .ceniza { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #ff8a3d; box-shadow: 0 0 12px #ff6a2b; }
+      .vaso { position: absolute; left: 390px; top: 760px; width: 300px; height: 600px; }
+      .brillo { position: absolute; left: 290px; top: 800px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(closest-side, rgba(240,163,60,.45), rgba(240,163,60,0)); }
+      .rayosx { position: absolute; left: 420px; top: 840px; width: 240px; height: 240px; border-radius: 50%; overflow: hidden; border: 6px solid var(--teal); box-shadow: 0 0 40px rgba(90,208,196,.5); background: #bfe9f0; clip-path: circle(0% at 50% 50%); }
+      .hielo { position: absolute; width: 74px; height: 74px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(180,230,240,.7)); box-shadow: inset 0 0 0 3px rgba(255,255,255,.8), 0 6px 14px rgba(0,60,80,.25); }
+
+      /* ── 3 · el celular con las vistas */
+      .cel { position: absolute; left: 330px; top: 500px; width: 420px; height: 760px; border-radius: 64px; background: #0b0b0b; box-shadow: inset 0 0 0 4px #2b2b2b, inset 0 0 0 12px #050505, 0 50px 90px rgba(0,0,0,.7); }
+      .cel .pant { position: absolute; left: 16px; top: 16px; right: 16px; bottom: 16px; border-radius: 50px; overflow: hidden; background: #0f0a08; }
+      .cel .isla { position: absolute; left: 50%; top: 30px; width: 120px; height: 34px; margin-left: -60px; border-radius: 20px; background: #000; z-index: 5; }
+      .cel .app { position: absolute; left: 0; right: 0; top: 70px; z-index: 4; text-align: center; font: 700 26px "Inter", sans-serif; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.7); }
+      .cel .mini { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+      .cel .lado { position: absolute; right: 22px; bottom: 170px; display: grid; gap: 30px; z-index: 4; }
+      .cel .lado svg { width: 52px; height: 52px; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+      .cel .pie { position: absolute; left: 24px; bottom: 40px; right: 100px; z-index: 4; font: 600 22px/1.35 "Inter", sans-serif; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.7); }
+      .contador { position: absolute; left: 90px; right: 140px; top: 1290px; z-index: 6; text-align: center; }
+      .contador .n { font: 800 110px/1 "Rounded", sans-serif; color: var(--tinta); font-variant-numeric: tabular-nums; letter-spacing: -2px; }
+      .contador .u { font: 700 30px "Mono", monospace; letter-spacing: 6px; color: var(--ambar); text-transform: uppercase; margin-top: 8px; }
+      .pausa { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; background: rgba(28,19,16,.75); border: 4px solid var(--tinta); display: grid; place-items: center; opacity: 0; }
+      .pausa i { display: inline-block; width: 26px; height: 90px; background: var(--tinta); border-radius: 6px; margin: 0 12px; }
+      .rebobina { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(240,231,219,.10) 0 2px, transparent 2px 9px); opacity: 0; }
+
+      /* ── tomas de Franco en el set */
+      .set .fondo, .set .persona { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+      .sub { position: absolute; left: 90px; right: 140px; top: 520px; text-align: center; }
+      .sub .w { display: inline-block; font: 700 60px/1.3 "Inter", sans-serif; color: var(--tinta); background: rgba(28,19,16,.85); padding: 2px 12px; margin: 0 -3px 8px; border-radius: 12px; }
+      .sub .w.k { color: var(--teal); }
+      .sub.xl .w { font: 800 100px/1.12 "Rounded", sans-serif; letter-spacing: -1px; }
+      .sub.xl .w.k { color: var(--ambar); }
+      .tag { position: absolute; left: 90px; top: 1380px; font: 500 26px "Mono", monospace; color: var(--teal); letter-spacing: 3px; background: rgba(28,19,16,.75); padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(90,208,196,.5); }
+
+      /* ── 5 · la respuesta de la marca */
+      .respuesta { position: absolute; left: 90px; right: 140px; top: 760px; padding: 40px 44px; border-radius: 36px; background: var(--fondo2); border: 2px solid var(--linea); box-shadow: 0 40px 80px rgba(0,0,0,.5); }
+      .respuesta .quien { display: flex; align-items: center; gap: 20px; font: 700 30px "Inter", sans-serif; }
+      .respuesta .quien .av { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--ambar), #b86d1f); display: grid; place-items: center; font: 800 32px "Rounded", sans-serif; color: #1c1310; }
+      .respuesta .quien small { display: block; font: 500 24px "Mono", monospace; color: var(--tenue); letter-spacing: 1px; margin-top: 4px; }
+      .respuesta p { font: 800 64px/1.12 "Rounded", sans-serif; margin-top: 30px; letter-spacing: -1px; }
+      .respuesta p em { font-style: normal; color: var(--ambar); }
+      .autonuevo { position: absolute; left: 0; top: 1130px; width: 760px; height: 290px; }
+
+      /* ── 7 · cierre */
+      .cierre .q { position: absolute; left: 90px; right: 140px; top: 600px; font: 800 96px/1.04 "Rounded", sans-serif; letter-spacing: -1.5px; text-wrap: balance; }
+      .cierre .q em { font-style: normal; color: var(--ambar); }
+      .cierre .firma { position: absolute; left: 90px; right: 140px; top: 1180px; display: flex; align-items: center; gap: 22px; }
+      .cierre .firma .h { font: 700 40px "Inter", sans-serif; }
+      .cierre .firma .s { font: 500 28px "Mono", monospace; color: var(--teal); letter-spacing: 2px; margin-top: 6px; }
+      .cierre .boton { padding: 18px 30px; border-radius: 999px; background: var(--ambar); color: #1c1310; font: 800 34px "Rounded", sans-serif; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="1920">
+      <!-- 1 · el auto se prende fuego (0–3,4) -->
+      <section id="s1" class="esc clip" data-start="0" data-duration="3.4" data-track-index="1">
+        <div class="noche"></div>
+        <div id="s1-humo"></div>
+        <svg class="auto" id="s1-auto" viewBox="0 0 900 340">
+          <path d="M60 250 L80 190 Q100 165 160 160 L280 150 Q340 80 420 70 L600 70 Q660 72 720 150 L820 165 Q860 172 862 210 L865 250 Z" fill="#2b201b" stroke="#4a3830" stroke-width="5" stroke-linejoin="round" />
+          <path d="M300 152 Q350 95 420 88 L500 88 L500 152 Z M520 88 L600 88 Q650 92 700 152 L520 152 Z" fill="#0e0907" />
+          <circle cx="220" cy="262" r="62" fill="#120c0a" stroke="#4a3830" stroke-width="6" /><circle cx="220" cy="262" r="24" fill="#3a2c25" />
+          <circle cx="700" cy="262" r="62" fill="#120c0a" stroke="#4a3830" stroke-width="6" /><circle cx="700" cy="262" r="24" fill="#3a2c25" />
+        </svg>
+        <div id="s1-llamas"></div>
+        <div class="piso"></div>
+        <div class="kicker" id="s1-k">Noviembre de 2023</div>
+        <h1 class="grande" id="s1-t"><span class="pal">A</span> <span class="pal">una</span> <span class="pal">clienta</span> <span class="pal">se</span> <span class="pal">le</span> <em><span class="pal">prende</span> <span class="pal">fuego</span></em> <span class="pal">el</span> <span class="pal">auto.</span></h1>
+        <div class="grano"></div>
+      </section>
+
+      <!-- 2 · entre los restos, un vaso con hielo (3,4–7) -->
+      <section id="s2" class="esc clip" data-start="3.4" data-duration="3.6" data-track-index="1">
+        <div class="interior"></div>
+        <div class="asiento" style="left: 60px; top: 820px; width: 300px; height: 560px"></div>
+        <div class="asiento" style="left: 720px; top: 820px; width: 300px; height: 560px"></div>
+        <div id="s2-cenizas"></div>
+        <div class="brillo" id="s2-brillo"></div>
+        <svg class="vaso" id="s2-vaso" viewBox="0 0 300 600">
+          <defs><linearGradient id="oro" x1="0" x2="1"><stop offset="0" stop-color="#8a6a3c" /><stop offset=".35" stop-color="#e8c58a" /><stop offset=".5" stop-color="#fff1d0" /><stop offset=".7" stop-color="#d4a865" /><stop offset="1" stop-color="#7a5a30" /></linearGradient></defs>
+          <path d="M235 170 Q300 175 298 260 Q296 345 230 350" fill="none" stroke="#c99f62" stroke-width="26" stroke-linecap="round" />
+          <path d="M40 120 L250 120 L232 560 Q230 585 200 585 L90 585 Q60 585 58 560 Z" fill="url(#oro)" />
+          <rect x="30" y="80" width="240" height="52" rx="16" fill="#d9b679" /><rect x="30" y="80" width="240" height="14" rx="7" fill="#f3dcab" />
+          <rect x="176" y="0" width="22" height="92" rx="8" fill="#e9d2a6" transform="rotate(8 187 46)" />
+          <text x="146" y="260" text-anchor="middle" font-family="Rounded, sans-serif" font-weight="800" font-size="34" letter-spacing="3" fill="#6b4f2a" opacity=".85">STANLEY</text>
+        </svg>
+        <div class="rayosx" id="s2-rx">
+          <div class="hielo" style="left: 34px; top: 44px; transform: rotate(-12deg)"></div>
+          <div class="hielo" style="left: 120px; top: 30px; transform: rotate(18deg)"></div>
+          <div class="hielo" style="left: 70px; top: 120px; transform: rotate(6deg)"></div>
+          <div class="hielo" style="left: 150px; top: 120px; transform: rotate(-22deg)"></div>
+        </div>
+        <h2 class="grande" id="s2-t1"><span class="pal">Entre</span> <span class="pal">los</span> <span class="pal">restos</span> <span class="pal">queda</span> <em><span class="pal">un</span> <span class="pal">vaso.</span></em></h2>
+        <h2 class="grande" id="s2-t2" style="top: 560px"><span class="pal">Y</span> <span class="pal">adentro…</span><br /><em><span class="pal">todavía</span> <span class="pal">hay</span> <span class="pal">hielo.</span></em></h2>
+        <div class="grano"></div>
+      </section>
+
+      <!-- 3 · lo sube y explota; congelamos (7–10) -->
+      <section id="s3" class="esc clip" data-start="7" data-duration="3" data-track-index="1">
+        <div class="noche" style="background: radial-gradient(50% 35% at 50% 50%, rgba(90,208,196,.16), transparent 70%), #1c1310"></div>
+        <div id="s3-todo">
+          <div class="cel" id="s3-cel">
+            <div class="isla"></div>
+            <div class="pant"><div class="app">TikTok</div>
+              <div class="mini" id="s3-mini"></div>
+              <div class="lado">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z" /></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2z" /></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c1-6 4-11 12-12z" /></svg>
+              </div>
+              <div class="pie">Se me prendió fuego el auto… y mirá lo que sobrevivió</div>
+            </div>
+          </div>
+          <div class="contador"><div class="n" id="s3-n">0</div><div class="u">vistas</div></div>
+        </div>
+        <div class="rebobina" id="s3-reb"></div>
+        <div class="pausa" id="s3-pausa"><div><i></i><i></i></div></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- 4 · Franco: "Pará. Este video no lo pagó ninguna marca. Lo filmó una clienta." (10–14,5) -->
+      <section id="s4" class="esc set clip" data-start="10" data-duration="4.5" data-track-index="1">
+        <img class="fondo" id="s4-f" src="assets/capa-fondo.png" alt="" />
+        <img class="persona" id="s4-p" src="assets/capa-persona.png" alt="" />
+        <div class="sub xl" id="s4-s0"><span class="w k">Pará.</span></div>
+        <div class="sub" id="s4-s1"><span class="w">Este</span> <span class="w">video</span> <span class="w k">no</span> <span class="w k">lo</span> <span class="w k">pagó</span> <span class="w k">ninguna</span> <span class="w k">marca.</span></div>
+        <div class="sub" id="s4-s2"><span class="w">Lo</span> <span class="w">filmó</span> <span class="w k">una</span> <span class="w k">clienta.</span></div>
+        <div class="tag" id="s4-tag">EP. 01 · HISTORIAS DE VENTAS</div>
+      </section>
+
+      <!-- 5 · la marca responde y le reponen el auto (14,5–20,5) -->
+      <section id="s5" class="esc clip" data-start="14.5" data-duration="6" data-track-index="1">
+        <div class="noche" style="background: radial-gradient(60% 40% at 50% 50%, rgba(240,163,60,.14), transparent 70%), #1c1310"></div>
+        <div class="kicker" id="s5-k">Días después</div>
+        <h2 class="grande" id="s5-t" style="top: 560px; font-size: 72px"><span class="pal">El</span> <span class="pal">presidente</span> <span class="pal">de</span> <span class="pal">Stanley</span> <span class="pal">le</span> <span class="pal">contesta</span> <span class="pal">por</span> <span class="pal">TikTok:</span></h2>
+        <div class="respuesta" id="s5-r">
+          <div class="quien"><div class="av">S</div><div>Presidente de Stanley<small>respuesta en video</small></div></div>
+          <p><span class="pal">“Nos</span> <span class="pal">encantaría</span> <em><span class="pal">reponerte</span> <span class="pal">el</span> <span class="pal">auto.”</span></em></p>
+        </div>
+        <svg class="autonuevo" id="s5-auto" viewBox="0 0 900 340">
+          <path d="M60 250 L80 190 Q100 165 160 160 L280 150 Q340 80 420 70 L600 70 Q660 72 720 150 L820 165 Q860 172 862 210 L865 250 Z" fill="#5ad0c4" />
+          <path d="M300 152 Q350 95 420 88 L500 88 L500 152 Z M520 88 L600 88 Q650 92 700 152 L520 152 Z" fill="#1c1310" opacity=".85" />
+          <circle cx="220" cy="262" r="62" fill="#120c0a" /><circle cx="220" cy="262" r="24" fill="#c9c2b8" />
+          <circle cx="700" cy="262" r="62" fill="#120c0a" /><circle cx="700" cy="262" r="24" fill="#c9c2b8" />
+          <path d="M470 70 L470 250 M60 200 L865 200" stroke="#f0a33c" stroke-width="22" />
+          <path d="M470 70 q-70 -70 -110 -20 q30 30 110 20 q70 -70 110 -20 q-30 30 -110 20" fill="#f0a33c" />
+        </svg>
+        <div class="grano"></div>
+      </section>
+
+      <!-- 6 · Franco: "Antes la publicidad la pagabas. Hoy la filma tu cliente." (20,5–27) -->
+      <section id="s6" class="esc set clip" data-start="20.5" data-duration="6.5" data-track-index="1">
+        <img class="fondo" id="s6-f" src="assets/capa-fondo.png" alt="" />
+        <img class="persona" id="s6-p" src="assets/capa-persona.png" alt="" />
+        <div class="sub" id="s6-s1"><span class="w">Antes,</span> <span class="w">la</span> <span class="w">publicidad</span> <span class="w k">la</span> <span class="w k">pagabas.</span></div>
+        <div class="sub xl" id="s6-s2"><span class="w">Hoy</span> <span class="w">la</span> <span class="w k">filma</span> <span class="w k">tu</span> <span class="w k">cliente.</span></div>
+      </section>
+
+      <!-- 7 · cierre (27–32) -->
+      <section id="s7" class="esc cierre clip" data-start="27" data-duration="5" data-track-index="1">
+        <div class="noche" style="background: radial-gradient(60% 40% at 50% 45%, rgba(90,208,196,.12), transparent 70%), #1c1310"></div>
+        <h2 class="q" id="s7-q"><span class="pal">¿Tu</span> <span class="pal">producto</span> <span class="pal">le</span> <span class="pal">da</span> <span class="pal">a</span> <span class="pal">alguien</span> <em><span class="pal">algo</span> <span class="pal">para</span> <span class="pal">filmar?</span></em></h2>
+        <div class="firma" id="s7-f"><div><div class="h">Franco Valencia</div><div class="s">historias de ventas</div></div><div class="boton">Seguime</div></div>
+        <div class="grano"></div>
+      </section>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      // pseudo-azar fijo (render determinístico)
+      let semilla = 7;
+      const az = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+
+      // llamas: 3 capas de lenguas sobre el techo y el capó
+      const capas = [["#ff4d1f", 1], ["#ff8a2b", 0.8], ["#ffd36b", 0.55]];
+      const llamas = document.getElementById("s1-llamas");
+      const lenguas = [];
+      [[300, 1190], [420, 1150], [540, 1145], [660, 1160], [790, 1215], [210, 1250]].forEach(([x, y], i) => {
+        capas.forEach(([color, s], c) => {
+          const d = document.createElement("div");
+          const w = 150 * s, h = 250 * s;
+          d.className = "llama";
+          d.style.cssText = `left:${x - w / 2}px;top:${y - h + 40}px;width:${w}px;height:${h}px;`;
+          d.innerHTML = `<svg viewBox="0 0 100 180" width="100%" height="100%"><path d="M50 0 C62 40 98 70 92 120 C88 158 70 180 50 180 C30 180 12 158 8 120 C4 84 30 70 34 40 C40 58 46 50 50 0Z" fill="${color}"/></svg>`;
+          llamas.appendChild(d);
+          lenguas.push({ d, f: 5 + i * 1.7 + c * 2.3, a: 0.12 + c * 0.04 });
+        });
+      });
+      // humo
+      const humo = document.getElementById("s1-humo");
+      const bocanadas = Array.from({ length: 14 }, (_, i) => {
+        const d = document.createElement("div");
+        const r = 160 + az() * 160;
+        d.className = "humo";
+        d.style.cssText = `left:${200 + az() * 640 - r / 2}px;top:${1080 - r / 2}px;width:${r}px;height:${r}px;`;
+        humo.appendChild(d);
+        return { d, v: 120 + az() * 160, o: az() * 3 };
+      });
+      // brasas en el interior
+      const cen = document.getElementById("s2-cenizas");
+      const brasas = Array.from({ length: 22 }, () => {
+        const d = document.createElement("div");
+        d.className = "ceniza";
+        cen.appendChild(d);
+        return { d, x: 60 + az() * 960, y0: 1450 + az() * 300, v: 140 + az() * 160, o: az() * 4 };
+      });
+      // la escena del vaso, achicada dentro del celular
+      const mini = document.getElementById("s3-mini");
+      mini.innerHTML = document.getElementById("s2").innerHTML.replace(/id="[^"]*"/g, "");
+      mini.querySelectorAll(".grande").forEach((e) => e.remove());
+      mini.querySelector(".rayosx").style.clipPath = "circle(50% at 50% 50%)";
+      mini.style.transform = `scale(${388 / 1080}) translate(0, -260px)`;
+      const nEl = document.getElementById("s3-n");
+
+      const palabras = (sel, t0, paso = 0.08) => tl.fromTo(`${sel} .pal`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out", stagger: paso }, t0);
+      const subt = (sel, t0, paso = 0.12) => tl.fromTo(`${sel} .w`, { opacity: 0, y: 18, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.28, ease: "back.out(2)", stagger: paso }, t0);
+      const empuje = (f, p, t0, d, a = 1.02, b = 1.06) => {
+        tl.fromTo(f, { scale: a }, { scale: b, duration: d, ease: "none" }, t0);
+        tl.fromTo(p, { scale: a + 0.01 }, { scale: b + 0.03, duration: d, ease: "none", transformOrigin: "50% 60%" }, t0);
+      };
+
+      // 1
+      tl.fromTo("#s1-k", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4 }, 0.05);
+      palabras("#s1-t", 0.2, 0.07);
+      tl.fromTo("#s1-auto", { x: -40 }, { x: 0, duration: 3.4, ease: "none" }, 0);
+      tl.fromTo("#s1-llamas", { opacity: 0, scale: 0.4, transformOrigin: "50% 100%" }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0.6);
+      tl.fromTo("#s1-t em", { color: "#f0a33c" }, { color: "#ff6a2b", duration: 0.3 }, 1.0);
+      tl.fromTo("#root", { x: 0 }, { x: 0, duration: 0.01 }, 0);
+      tl.to("#s1", { x: 6, duration: 0.05, yoyo: true, repeat: 7, ease: "none" }, 1.0);
+      // 2
+      tl.fromTo("#s2-vaso", { scale: 0.85, y: 60, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.7, ease: "expo.out", transformOrigin: "50% 70%" }, 3.45);
+      tl.fromTo("#s2-brillo", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8 }, 3.6);
+      palabras("#s2-t1", 3.5);
+      tl.to("#s2-t1", { opacity: 0, y: -20, duration: 0.25 }, 5.0);
+      palabras("#s2-t2", 5.2);
+      tl.to("#s2-rx", { clipPath: "circle(50% at 50% 50%)", duration: 0.5, ease: "power3.out" }, 5.4);
+      tl.fromTo("#s2-rx .hielo", { y: 0 }, { y: -10, duration: 0.12, yoyo: true, repeat: 7, stagger: 0.05, ease: "sine.inOut" }, 5.9);
+      // 3
+      tl.fromTo("#s3-cel", { y: 200, opacity: 0, rotation: -4 }, { y: 0, opacity: 1, rotation: 0, duration: 0.6, ease: "expo.out" }, 7.0);
+      const cuenta = { n: 0 };
+      tl.fromTo(cuenta, { n: 0 }, { n: 42000000, duration: 1.7, ease: "expo.in", onUpdate: () => (nEl.textContent = Math.round(cuenta.n).toLocaleString("es-AR")) }, 7.2);
+      tl.fromTo("#s3-n", { scale: 1 }, { scale: 1.12, duration: 0.12, yoyo: true, repeat: 1 }, 8.9);
+      // congelado: se desatura, líneas de rebobinado y pausa
+      tl.fromTo("#s3-todo", { filter: "grayscale(0) brightness(1)" }, { filter: "grayscale(1) brightness(.55)", duration: 0.2 }, 9.25);
+      tl.fromTo("#s3-reb", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 9.25);
+      tl.fromTo("#s3-reb", { y: 0 }, { y: -40, duration: 0.75, ease: "none" }, 9.25);
+      tl.fromTo("#s3-pausa", { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 9.3);
+      // 4
+      empuje("#s4-f", "#s4-p", 10, 4.5);
+      tl.fromTo("#s4-s0 .w", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, 10.1);
+      tl.to("#s4-s0", { opacity: 0, duration: 0.15 }, 10.85);
+      subt("#s4-s1", 11.0, 0.12);
+      tl.to("#s4-s1", { opacity: 0, y: -20, duration: 0.2 }, 12.75);
+      subt("#s4-s2", 12.9, 0.14);
+      tl.fromTo("#s4-tag", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4 }, 10.4);
+      // 5
+      tl.fromTo("#s5-k", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4 }, 14.55);
+      palabras("#s5-t", 14.65, 0.06);
+      tl.fromTo("#s5-r", { opacity: 0, y: 80, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "expo.out" }, 15.3);
+      palabras("#s5-r", 15.7, 0.12);
+      tl.fromTo("#s5-auto", { x: -800 }, { x: 160, duration: 1.1, ease: "power3.out" }, 17.6);
+      tl.fromTo("#s5-auto", { rotation: 0 }, { rotation: -2, duration: 0.15, yoyo: true, repeat: 1, transformOrigin: "80% 100%" }, 18.6);
+      // 6
+      empuje("#s6-f", "#s6-p", 20.5, 6.5);
+      subt("#s6-s1", 20.65, 0.13);
+      tl.to("#s6-s1", { opacity: 0, y: -20, duration: 0.2 }, 23.2);
+      tl.fromTo("#s6-s2 .w", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "expo.out", stagger: 0.16 }, 23.4);
+      // 7
+      palabras("#s7-q", 27.1, 0.08);
+      tl.fromTo("#s7-f", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" }, 28.4);
+
+      function dibujar(t) {
+        if (t < 3.4) {
+          lenguas.forEach(({ d, f, a }) => {
+            const s = 1 + a * Math.sin(t * f) + a * 0.6 * Math.sin(t * f * 2.3 + 1);
+            d.style.transform = `scaleY(${s}) skewX(${6 * Math.sin(t * f * 0.7)}deg)`;
+          });
+          bocanadas.forEach(({ d, v, o }) => {
+            const u = (t + o) % 3;
+            d.style.transform = `translate(${u * 30}px, ${-u * v}px) scale(${0.6 + u * 0.4})`;
+            d.style.opacity = Math.min(1, u * 1.5) * (1 - u / 3);
+          });
+        }
+        if (t >= 3.4 && t < 7) {
+          const lt = t - 3.4;
+          brasas.forEach(({ d, x, y0, v, o }) => {
+            const u = (lt + o) % 4;
+            d.style.left = x + 30 * Math.sin(u * 2 + o) + "px";
+            d.style.top = y0 - u * v - 600 + "px";
+            d.style.opacity = 1 - u / 4;
+          });
+        }
+      }
+      tl.eventCallback("onUpdate", () => dibujar(tl.time()));
+      window.addEventListener("hf-seek", (e) => dibujar(e.detail.time));
+      dibujar(0);
+      tl.seek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
