@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>El vaso que sobrevivió · EP. 01 · v3</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Rounded"; src: url("assets/rounded.woff2") format("woff2"); font-weight: 800; font-display: block; }
+      @font-face { font-family: "Inter"; src: url("assets/inter.woff2") format("woff2"); font-weight: 400 800; font-display: block; }
+      @font-face { font-family: "Mono"; src: url("assets/mono.woff2") format("woff2"); font-weight: 400 700; font-display: block; }
+      /* paleta: marca personal (portfolio) + fuego + hielo */
+      :root {
+        --fondo: #120c0a;
+        --fondo2: #1c1310;
+        --sup: #261a15;
+        --tinta: #f0e7db;
+        --tenue: rgba(240, 231, 219, 0.6);
+        --teal: #5ad0c4;
+        --ambar: #f0a33c;
+        --fuego: #ff5a1f;
+        --hielo: #bff3ff;
+        --linea: rgba(240, 231, 219, 0.14);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--fondo); }
+      body { font-family: "Inter", system-ui, sans-serif; color: var(--tinta); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--fondo); }
+      .esc { position: absolute; inset: 0; overflow: hidden; }
+      .cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+      canvas.fx { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; pointer-events: none; }
+      .grano { position: absolute; inset: 0; pointer-events: none; opacity: 0.09; mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+      .vineta { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(75% 60% at 50% 48%, transparent 55%, rgba(0,0,0,.65) 100%); }
+      .kicker { position: absolute; left: 90px; top: 500px; font: 700 30px "Mono", monospace; letter-spacing: 7px; color: var(--teal); text-transform: uppercase; white-space: nowrap; }
+      .t { position: absolute; left: 90px; right: 140px; font-family: "Rounded", sans-serif; font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+      .ln { display: block; overflow: hidden; padding: 0.06em 0 0.1em; margin: -0.06em 0 -0.1em; }
+      .ln.glow { padding: 0.3em 0.4em; margin: -0.3em -0.4em; }
+      .ln > span { display: inline-block; }
+      .chico { font-size: 70px; color: var(--tinta); }
+      .tenue { color: var(--tenue); }
+      .ambar { color: var(--ambar); }
+      .fuegotxt { background: linear-gradient(0deg, #ff3d00 0%, #ff8a00 45%, #ffd36b 75%, #fff6d8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 28px rgba(255,90,31,.55)); }
+      .hielotxt { background: linear-gradient(180deg, #ffffff 0%, #d9fbff 45%, #7fdcef 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 26px rgba(150,230,255,.45)); }
+      .flash { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+
+      /* ── 1 · fuego */
+      .cielo { position: absolute; inset: 0; background: radial-gradient(70% 38% at 50% 74%, rgba(255,90,31,.32), transparent 70%), linear-gradient(180deg, #0b0706 0%, #140d0a 60%, #0b0706 100%); }
+      .suelo { position: absolute; left: -100px; right: -100px; top: 1395px; height: 600px; background: linear-gradient(180deg, #1b120e, #0b0706 70%); }
+      .suelo::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: rgba(255,140,60,.35); }
+      .auto { position: absolute; left: 115px; top: 1085px; width: 850px; height: 330px; }
+      .reflejo { position: absolute; left: 115px; top: 1400px; width: 850px; height: 330px; transform: scaleY(-1); transform-origin: top; opacity: .22; filter: blur(6px); -webkit-mask-image: linear-gradient(0deg, transparent 40%, #000); mask-image: linear-gradient(0deg, transparent 40%, #000); }
+
+      /* ── 2 · vaso */
+      .interior { position: absolute; inset: 0; background: radial-gradient(60% 34% at 50% 70%, rgba(240,140,50,.30), transparent 70%), radial-gradient(40% 25% at 15% 85%, rgba(255,80,20,.25), transparent 70%), #0d0807; }
+      .tablero { position: absolute; left: -60px; right: -60px; top: 1380px; height: 600px; border-radius: 60px 60px 0 0; background: linear-gradient(180deg, #221713, #0c0807 60%); box-shadow: inset 0 3px 0 rgba(255,140,60,.25); }
+      .portavaso { position: absolute; left: 330px; top: 1352px; width: 420px; height: 70px; border-radius: 50%; background: radial-gradient(closest-side, #050303 55%, #3a2a22 70%, #1a110d 100%); }
+      .vaso { position: absolute; left: 330px; top: 830px; width: 420px; height: 560px; }
+      .halo { position: absolute; border-radius: 50%; pointer-events: none; }
+      .lente { position: absolute; left: 395px; top: 815px; width: 290px; height: 290px; border-radius: 50%; overflow: hidden; clip-path: circle(0% at 50% 50%); box-shadow: inset 0 0 0 6px rgba(191,243,255,.9), 0 0 60px rgba(150,230,255,.6); background: radial-gradient(circle at 40% 35%, #f4feff, #9fe3f2 60%, #5cb8d0); }
+      .cubo { position: absolute; width: 96px; height: 96px; border-radius: 18px; background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(200,240,250,.65)); box-shadow: inset 0 0 0 3px rgba(255,255,255,.9), inset -10px -10px 20px rgba(80,170,200,.35), 0 8px 18px rgba(0,60,90,.3); }
+
+      /* ── 3 · celular */
+      .cel { position: absolute; left: 330px; top: 600px; width: 420px; height: 640px; border-radius: 62px; background: #0a0a0a; box-shadow: inset 0 0 0 4px #333, inset 0 0 0 11px #050505, 0 60px 120px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.06); }
+      .cel .pant { position: absolute; left: 14px; top: 14px; right: 14px; bottom: 14px; border-radius: 50px; overflow: hidden; background: #0d0807; }
+      .cel .isla { position: absolute; left: 50%; top: 28px; width: 110px; height: 32px; margin-left: -55px; border-radius: 18px; background: #000; z-index: 6; }
+      .cel .app { position: absolute; left: 0; right: 0; top: 70px; text-align: center; font: 700 24px "Inter", sans-serif; color: #fff; z-index: 5; text-shadow: 0 2px 8px rgba(0,0,0,.8); }
+      .cel .lado { position: absolute; right: 18px; bottom: 120px; display: grid; gap: 26px; z-index: 5; justify-items: center; }
+      .cel .lado svg { width: 46px; height: 46px; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.7)); }
+      .cel .lado b { font: 700 16px "Inter", sans-serif; color: #fff; margin-top: -18px; }
+      .cel .pie { position: absolute; left: 22px; right: 90px; bottom: 34px; z-index: 5; font: 600 19px/1.35 "Inter", sans-serif; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,.85); }
+      .cel .mini { position: absolute; left: 0; top: 0; width: 392px; height: 612px; }
+      .corazon { position: absolute; width: 54px; height: 54px; color: #ff3b5c; opacity: 0; }
+      .odo { position: absolute; left: 90px; right: 140px; top: 1275px; display: flex; justify-content: center; align-items: flex-end; height: 120px; font: 800 116px/1 "Rounded", sans-serif; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+      .odo .col { height: 116px; overflow: hidden; width: 0.62em; text-align: center; }
+      .odo .tira { display: block; }
+      .odo .tira i { display: block; height: 116px; font-style: normal; }
+      .odo .pto { width: 0.28em; text-align: center; }
+      .odo-lbl { position: absolute; left: 90px; right: 140px; top: 1408px; text-align: center; font: 700 30px "Mono", monospace; letter-spacing: 8px; color: var(--ambar); }
+      .congela { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: repeating-linear-gradient(0deg, rgba(240,231,219,.08) 0 2px, transparent 2px 8px); }
+      .rec { position: absolute; left: 90px; top: 500px; font: 700 30px "Mono", monospace; letter-spacing: 4px; color: var(--tinta); opacity: 0; display: flex; gap: 16px; align-items: center; }
+      .rec i { width: 22px; height: 22px; border-radius: 50%; background: #ff3b30; box-shadow: 0 0 18px #ff3b30; }
+      .pausa { position: absolute; left: 390px; top: 760px; width: 300px; height: 300px; opacity: 0; }
+
+      /* ── 4 · Pará */
+      .par4 { position: absolute; inset: 0; background: radial-gradient(60% 40% at 50% 50%, rgba(90,208,196,.12), transparent 70%), var(--fondo); }
+      .visor { position: absolute; pointer-events: none; }
+      .visor i { position: absolute; width: 70px; height: 70px; border: 0 solid var(--tinta); }
+      .visor .a { left: 0; top: 0; border-left-width: 8px; border-top-width: 8px; border-top-left-radius: 14px; }
+      .visor .b { right: 0; top: 0; border-right-width: 8px; border-top-width: 8px; border-top-right-radius: 14px; }
+      .visor .c { left: 0; bottom: 0; border-left-width: 8px; border-bottom-width: 8px; border-bottom-left-radius: 14px; }
+      .visor .d { right: 0; bottom: 0; border-right-width: 8px; border-bottom-width: 8px; border-bottom-right-radius: 14px; }
+      .sello { position: absolute; padding: 10px 26px; border: 7px solid #ff3b30; border-radius: 14px; color: #ff3b30; font: 800 64px/1 "Rounded", sans-serif; letter-spacing: 2px; transform: rotate(-8deg); opacity: 0; }
+
+      /* ── 5 · respuesta */
+      .par5 { position: absolute; inset: 0; background: radial-gradient(70% 45% at 50% 60%, rgba(240,163,60,.16), transparent 70%), var(--fondo); }
+      .burbuja { position: absolute; left: 90px; right: 140px; top: 780px; padding: 34px 38px 38px; border-radius: 36px 36px 36px 10px; background: var(--sup); border: 2px solid var(--linea); box-shadow: 0 40px 80px rgba(0,0,0,.55); }
+      .burbuja .quien { display: flex; align-items: center; gap: 18px; font: 700 28px "Inter", sans-serif; }
+      .burbuja .av { width: 66px; height: 66px; border-radius: 50%; background: linear-gradient(135deg, var(--ambar), #b86d1f); display: grid; place-items: center; font: 800 30px "Rounded", sans-serif; color: #1c1310; flex: none; }
+      .burbuja small { display: block; font: 500 22px "Mono", monospace; color: var(--tenue); margin-top: 4px; }
+      .burbuja .dots { display: flex; gap: 12px; margin-top: 28px; height: 70px; align-items: center; }
+      .burbuja .dots i { width: 18px; height: 18px; border-radius: 50%; background: var(--tenue); }
+      .burbuja .cita { position: absolute; left: 38px; right: 38px; top: 130px; font: 800 66px/1.08 "Rounded", sans-serif; letter-spacing: -1px; }
+      .burbuja .cita em { font-style: normal; color: var(--ambar); }
+      .autonuevo { position: absolute; left: 140px; top: 1150px; width: 800px; height: 300px; }
+      .lineas i { position: absolute; height: 6px; border-radius: 3px; background: rgba(240,231,219,.5); }
+
+      .tt { position: absolute; left: 240px; top: 590px; width: 600px; height: 860px; border-radius: 74px; background: #0a0a0a; box-shadow: inset 0 0 0 4px #333, inset 0 0 0 12px #050505, 0 60px 120px rgba(0,0,0,.75); }
+      .tt .pant { position: absolute; left: 15px; top: 15px; right: 15px; bottom: 15px; border-radius: 60px; overflow: hidden; background: #ddd; }
+      .tt .isla { position: absolute; left: 50%; top: 30px; width: 130px; height: 36px; margin-left: -65px; border-radius: 20px; background: #000; z-index: 6; }
+      .tt .foto { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; transform-origin: 50% 35%; }
+      .tt .degr { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.35) 0, transparent 18%, transparent 52%, rgba(0,0,0,.85) 100%); }
+      .tt .cuenta { position: absolute; left: 0; right: 0; top: 78px; text-align: center; font: 700 24px "Inter", sans-serif; color: #fff; z-index: 5; text-shadow: 0 2px 8px rgba(0,0,0,.6); }
+      .tt .lado { position: absolute; right: 20px; top: 330px; display: grid; gap: 30px; z-index: 5; }
+      .tt .lado svg { width: 50px; height: 50px; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.7)); }
+      .tt .quien2 { position: absolute; left: 24px; right: 24px; bottom: 30px; display: flex; gap: 16px; align-items: center; z-index: 5; color: #fff; }
+      .tt .quien2 img { width: 70px; height: 70px; border-radius: 50%; box-shadow: 0 0 0 3px #fff; }
+      .tt .quien2 b { display: block; font: 800 28px "Inter", sans-serif; }
+      .tt .quien2 span { display: block; font: 500 21px "Inter", sans-serif; opacity: .9; }
+      .tt .cap { position: absolute; left: 30px; right: 30px; top: 560px; text-align: center; font: 800 40px/1.2 "Inter", sans-serif; color: #fff; opacity: 0; z-index: 5; text-shadow: 0 0 6px #000, 0 3px 0 #000, 0 -2px 0 #000, 2px 0 0 #000, -2px 0 0 #000; }
+      .tt .cap b { color: #ffd36b; }
+      .final5 { position: absolute; left: 90px; right: 140px; top: 600px; height: 520px; opacity: 0; }
+      /* ── 6 · pagabas → filma */
+      .par6 { position: absolute; inset: 0; background: radial-gradient(60% 40% at 50% 40%, rgba(255,90,31,.10), transparent 70%), var(--fondo); }
+      .letra { display: inline-block; }
+
+      /* ── 7 · cierre */
+      .par7 { position: absolute; inset: 0; background: radial-gradient(70% 45% at 50% 40%, rgba(90,208,196,.12), transparent 70%), var(--fondo); }
+      .perfil { position: absolute; left: 90px; right: 140px; top: 1120px; display: flex; align-items: center; gap: 26px; padding: 26px; border-radius: 30px; background: var(--sup); border: 2px solid var(--linea); }
+      .perfil img { width: 130px; height: 130px; border-radius: 50%; flex: none; box-shadow: 0 0 0 4px var(--fondo), 0 0 0 8px var(--ambar); }
+      .perfil .n { font: 800 38px/1.1 "Rounded", sans-serif; }
+      .perfil .s { font: 500 22px "Mono", monospace; color: var(--teal); letter-spacing: 1px; margin-top: 6px; }
+      .perfil { position: absolute; }
+      .perfil .btn { margin-left: auto; padding: 18px 30px; border-radius: 16px; background: var(--ambar); color: #1c1310; font: 800 32px "Rounded", sans-serif; white-space: nowrap; position: relative; }
+      .perfil .btn.ok { background: var(--sup); color: var(--tinta); box-shadow: inset 0 0 0 3px var(--linea); }
+      .toque { position: absolute; width: 90px; height: 90px; border-radius: 50%; border: 5px solid var(--tinta); opacity: 0; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32" data-width="1080" data-height="1920">
+      <!-- ══ 1 · el fuego (0–3,15) -->
+      <section id="s1" class="esc clip" data-start="0" data-duration="3.15" data-track-index="1">
+        <div class="cam" id="s1-cam">
+          <div class="cielo"></div>
+          <canvas class="fx" id="fx-humo" width="540" height="960"></canvas>
+          <div class="suelo"></div>
+          <svg class="reflejo" viewBox="0 0 850 330"><use href="#auto-sym" /></svg>
+          <svg class="auto" viewBox="0 0 850 330"><use href="#auto-sym" /></svg>
+          <canvas class="fx" id="fx-fuego" width="540" height="960" style="mix-blend-mode: screen"></canvas>
+        </div>
+        <div class="kicker" id="s1-k"></div>
+        <div class="t" style="top: 560px">
+          <span class="ln chico"><span>A una clienta</span></span>
+          <span class="ln chico"><span>se le prende</span></span>
+          <span class="ln glow" style="font-size: 236px; letter-spacing: -6px; margin-top: calc(6px - 0.3em)"><span class="fuegotxt" id="s1-fuego">FUEGO</span></span>
+          <span class="ln chico"><span>el auto.</span></span>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+        <div class="flash" id="s1-flash" style="background: radial-gradient(circle at 50% 65%, #fff3d0, #ff8a2b 40%, rgba(255,90,31,0) 75%)"></div>
+      </section>
+
+      <!-- ══ 2 · el vaso (3,0–7,25) -->
+      <section id="s2" class="esc clip" data-start="3" data-duration="4.25" data-track-index="2">
+        <div class="cam" id="s2-cam">
+          <div class="interior"></div>
+          <canvas class="fx" id="fx-brasas" width="540" height="960" style="mix-blend-mode: screen"></canvas>
+          <div class="halo" id="s2-halo" style="left: 190px; top: 760px; width: 700px; height: 700px; background: radial-gradient(closest-side, rgba(255,170,70,.42), rgba(255,170,70,0))"></div>
+          <div class="tablero"></div>
+          <div class="portavaso"></div>
+          <svg class="vaso" id="s2-vaso" viewBox="0 0 420 560"><use href="#vaso-sym" /></svg>
+          <div class="lente" id="s2-lente">
+            <div class="cubo" style="left: 34px; top: 52px; transform: rotate(-14deg)"></div>
+            <div class="cubo" style="left: 150px; top: 30px; transform: rotate(16deg)"></div>
+            <div class="cubo" style="left: 70px; top: 150px; transform: rotate(8deg)"></div>
+            <div class="cubo" style="left: 168px; top: 148px; transform: rotate(-24deg)"></div>
+          </div>
+          <canvas class="fx" id="fx-escarcha" width="540" height="960" style="mix-blend-mode: screen"></canvas>
+        </div>
+        <div class="t" id="s2-a" style="top: 520px">
+          <span class="ln chico tenue" style="font-size: 62px"><span>Entre los restos queda…</span></span>
+          <span class="ln ambar" style="font-size: 176px; letter-spacing: -4px; margin-top: 12px"><span>UN VASO.</span></span>
+        </div>
+        <div class="t" id="s2-b" style="top: 520px">
+          <span class="ln chico tenue" style="font-size: 62px"><span>Y adentro…</span></span>
+          <span class="ln glow" style="font-size: 124px; letter-spacing: -3px; margin-top: calc(12px - 0.3em)"><span class="hielotxt">TODAVÍA</span></span>
+          <span class="ln glow" style="font-size: 124px; letter-spacing: -3px"><span class="hielotxt">HAY HIELO.</span></span>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 3 · TikTok y el contador (7,0–10,7) -->
+      <section id="s3" class="esc clip" data-start="7" data-duration="3.7" data-track-index="1">
+        <div class="cam" id="s3-cam" style="background: radial-gradient(60% 40% at 50% 45%, rgba(255,59,92,.10), transparent 70%), var(--fondo)">
+          <div class="t" id="s3-t" style="top: 500px"><span class="ln chico" style="font-size: 62px"><span>Lo sube a <span class="ambar">TikTok</span>…</span></span></div>
+          <div class="cel" id="s3-cel">
+            <div class="isla"></div>
+            <div class="pant">
+              <svg class="mini" viewBox="0 0 392 612" preserveAspectRatio="xMidYMid slice">
+                <rect width="392" height="612" fill="#0d0807" />
+                <ellipse cx="196" cy="420" rx="200" ry="160" fill="rgba(240,140,50,.28)" />
+                <rect x="-20" y="520" width="432" height="120" rx="30" fill="#1d1411" />
+                <use href="#vaso-sym" x="91" y="170" width="210" height="280" />
+              </svg>
+              <div class="app">TikTok</div>
+              <div class="lado">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z" /></svg><b id="s3-likes">0</b>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2z" /></svg><b>48 K</b>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c1-6 4-11 12-12z" /></svg><b>Compartir</b>
+              </div>
+              <div class="pie">Se me prendió fuego el auto… y mirá lo que sobrevivió</div>
+            </div>
+          </div>
+          <div id="s3-cors"></div>
+          <div class="odo" id="s3-odo"></div>
+          <div class="odo-lbl" id="s3-lbl">VISTAS EN TIKTOK</div>
+        </div>
+        <div class="congela" id="s3-scan"></div>
+        <div class="rec" id="s3-rec"><i></i>PAUSA · 00:09:12</div>
+        <svg class="pausa" id="s3-pausa" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="rgba(18,12,10,.6)" stroke="#f0e7db" stroke-width="3" /><rect x="35" y="29" width="10" height="42" rx="3" fill="#f0e7db" /><rect x="55" y="29" width="10" height="42" rx="3" fill="#f0e7db" /></svg>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 4 · Pará (10,7–14,6) -->
+      <section id="s4" class="esc clip" data-start="10.7" data-duration="3.9" data-track-index="2">
+        <div class="cam" id="s4-cam">
+          <div class="par4"></div>
+          <div class="t" id="s4-para" style="top: 790px; text-align: center; font-size: 250px; letter-spacing: -8px"><span class="ln"><span class="ambar">Pará.</span></span></div>
+          <div class="t" id="s4-a" style="top: 640px; font-size: 96px; line-height: 1.04">
+            <span class="ln"><span>Este video</span></span>
+            <span class="ln"><span>no lo pagó</span></span>
+            <span class="ln"><span class="tenue">ninguna marca.</span></span>
+          </div>
+          <div class="sello" id="s4-sello" style="left: 460px; top: 1010px">$0</div>
+          <div class="t" id="s4-b" style="top: 780px; font-size: 104px; line-height: 1.04">
+            <span class="ln"><span>Lo filmó</span></span>
+            <span class="ln"><span class="ambar">una clienta.</span></span>
+          </div>
+          <div class="visor" id="s4-visor" style="left: 60px; top: 735px; width: 820px; height: 300px"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
+          <div class="rec" id="s4-rec" style="top: 1080px; left: 90px; opacity: 0"><i></i>REC</div>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 5a · el TikTok de Reilly (14,6–20,2) -->
+      <section id="s5" class="esc clip" data-start="14.6" data-duration="5.6" data-track-index="1">
+        <div class="cam" id="s5-cam">
+          <div class="par5"></div>
+          <div class="kicker" id="s5-k">Días después · TikTok de Stanley</div>
+          <div class="tt" id="s5-tel">
+            <div class="isla"></div>
+            <div class="pant">
+              <img class="foto" id="s5-foto" src="assets/reilly.jpg" alt="Terence Reilly" />
+              <div class="degr"></div>
+              <div class="cuenta">Stanley · respuesta</div>
+              <div class="lado">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z" /></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2z" /></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c1-6 4-11 12-12z" /></svg>
+              </div>
+              <div class="quien2"><img src="assets/reilly-av.png" alt="" /><div><b>Terence Reilly</b><span>Presidente global de Stanley</span></div></div>
+              <div class="cap" id="cap1">“Te vamos a mandar unos Stanley…</div>
+              <div class="cap" id="cap2">pero hay <b>una cosa más.</b></div>
+              <div class="cap" id="cap3"><b>Nunca</b> hicimos esto…</div>
+              <div class="cap" id="cap4">y probablemente <b>nunca</b> lo volvamos a hacer…</div>
+            </div>
+          </div>
+          <div class="final5" id="s5-final">
+            <div class="t" style="top: 0; left: 0; right: 0; font-size: 84px; line-height: 1.04">
+              <span class="ln"><span>“…pero nos encantaría</span></span>
+              <span class="ln" style="font-size: 150px; letter-spacing: -4px; margin-top: 10px"><span class="ambar">REPONERTE</span></span>
+              <span class="ln" style="font-size: 150px; letter-spacing: -4px"><span class="ambar">EL AUTO.”</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 5b · el auto nuevo (20,2–22,0) -->
+      <section id="s5b" class="esc clip" data-start="20.2" data-duration="1.8" data-track-index="2">
+        <div class="cam" id="s5b-cam">
+          <div class="par5"></div>
+          <div class="t" style="top: 540px; font-size: 92px; line-height: 1.04">
+            <span class="ln"><span>Y le regalaron</span></span>
+            <span class="ln"><span class="ambar">uno nuevo.</span></span>
+          </div>
+          <div class="lineas" id="s5-lineas"><i style="left: 60px; top: 1180px; width: 220px"></i><i style="left: 20px; top: 1235px; width: 300px"></i><i style="left: 90px; top: 1290px; width: 180px"></i></div>
+          <svg class="autonuevo" id="s5-auto" viewBox="0 0 850 330" style="top: 1060px"><use href="#auto-nuevo-sym" /></svg>
+          <canvas class="fx" id="fx-confeti" width="540" height="960"></canvas>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 6 · antes pagabas / hoy filma (22,0–28,1) -->
+      <section id="s6" class="esc clip" data-start="22" data-duration="6.1" data-track-index="2">
+        <div class="cam" id="s6-cam">
+          <div class="par6"></div>
+          <div class="t" id="s6-a" style="top: 540px; font-size: 78px; line-height: 1.04">
+            <span class="ln"><span class="tenue">Antes, la publicidad</span></span>
+            <span class="ln" style="font-size: 150px; letter-spacing: -4px; margin-top: 8px"><span id="s6-pagabas"></span></span>
+          </div>
+          <canvas class="fx" id="fx-quema" width="540" height="960" style="mix-blend-mode: screen"></canvas>
+          <div class="t" id="s6-b" style="top: 960px; font-size: 100px; line-height: 1.02">
+            <span class="ln"><span>Hoy la</span></span>
+            <span class="ln" style="font-size: 196px; letter-spacing: -6px"><span class="ambar">FILMA</span></span>
+            <span class="ln"><span>tu cliente.</span></span>
+          </div>
+          <div class="visor" id="s6-visor" style="left: 62px; top: 930px; width: 800px; height: 470px"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i></div>
+          <div class="rec" id="s6-rec" style="top: 880px; left: 640px"><i></i>00:00:03</div>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- ══ 7 · cierre (28,1–32) -->
+      <section id="s7" class="esc clip" data-start="28.1" data-duration="3.9" data-track-index="1">
+        <div class="cam" id="s7-cam">
+          <div class="par7"></div>
+          <div class="t" style="top: 580px; font-size: 98px; line-height: 1.04">
+            <span class="ln"><span>¿Tu producto</span></span>
+            <span class="ln"><span>le da a alguien</span></span>
+            <span class="ln"><span class="ambar">algo para filmar?</span></span>
+          </div>
+          <div class="perfil" id="s7-perfil">
+            <img src="assets/avatar.png" alt="Franco Valencia" />
+            <div><div class="n">Franco Valencia</div><div class="s">historias de ventas</div></div>
+            <div class="btn" id="s7-btn"><span id="s7-b1">Seguir</span></div><div class="btn ok" id="s7-btn2" style="position:absolute; right: 26px; opacity: 0">Siguiendo</div>
+          </div>
+          <div class="toque" id="s7-toque" style="left: 735px; top: 1200px"></div>
+        </div>
+        <div class="vineta"></div>
+        <div class="grano"></div>
+      </section>
+
+      <!-- símbolos compartidos -->
+      <svg width="0" height="0" style="position: absolute">
+        <defs>
+          <linearGradient id="carro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3a33" /><stop offset=".5" stop-color="#2a1f1a" /><stop offset="1" stop-color="#140e0b" /></linearGradient>
+          <linearGradient id="vidrio" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd27a" /><stop offset=".6" stop-color="#ff7a1f" /><stop offset="1" stop-color="#7a1d05" /></linearGradient>
+          <linearGradient id="nuevo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ce8de" /><stop offset=".55" stop-color="#4fbfb3" /><stop offset="1" stop-color="#2b8a80" /></linearGradient>
+          <linearGradient id="oro" x1="0" x2="1"><stop offset="0" stop-color="#6f5230" /><stop offset=".22" stop-color="#c79e62" /><stop offset=".42" stop-color="#fff0cc" /><stop offset=".55" stop-color="#e2bc80" /><stop offset=".8" stop-color="#9c7643" /><stop offset="1" stop-color="#5c4224" /></linearGradient>
+          <linearGradient id="oro2" x1="0" x2="1"><stop offset="0" stop-color="#8a6a3c" /><stop offset=".5" stop-color="#f6dcaa" /><stop offset="1" stop-color="#8a6a3c" /></linearGradient>
+          <linearGradient id="brillo" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset=".5" stop-color="#fff" stop-opacity=".85" /><stop offset="1" stop-color="#fff" stop-opacity="0" /></linearGradient>
+          <clipPath id="cuerpo-clip"><path d="M70 120 L350 120 L326 520 Q323 548 292 548 L128 548 Q97 548 94 520 Z" /></clipPath>
+          <symbol id="auto-sym" viewBox="0 0 850 330">
+            <path d="M40 255 L52 200 Q62 172 120 164 L250 150 Q318 70 410 62 L585 62 Q650 66 712 148 L800 162 Q838 170 842 205 L846 255 Q846 268 832 268 L54 268 Q40 268 40 255 Z" fill="url(#carro)" stroke="#5a463c" stroke-width="3" />
+            <path d="M272 150 Q330 88 412 80 L492 80 L492 150 Z" fill="url(#vidrio)" />
+            <path d="M510 80 L585 80 Q640 84 690 150 L510 150 Z" fill="url(#vidrio)" />
+            <path d="M60 200 L820 200" stroke="rgba(255,150,70,.35)" stroke-width="3" />
+            <rect x="790" y="182" width="40" height="16" rx="6" fill="#ffb15a" />
+            <g><circle cx="200" cy="262" r="64" fill="#0a0605" /><circle cx="200" cy="262" r="40" fill="#2d211b" stroke="#6b5246" stroke-width="5" /><circle cx="200" cy="262" r="10" fill="#6b5246" /></g>
+            <g><circle cx="672" cy="262" r="64" fill="#0a0605" /><circle cx="672" cy="262" r="40" fill="#2d211b" stroke="#6b5246" stroke-width="5" /><circle cx="672" cy="262" r="10" fill="#6b5246" /></g>
+          </symbol>
+          <symbol id="auto-nuevo-sym" viewBox="0 0 850 330">
+            <path d="M40 255 L52 200 Q62 172 120 164 L250 150 Q318 70 410 62 L585 62 Q650 66 712 148 L800 162 Q838 170 842 205 L846 255 Q846 268 832 268 L54 268 Q40 268 40 255 Z" fill="url(#nuevo)" />
+            <path d="M272 150 Q330 88 412 80 L492 80 L492 150 Z M510 80 L585 80 Q640 84 690 150 L510 150 Z" fill="#163a36" opacity=".9" />
+            <path d="M300 100 L340 100 L300 148 Z" fill="#fff" opacity=".35" />
+            <path d="M60 205 L830 205" stroke="rgba(255,255,255,.45)" stroke-width="3" />
+            <rect x="790" y="182" width="40" height="16" rx="6" fill="#fff4c9" />
+            <g><circle cx="200" cy="262" r="64" fill="#0a0605" /><circle cx="200" cy="262" r="40" fill="#d8d2c8" /><circle cx="200" cy="262" r="12" fill="#8a837a" /></g>
+            <g><circle cx="672" cy="262" r="64" fill="#0a0605" /><circle cx="672" cy="262" r="40" fill="#d8d2c8" /><circle cx="672" cy="262" r="12" fill="#8a837a" /></g>
+            <path d="M450 62 L450 268" stroke="#f0a33c" stroke-width="26" />
+            <path d="M44 220 L846 220" stroke="#f0a33c" stroke-width="22" />
+            <g id="mono" transform="translate(450 58)"><path d="M0 0 C-70 -90 -150 -40 -110 -6 C-80 18 -30 8 0 0 C30 8 80 18 110 -6 C150 -40 70 -90 0 0 Z" fill="#f0a33c" /><circle r="16" fill="#d98a22" /></g>
+          </symbol>
+          <symbol id="vaso-sym" viewBox="0 0 420 560">
+            <path d="M330 170 Q412 176 410 268 Q408 358 326 364" fill="none" stroke="#a8824e" stroke-width="34" stroke-linecap="round" />
+            <path d="M330 170 Q404 176 402 268 Q400 352 326 358" fill="none" stroke="#e8c88f" stroke-width="10" stroke-linecap="round" opacity=".7" />
+            <path d="M70 120 L350 120 L326 520 Q323 548 292 548 L128 548 Q97 548 94 520 Z" fill="url(#oro)" />
+            <g clip-path="url(#cuerpo-clip)"><rect id="vaso-brillo" x="-140" y="100" width="90" height="480" fill="url(#brillo)" transform="skewX(-14)" /></g>
+            <text x="210" y="300" text-anchor="middle" font-family="Rounded, sans-serif" font-weight="800" font-size="40" letter-spacing="5" fill="#5e4524" opacity=".8">STANLEY</text>
+            <rect x="52" y="74" width="316" height="60" rx="18" fill="url(#oro2)" />
+            <rect x="52" y="74" width="316" height="16" rx="8" fill="#fbe7bf" />
+            <rect x="248" y="-10" width="28" height="100" rx="10" fill="#efd7aa" transform="rotate(9 262 40)" />
+            <g fill="#fff" opacity=".55"><circle cx="120" cy="210" r="4" /><circle cx="150" cy="380" r="3" /><circle cx="292" cy="250" r="3.5" /><circle cx="270" cy="440" r="3" /><circle cx="110" cy="460" r="3.5" /><circle cx="200" cy="350" r="2.5" /></g>
+          </symbol>
+        </defs>
+      </svg>
+    </div>
+    <script>
+      const W = 1080, H = 1920;
+      const tl = gsap.timeline({ paused: true });
+      // ── azar determinístico
+      const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+      const $ = (id) => document.getElementById(id);
+      const ctx = (id) => { const c = $(id).getContext("2d"); c.setTransform(0.5, 0, 0, 0.5, 0, 0); return c; };
+
+      // ── tipografía: entradas por línea (máscara), golpes con desenfoque
+      const lineas = (sel, t0, paso = 0.09, dur = 0.55) => tl.fromTo(`${sel} .ln > span`, { yPercent: 115, rotation: 3 }, { yPercent: 0, rotation: 0, duration: dur, ease: "expo.out", stagger: paso }, t0);
+      const golpe = (sel, t0, desde = 2.4) => tl.fromTo(sel, { scale: desde, opacity: 0, filter: "blur(22px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out" }, t0);
+      // sacudón de cámara determinístico
+      const sacudon = (sel, t0, dur = 0.35, amp = 16) => {
+        const n = Math.round(dur / 0.035);
+        for (let i = 0; i < n; i++) { const k = 1 - i / n; tl.to(sel, { x: (hash(i + t0 * 13) - 0.5) * 2 * amp * k, y: (hash(i * 3 + t0 * 7) - 0.5) * 2 * amp * k, duration: 0.035, ease: "none" }, t0 + i * 0.035); }
+        tl.to(sel, { x: 0, y: 0, duration: 0.04 }, t0 + dur);
+      };
+      const maquina = (el, texto, t0, cps = 26) => { const o = { n: 0 }; tl.fromTo(o, { n: 0 }, { n: texto.length, duration: texto.length / cps, ease: "none", onUpdate: () => (el.textContent = texto.slice(0, Math.round(o.n))) }, t0); };
+
+      // ══ 1 · fuego
+      tl.fromTo("#s1-cam", { scale: 1.12 }, { scale: 1.0, duration: 1.5, ease: "power1.out" }, 0);
+      tl.to("#s1-cam", { scale: 1.75, x: -60, y: -330, duration: 0.18, ease: "expo.out" }, 1.6);
+      tl.to("#s1-cam", { scale: 1.85, duration: 1.4, ease: "none" }, 1.78);
+      tl.fromTo("#s1-flash", { opacity: 0.0 }, { opacity: 0.9, duration: 0.06, yoyo: true, repeat: 1 }, 0.05);
+      maquina($("s1-k"), "NOVIEMBRE · 2023", 0.15, 30);
+      lineas("#s1 .t", 0.25, 0.1);
+      golpe("#s1-fuego", 0.45, 2.8);
+      sacudon("#s1-cam", 0.5, 0.45, 18);
+      tl.fromTo("#s1-fuego", { filter: "drop-shadow(0 0 28px rgba(255,90,31,.55)) brightness(1)" }, { filter: "drop-shadow(0 0 48px rgba(255,90,31,.9)) brightness(1.15)", duration: 0.12, yoyo: true, repeat: 15, ease: "sine.inOut" }, 0.8);
+      tl.to("#s1-flash", { opacity: 1, duration: 0.15, ease: "power2.in" }, 2.95);
+
+      // ══ 2 · vaso (entra desde el destello)
+      tl.fromTo("#s2", { opacity: 0 }, { opacity: 1, duration: 0.12 }, 3.0);
+      tl.fromTo("#s2-cam", { scale: 1.25 }, { scale: 1.0, duration: 1.2, ease: "expo.out" }, 3.0);
+      tl.to("#s2-cam", { scale: 1.06, duration: 1.0, ease: "none" }, 4.2);
+      tl.to("#s2-cam", { scale: 1.45, y: 220, duration: 0.2, ease: "expo.out" }, 5.2);
+      tl.to("#s2-cam", { scale: 1.52, duration: 1.3, ease: "none" }, 5.4);
+      tl.fromTo("#s2-vaso", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "expo.out" }, 3.1);
+      tl.fromTo("#vaso-brillo", { attr: { x: -140 } }, { attr: { x: 520 }, duration: 0.9, ease: "power2.inOut" }, 3.6);
+      tl.fromTo("#vaso-brillo", { attr: { x: -140 } }, { attr: { x: 520 }, duration: 0.7, ease: "power2.inOut", immediateRender: false }, 5.4);
+      tl.fromTo("#s2-halo", { opacity: 0.4, scale: 0.8 }, { opacity: 1, scale: 1.05, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 2 }, 3.2);
+      lineas("#s2-a", 3.25, 0.18, 0.6);
+      tl.to("#s2-a .ln > span", { yPercent: -115, duration: 0.3, ease: "power3.in", stagger: 0.05 }, 4.95);
+      tl.set("#s2-b .ln > span", { yPercent: 115 }, 0);
+      lineas("#s2-b", 5.2, 0.12, 0.55);
+      tl.fromTo("#s2-lente", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(50% at 50% 50%)", duration: 0.55, ease: "back.out(1.6)" }, 5.35);
+      tl.fromTo("#s2-lente .cubo", { y: 0 }, { y: -12, duration: 0.11, yoyo: true, repeat: 5, stagger: 0.04, ease: "sine.inOut" }, 5.8);
+      // transición: el vaso se achica hacia la pantalla del celular
+      tl.to("#s2-cam", { scale: 0.36, y: -40, borderRadius: 120, duration: 0.45, ease: "power3.in" }, 6.75);
+      tl.to("#s2 .t", { opacity: 0, duration: 0.2 }, 6.7);
+      tl.to("#s2", { opacity: 0, duration: 0.12 }, 7.13);
+
+      // ══ 3 · celular + contador + congelado
+      tl.fromTo("#s3", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 7.05);
+      tl.fromTo("#s3-cel", { scale: 1.12, opacity: 0, rotationX: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, 7.0);
+      tl.fromTo("#s3-cel", { rotationY: 0 }, { rotationY: -8, duration: 2.6, ease: "sine.inOut", transformPerspective: 1600 }, 7.4);
+      lineas("#s3-t", 7.15, 0.1);
+      // odómetro
+      const odo = $("s3-odo"), digitos = "42.000.000".split("");
+      const tiras = [];
+      digitos.forEach((d, i) => {
+        if (d === ".") { const p = document.createElement("div"); p.className = "pto"; p.textContent = "."; odo.appendChild(p); return; }
+        const col = document.createElement("div"); col.className = "col";
+        const tira = document.createElement("span"); tira.className = "tira";
+        const vueltas = 2 + tiras.length; // las de la derecha giran más
+        for (let k = 0; k <= vueltas * 10 + +d; k++) { const n = document.createElement("i"); n.textContent = k % 10; tira.appendChild(n); }
+        col.appendChild(tira); odo.appendChild(col); tiras.push({ tira, pasos: vueltas * 10 + +d });
+      });
+      tiras.forEach(({ tira, pasos }, i) => tl.fromTo(tira, { y: 0 }, { y: -pasos * 116, duration: 1.7 + i * 0.06, ease: "power3.inOut" }, 7.45));
+      tl.fromTo("#s3-odo", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 7.4);
+      tl.fromTo("#s3-lbl", { opacity: 0, scaleX: 1.3 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "expo.out" }, 7.6);
+      tl.fromTo("#s3-odo", { scale: 1 }, { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 }, 9.3);
+      const likes = { n: 0 }; tl.fromTo(likes, { n: 0 }, { n: 3.1, duration: 1.8, ease: "power3.inOut", onUpdate: () => ($("s3-likes").textContent = likes.n < 0.01 ? "0" : likes.n.toFixed(1).replace(".", ",") + " M") }, 7.45);
+      // corazones que suben
+      const cors = $("s3-cors");
+      for (let i = 0; i < 12; i++) {
+        const c = document.createElement("div"); c.className = "corazon";
+        c.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>';
+        c.style.left = 760 + hash(i) * 120 + "px"; c.style.top = "1080px"; cors.appendChild(c);
+        const t0 = 7.6 + i * 0.13;
+        tl.fromTo(c, { y: 0, x: 0, scale: 0.4, rotation: (hash(i + 9) - 0.5) * 40 }, { y: -420 - hash(i + 3) * 160, x: (hash(i + 5) - 0.5) * 80, scale: 1.1, duration: 1.3, ease: "power1.out" }, t0);
+        tl.fromTo(c, { opacity: 0 }, { opacity: 1, duration: 0.15 }, t0);
+        tl.to(c, { opacity: 0, duration: 0.4 }, t0 + 0.9);
+      }
+      // congelado
+      tl.set("#s3-cam", { filter: "grayscale(0) contrast(1)" }, 0);
+      tl.to("#s3-cam", { filter: "grayscale(1) contrast(1.25) brightness(.6)", duration: 0.08 }, 9.75);
+      tl.fromTo("#s3-odo", { textShadow: "0 0 0 rgba(0,0,0,0)" }, { textShadow: "-7px 0 0 rgba(255,42,85,.9), 7px 0 0 rgba(42,240,255,.9)", duration: 0.05 }, 9.75);
+      tl.fromTo("#s3-scan", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 9.75);
+      tl.fromTo("#s3-scan", { y: 0 }, { y: -48, duration: 0.95, ease: "none" }, 9.75);
+      tl.to("#s3-t", { opacity: 0, duration: 0.05 }, 9.75);
+      tl.fromTo("#s3-rec", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 9.8);
+      tl.fromTo("#s3-pausa", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(2.2)" }, 9.8);
+      sacudon("#s3-cam", 9.75, 0.2, 10);
+
+      // ══ 4 · Pará
+      golpe("#s4-para .ln > span", 10.72, 3);
+      sacudon("#s4-cam", 10.74, 0.4, 22);
+      tl.to("#s4-para", { opacity: 0, scale: 0.8, duration: 0.18, ease: "power2.in" }, 11.45);
+      tl.set("#s4-a .ln > span", { yPercent: 115 }, 0);
+      lineas("#s4-a", 11.6, 0.14, 0.5);
+      tl.fromTo("#s4-sello", { opacity: 0, scale: 2.4, rotation: -20 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.25, ease: "back.out(2)" }, 12.15);
+      sacudon("#s4-cam", 12.18, 0.2, 10);
+      tl.to("#s4-a, #s4-sello", { opacity: 0, y: -40, duration: 0.25, ease: "power2.in" }, 13.0);
+      tl.set("#s4-b .ln > span", { yPercent: 115 }, 0);
+      lineas("#s4-b", 13.25, 0.14, 0.5);
+      tl.fromTo("#s4-visor", { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "expo.out" }, 13.45);
+      tl.fromTo("#s4-rec", { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true }, 13.55);
+      // barrido a la izquierda
+      tl.to("#s4-cam", { x: -1080, filter: "blur(18px)", duration: 0.32, ease: "power3.in" }, 14.3);
+
+      // ══ 5a · TikTok de Reilly (subtítulos con sus palabras)
+      tl.fromTo("#s5-cam", { x: 1080, filter: "blur(18px)" }, { x: 0, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 14.6);
+      tl.fromTo("#s5-k", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.35 }, 14.75);
+      tl.fromTo("#s5-tel", { y: 260, rotation: 4 }, { y: 0, rotation: 0, duration: 0.6, ease: "expo.out" }, 14.65);
+      tl.fromTo("#s5-foto", { scale: 1 }, { scale: 1.08, duration: 2.2, ease: "none" }, 14.8);
+      const caps = [["#cap1", 15.05, 15.95], ["#cap2", 16.0, 16.85], ["#cap3", 16.9, 17.75], ["#cap4", 17.8, 18.95]];
+      caps.forEach(([id, a, b]) => {
+        tl.fromTo(id, { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2.5)" }, a);
+        tl.to(id, { opacity: 0, duration: 0.08 }, b);
+      });
+      // toma 2: acercamiento a la cara
+      tl.to("#s5-tel", { scale: 1.16, y: 30, duration: 0.35, ease: "expo.out" }, 16.9);
+      tl.to("#s5-k", { opacity: 0, duration: 0.15 }, 16.9);
+      tl.to("#s5-foto", { scale: 1.16, duration: 2, ease: "none" }, 16.9);
+      // toma 3: la frase final ocupa la pantalla
+      tl.to("#s5-tel", { scale: 0.9, y: 220, filter: "brightness(.25) blur(6px)", duration: 0.35, ease: "power3.inOut" }, 18.95);
+      tl.fromTo("#s5-final", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 19.0);
+      tl.set("#s5-final .ln > span", { yPercent: 115 }, 0);
+      lineas("#s5-final", 19.02, 0.12, 0.45);
+      sacudon("#s5-cam", 19.3, 0.3, 14);
+
+      // ══ 5b · el auto nuevo
+      lineas("#s5b .t", 20.22, 0.1, 0.45);
+      tl.fromTo("#s5-auto", { x: -1100 }, { x: 0, duration: 0.6, ease: "power4.out" }, 20.3);
+      tl.fromTo("#s5-auto", { rotation: 0 }, { rotation: -2.5, duration: 0.14, yoyo: true, repeat: 1, transformOrigin: "85% 90%" }, 20.85);
+      tl.fromTo("#s5-lineas i", { opacity: 0, scaleX: 0, transformOrigin: "right center" }, { opacity: 1, scaleX: 1, duration: 0.2, stagger: 0.04 }, 20.32);
+      tl.to("#s5-lineas i", { opacity: 0, x: -200, duration: 0.3, stagger: 0.04 }, 20.8);
+      tl.fromTo("#mono", { scale: 0.2 }, { scale: 1.15, duration: 0.3, ease: "back.out(3)", transformOrigin: "50% 50%" }, 21.0);
+      sacudon("#s5b-cam", 21.0, 0.25, 9);
+
+      // ══ 6 · pagabas se quema → FILMA
+      const pg = $("s6-pagabas");
+      "la pagabas.".split("").forEach((ch) => { const s = document.createElement("span"); s.className = "letra"; s.innerHTML = ch === " " ? "&nbsp;" : ch; pg.appendChild(s); });
+      tl.fromTo("#s6-cam", { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "expo.out" }, 22.0);
+      lineas("#s6-a", 22.1, 0.14);
+      tl.fromTo("#s6-pagabas .letra", { color: "#f0e7db" }, { color: "#ff8a2b", duration: 0.3, stagger: 0.04 }, 23.15);
+      tl.to("#s6-pagabas .letra", { y: -90, opacity: 0, filter: "blur(10px)", scale: 0.6, duration: 0.6, ease: "power2.in", stagger: 0.06 }, 23.55);
+      tl.to("#s6-a", { opacity: 0.22, y: -20, duration: 0.4 }, 24.2);
+      tl.set("#s6-b .ln > span", { yPercent: 115 }, 0);
+      lineas("#s6-b", 24.5, 0.16, 0.55);
+      golpe("#s6-b .ln:nth-child(2) > span", 24.65, 2.2);
+      sacudon("#s6-cam", 24.7, 0.3, 14);
+      tl.fromTo("#s6-visor", { scale: 1.45, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, 25.1);
+      tl.fromTo("#s6-rec", { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 9, yoyo: true }, 25.3);
+      tl.to("#s6-cam", { scale: 1.04, duration: 2.6, ease: "none" }, 25.1);
+      tl.to("#s6-cam", { scale: 3.2, opacity: 0, duration: 0.35, ease: "power3.in" }, 27.75);
+
+      // ══ 7 · cierre
+      tl.fromTo("#s7-cam", { scale: 0.92, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 28.1);
+      lineas("#s7 .t", 28.15, 0.12);
+      tl.fromTo("#s7-perfil", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 29.0);
+      tl.fromTo("#s7-toque", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.15 }, 30.1);
+      tl.to("#s7-toque", { opacity: 0, scale: 1.8, duration: 0.4 }, 30.25);
+      tl.fromTo("#s7-btn", { scale: 1 }, { scale: 0.9, duration: 0.1, yoyo: true, repeat: 1 }, 30.1);
+      tl.fromTo("#s7-btn2", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 30.22);
+
+      // ══ partículas (dibujadas a partir del tiempo, sin estado)
+      const cFuego = ctx("fx-fuego"), cHumo = ctx("fx-humo"), cBrasas = ctx("fx-brasas"), cEsc = ctx("fx-escarcha"), cConf = ctx("fx-confeti"), cQuema = ctx("fx-quema");
+      const focos = [[300, 1170], [390, 1135], [470, 1130], [540, 1135], [620, 1150], [720, 1200], [230, 1215]];
+      function fuego(t) {
+        cFuego.clearRect(0, 0, W, H);
+        const crece = Math.min(1, Math.max(0, (t - 0.15) / 0.9));
+        cFuego.globalCompositeOperation = "lighter";
+        const N = 420;
+        for (let i = 0; i < N; i++) {
+          const vida = 0.55 + hash(i) * 0.6;
+          const edad = ((t + hash(i + 1) * 5) % vida) / vida;
+          const f = focos[i % focos.length];
+          const sube = (180 + hash(i + 2) * 380) * crece;
+          const x = f[0] + (hash(i + 3) - 0.5) * 90 + Math.sin(t * 6 + i) * 18 * edad;
+          const y = f[1] - edad * sube;
+          const r = (34 + hash(i + 4) * 34) * (1 - edad * 0.7) * (0.4 + 0.6 * crece);
+          if (r <= 0.5) continue;
+          const g = cFuego.createRadialGradient(x, y, 0, x, y, r);
+          const a = 0.085 * (1 - edad);
+          const col = edad < 0.12 ? `255,215,120` : edad < 0.45 ? `255,110,20` : `190,35,8`;
+          g.addColorStop(0, `rgba(${col},${a * 2})`); g.addColorStop(1, `rgba(${col},0)`);
+          cFuego.fillStyle = g; cFuego.save(); cFuego.translate(x, y); cFuego.scale(0.6, 1.5); cFuego.translate(-x, -y); cFuego.beginPath(); cFuego.arc(x, y, r, 0, Math.PI * 2); cFuego.fill(); cFuego.restore();
+        }
+        // chispas
+        for (let i = 0; i < 90; i++) {
+          const vida = 1.2 + hash(i + 50) * 1.4, edad = ((t + hash(i + 51) * 7) % vida) / vida;
+          const f = focos[i % focos.length];
+          const x = f[0] + (hash(i + 52) - 0.5) * 200 + Math.sin(t * 2 + i) * 40 * edad, y = f[1] - edad * (500 + hash(i + 53) * 600) * crece;
+          cFuego.fillStyle = `rgba(255,${180 + hash(i) * 60 | 0},90,${(1 - edad) * crece})`;
+          cFuego.fillRect(x, y, 4, 4);
+        }
+        cFuego.globalCompositeOperation = "source-over";
+        // humo
+        cHumo.clearRect(0, 0, W, H);
+        for (let i = 0; i < 40; i++) {
+          const vida = 2.2 + hash(i + 80) * 1.5, edad = ((t + hash(i + 81) * 6) % vida) / vida;
+          const x = 300 + hash(i + 82) * 480 + edad * 120, y = 1050 - edad * 900;
+          const r = 120 + edad * 260;
+          const g = cHumo.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, `rgba(60,48,42,${0.42 * Math.sin(edad * Math.PI) * crece})`); g.addColorStop(1, "rgba(60,48,42,0)");
+          cHumo.fillStyle = g; cHumo.beginPath(); cHumo.arc(x, y, r, 0, Math.PI * 2); cHumo.fill();
+        }
+      }
+      function brasas(t) {
+        cBrasas.clearRect(0, 0, W, H);
+        for (let i = 0; i < 70; i++) {
+          const vida = 2 + hash(i + 200) * 2, edad = ((t + hash(i + 201) * 9) % vida) / vida;
+          const x = hash(i + 202) * W + Math.sin(t * 1.5 + i) * 40, y = 1900 - edad * (1500 + hash(i + 203) * 500);
+          const r = 3 + hash(i + 204) * 5;
+          const g = cBrasas.createRadialGradient(x, y, 0, x, y, r * 4);
+          g.addColorStop(0, `rgba(255,170,80,${(1 - edad) * 0.9})`); g.addColorStop(1, "rgba(255,90,31,0)");
+          cBrasas.fillStyle = g; cBrasas.beginPath(); cBrasas.arc(x, y, r * 4, 0, Math.PI * 2); cBrasas.fill();
+        }
+      }
+      function escarcha(t) {
+        cEsc.clearRect(0, 0, W, H);
+        const lt = t - 5.4; if (lt < 0) return;
+        for (let i = 0; i < 80; i++) {
+          const ang = hash(i + 300) * Math.PI * 2, vel = 120 + hash(i + 301) * 260;
+          const d = Math.min(1, lt / 1.2) * vel;
+          const x = 540 + Math.cos(ang) * (150 + d), y = 960 + Math.sin(ang) * (150 + d) * 0.9;
+          const a = Math.max(0, 1 - lt / 1.6);
+          cEsc.fillStyle = `rgba(210,250,255,${a})`;
+          const s = 3 + hash(i + 302) * 5; cEsc.save(); cEsc.translate(x, y); cEsc.rotate(ang); cEsc.fillRect(-s, -1, s * 2, 2); cEsc.fillRect(-1, -s, 2, s * 2); cEsc.restore();
+        }
+      }
+      const colores = ["#f0a33c", "#5ad0c4", "#f0e7db", "#ff5a1f", "#ffd36b"];
+      function confeti(t) {
+        cConf.clearRect(0, 0, W, H);
+        const lt = t - 21.02; if (lt < 0) return;
+        for (let i = 0; i < 160; i++) {
+          const ang = -Math.PI / 2 + (hash(i + 400) - 0.5) * 2.4, v = 900 + hash(i + 401) * 1100;
+          const x = 590 + Math.cos(ang) * v * lt, y = 1120 + Math.sin(ang) * v * lt + 1300 * lt * lt;
+          if (y > H + 40) continue;
+          cConf.save(); cConf.translate(x, y); cConf.rotate(lt * (6 + hash(i + 402) * 10));
+          cConf.fillStyle = colores[i % colores.length];
+          cConf.fillRect(-9, -5 * Math.abs(Math.cos(lt * 8 + i)), 18, 10 * Math.abs(Math.cos(lt * 8 + i)) + 1);
+          cConf.restore();
+        }
+      }
+      function quema(t) {
+        cQuema.clearRect(0, 0, W, H);
+        const lt = t - 23.3; if (lt < 0 || lt > 2.2) return;
+        cQuema.globalCompositeOperation = "lighter";
+        for (let i = 0; i < 260; i++) {
+          const nace = hash(i + 500) * 0.9; const e = (lt - nace) / (0.6 + hash(i + 501) * 0.8); if (e < 0 || e > 1) continue;
+          const x = 300 + hash(i + 502) * 600 + Math.sin(e * 8 + i) * 20, y = 760 - e * (220 + hash(i + 503) * 260);
+          const r = (16 + hash(i + 504) * 22) * (1 - e);
+          const g = cQuema.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, `rgba(255,${200 - e * 120 | 0},90,${0.5 * (1 - e)})`); g.addColorStop(1, "rgba(255,90,31,0)");
+          cQuema.fillStyle = g; cQuema.beginPath(); cQuema.arc(x, y, r, 0, Math.PI * 2); cQuema.fill();
+        }
+        cQuema.globalCompositeOperation = "source-over";
+      }
+      function dibujar(t) {
+        if (t < 3.3) fuego(t);
+        if (t >= 2.9 && t < 7.3) { brasas(t); escarcha(t); }
+        if (t >= 20.1 && t < 22.1) confeti(t);
+        if (t >= 21.9 && t < 28.2) quema(t);
+      }
+      tl.eventCallback("onUpdate", () => dibujar(tl.time()));
+      window.addEventListener("hf-seek", (e) => dibujar(e.detail.time));
+      dibujar(0);
+      tl.seek(0);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
