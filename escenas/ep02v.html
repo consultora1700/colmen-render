@@ -20,7 +20,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 .hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
 .hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
 .src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
-#hud{position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud{display:none!important;position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
 #hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
 #hud .a{left:0}#hud .b{right:0}
 #hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
@@ -364,15 +364,10 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <div class="sc" id="s14"><div class="cam" id="s14cam">
   <div class="abs" style="inset:0;background:var(--ink)"></div>
   <div class="abs" style="left:90px;top:520px;width:900px">
-    <span class="m d" style="font-size:84px"><span>¿Qué marca cuento</span></span>
-    <span class="m d" style="font-size:84px"><span>en el <span class="hl" style="background:var(--didi)">EP.03?</span></span></span>
+    <span class="m d" style="font-size:100px"><span>Ser el primero</span></span>
+    <span class="m d" style="font-size:100px"><span>no te hace dueño</span></span>
+    <span class="m d" style="font-size:100px"><span>del <span class="hl" style="background:var(--didi)">mercado.</span></span></span>
   </div>
-  <div class="abs" id="caja" style="left:90px;right:90px;top:760px;height:120px;border-radius:60px;background:#1c1917;border:2px solid #34302c;display:flex;align-items:center;padding:0 22px;gap:20px">
-    <div style="width:76px;height:76px;border-radius:50%;background:url(img/avatar.png) center/cover;flex:none"></div>
-    <div id="tipeo" style="font:700 40px 'Inter Tight';color:#fff;white-space:nowrap;overflow:hidden"></div>
-    <div id="cursor" style="width:4px;height:48px;background:var(--didi);margin-left:-14px"></div>
-  </div>
-  <div class="abs" style="left:110px;top:900px;font:700 32px 'Inter Tight';color:var(--mute)" id="cajaL">Dejalo en los comentarios</div>
   <div class="perfil" id="perfil14" style="top:1010px">
     <div class="av"><div style="background-image:url(img/avatar.png)"></div></div>
     <div><div class="n">Franco Valencia</div><div class="r">@francovalencia.ok</div><div class="kk">Historias reales de ventas</div></div>
@@ -526,10 +521,9 @@ tl.set('#spr', { autoAlpha: 0 }, 0); tl.set('#spr', { autoAlpha: 1 }, 44.0); lin
 // 14 · cierre
 barre('s14', 45.8, 'arr');
 lineas('#s14', 46.0);
-tl.fromTo('#caja, #cajaL', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: E, stagger: .1 }, 46.2);
-tl.fromTo('#perfil14', { y: 500, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, 46.6);
-toque(BT[0], BT[1], 48.4);
-tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, 48.45);
+tl.fromTo('#perfil14', { y: 500, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, 47.9);
+toque(BT[0], BT[1], 48.9);
+tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, 48.95);
 tl.to('#hud', { opacity: 0, duration: .3 }, 49.1);
 
 const fmt = (v) => Math.round(v).toLocaleString('es-AR');
@@ -546,13 +540,11 @@ window.render = (t) => {
   gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
   if (vis('sr', t)) { const u = ease((t - 31.7) / 1.6); $('#viajes').textContent = u >= 1 ? '1.430.000.000' : fmt(1.43e9 * u); }
   if (vis('s14', t)) {
-    const n = Math.floor(clamp((t - 46.6) / 1.5) * TIPEO.length); $('#tipeo').textContent = TIPEO.slice(0, n);
-    $('#cursor').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2;
-    $('#btn14t').textContent = t >= 48.45 ? 'Siguiendo' : 'Seguir';
+    $('#btn14t').textContent = t >= 48.95 ? 'Siguiendo' : 'Seguir';
   }
 };
 // retiempo a la voz: tiempo nuevo → tiempo de la animación original (entrada y salida a 1x, el medio se estira)
-const SEG = [[0, 3.4, 0, 5.1, 1.8, 0.35], [3.4, 3.6, 5.1, 4.54, 1.8, 0.35], [7.0, 3.4, 9.64, 5.66, 1.8, 0.35], [10.4, 4.0, 15.3, 4.89, 1.8, 0.35], [14.4, 3.4, 20.19, 3.6, 1.8, 0.35], [17.8, 3.4, 23.79, 3.71, 1.8, 0.35], [21.2, 3.4, 27.5, 5.41, 1.8, 0.35], [24.6, 3.4, 32.91, 3.79, 1.8, 0.35], [28.0, 3.4, 36.7, 3.4, 1.8, 0.35], [31.4, 3.8, 40.1, 6.21, 1.8, 0.35], [35.2, 3.6, 46.31, 4.08, 1.8, 0.35], [38.8, 3.6, 50.39, 5.5, 1.8, 0.35], [42.4, 3.4, 55.89, 6.22, 1.8, 0.35], [45.8, 3.7, 62.11, 4.53, 1.8, 0]], DUR2 = 66.64;
+const SEG = [[0, 3.4, 0, 5.1, 1.8, 0.35], [3.4, 3.6, 5.1, 4.54, 1.8, 0.35], [7.0, 3.4, 9.64, 5.66, 1.8, 0.35], [10.4, 4.0, 15.3, 4.89, 1.8, 0.35], [14.4, 3.4, 20.19, 3.6, 1.8, 0.35], [17.8, 3.4, 23.79, 3.71, 1.8, 0.35], [21.2, 3.4, 27.5, 5.41, 1.8, 0.35], [24.6, 3.4, 32.91, 3.79, 1.8, 0.35], [28.0, 3.4, 36.7, 3.4, 1.8, 0.35], [31.4, 3.8, 40.1, 6.21, 1.8, 0.35], [35.2, 3.6, 46.31, 4.08, 1.8, 0.35], [38.8, 3.6, 50.39, 5.5, 1.8, 0.35], [42.4, 3.4, 55.89, 6.22, 1.8, 0.35], [45.8, 3.7, 62.11, 5.6, 1.8, 0]], DUR2 = 67.71;
 const aViejo = (t) => { let s = SEG[0]; for (const x of SEG) if (t >= x[2]) s = x;
   const [a, o, A, n, e, z] = s, u = t - A;
   if (u <= e) return a + u; if (u >= n - z) return a + o - (n - u);
