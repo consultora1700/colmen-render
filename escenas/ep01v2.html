@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>EP.01 v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- metal del vaso -->
+    <linearGradient id="gMetal" x1="0" x2="1">
+      <stop offset="0" stop-color="#8f8a83"/><stop offset=".12" stop-color="#cfc9bf"/><stop offset=".27" stop-color="#f7f3ec"/>
+      <stop offset=".36" stop-color="#e6e0d6"/><stop offset=".62" stop-color="#bdb6aa"/><stop offset=".86" stop-color="#8a8379"/><stop offset="1" stop-color="#5d5850"/>
+    </linearGradient>
+    <linearGradient id="gTapa" x1="0" x2="1">
+      <stop offset="0" stop-color="#6f6a63"/><stop offset=".3" stop-color="#d9d3c9"/><stop offset=".7" stop-color="#9c958b"/><stop offset="1" stop-color="#57534d"/>
+    </linearGradient>
+    <linearGradient id="gHollin" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#1a1410" stop-opacity=".85"/><stop offset=".35" stop-color="#2a1d14" stop-opacity=".35"/><stop offset=".7" stop-color="#000" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="gBrillo" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <clipPath id="cpCuerpo"><path id="pCuerpo" d="M70 128 C74 300 108 470 122 528 L128 548 L128 742 Q128 772 158 772 L242 772 Q272 772 272 742 L272 548 L278 528 C292 470 326 300 330 128 Z"/></clipPath>
+    <symbol id="quencher" viewBox="0 0 420 800">
+      <path d="M232 4 L216 100" stroke="#a49d93" stroke-width="18" stroke-linecap="round"/>
+      <path d="M232 4 L216 100" stroke="#e8e2d8" stroke-width="5" stroke-linecap="round" transform="translate(-4 0)"/>
+      <path d="M314 176 C410 176 410 196 410 300 C410 410 400 470 300 470" fill="none" stroke="#6d675f" stroke-width="44" stroke-linecap="round"/>
+      <path d="M314 176 C410 176 410 196 410 300 C410 410 400 470 300 470" fill="none" stroke="url(#gTapa)" stroke-width="36" stroke-linecap="round"/>
+      <path d="M318 222 C366 222 368 240 368 300 C368 380 362 424 300 424" fill="none" stroke="#2a2724" stroke-width="10" opacity=".35"/>
+      <use href="#pCuerpo" fill="url(#gMetal)"/>
+      <g clip-path="url(#cpCuerpo)">
+        <rect x="0" y="526" width="420" height="26" fill="#000" opacity=".16"/>
+        <rect x="0" y="0" width="420" height="800" fill="url(#gHollin)"/>
+        <rect class="brillo" x="-160" y="0" width="120" height="800" fill="url(#gBrillo)" transform="skewX(-12)"/>
+      </g>
+      <rect x="60" y="86" width="280" height="50" rx="16" fill="url(#gTapa)"/>
+      <rect x="60" y="86" width="280" height="10" rx="5" fill="#fff" opacity=".35"/>
+      <rect x="64" y="128" width="272" height="8" fill="#000" opacity=".25"/>
+      <g transform="translate(200 330)" fill="#5f5a53" opacity=".85">
+        <path d="M-26 -34 L0 -48 L26 -34 L22 -6 L0 6 L-22 -6 Z" fill="none" stroke="#5f5a53" stroke-width="4"/>
+        <text y="44" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="25" letter-spacing="5">STANLEY</text>
+      </g>
+    </symbol>
+    <symbol id="hielo" viewBox="0 0 100 100">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#d9f6ff" fill-opacity=".55" stroke="#9fe6ff" stroke-width="4"/>
+      <path d="M22 24 Q40 16 62 22" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none" opacity=".9"/>
+      <path d="M78 40 L80 62" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+    </symbol>
+    <path id="pAuto" d="M40 330 L40 235 Q42 180 80 150 L140 100 Q155 90 175 90 L590 88 Q615 88 632 100 L760 180 L920 205 Q965 213 975 245 L978 318 Q978 340 958 345 L870 345 A80 80 0 0 0 710 345 L310 345 A80 80 0 0 0 150 345 L60 345 Q40 345 40 330 Z"/>
+    <path id="pVidrio" d="M172 112 L584 110 Q598 110 610 119 L712 186 L172 190 Z"/>
+    <linearGradient id="gQuemado" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a221e"/><stop offset=".55" stop-color="#17120f"/><stop offset="1" stop-color="#0d0a08"/></linearGradient>
+    <linearGradient id="gBrasa" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd76a"/><stop offset=".45" stop-color="#ff7a1f"/><stop offset="1" stop-color="#9c1e08"/></linearGradient>
+    <radialGradient id="gOxido" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7a3a17" stop-opacity=".9"/><stop offset="1" stop-color="#7a3a17" stop-opacity="0"/></radialGradient>
+    <linearGradient id="gPintura" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8a6a"/><stop offset=".45" stop-color="#2f5d46"/><stop offset="1" stop-color="#1b382a"/></linearGradient>
+    <linearGradient id="gCristal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bfe3f2"/><stop offset=".5" stop-color="#5d7f90"/><stop offset="1" stop-color="#22343e"/></linearGradient>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path fill="#fff" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+    <symbol id="i-com" viewBox="0 0 24 24"><path fill="#fff" d="M12 3C6.5 3 2 6.8 2 11.5c0 2.4 1.2 4.6 3.1 6.1L4.5 21l4-2c1.1.3 2.3.5 3.5.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></symbol>
+    <symbol id="i-sav" viewBox="0 0 24 24"><path fill="#fff" d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.5L5 22V3a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-sha" viewBox="0 0 24 24"><path fill="#fff" d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c.5-6 3.5-11 12-12V4z"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path fill="#25f4ee" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(-.8 .8)"/><path fill="#fe2c55" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(.8 -.8)"/><path fill="#fff" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z"/></symbol>
+    <filter id="fCalor" x="-10%" y="-20%" width="120%" height="140%"><feTurbulence id="turb" type="fractalNoise" baseFrequency=".012 .045" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="14"/></filter>
+  </defs>
+</svg>
+
+<!-- 1 · gancho -->
+<div class="sc" id="s1"><div class="cam">
+  <div class="abs" style="inset:0;background:radial-gradient(120% 60% at 50% 100%,#3a1206 0%,#140806 45%,var(--ink) 75%)"></div>
+  <canvas id="cv1" width="1080" height="1920"></canvas>
+  <div class="abs k" id="s1k" style="left:90px;top:510px;color:var(--fire)">Noviembre 2023 · historia real</div>
+  <div class="abs" style="left:90px;top:580px;width:900px">
+    <span class="m d" style="font-size:112px"><span>A una clienta</span></span>
+    <span class="m d" style="font-size:112px"><span>se le prende</span></span>
+    <span class="m d" id="fuego" style="font-size:250px;line-height:1;padding-top:.08em"><span style="background:linear-gradient(0deg,#d8240a 0%,#ff5a1f 30%,#ffa53a 62%,#ffe7a8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:url(#fCalor)">FUEGO</span></span>
+    <span class="m d" style="font-size:112px"><span>el auto.</span></span>
+  </div>
+</div></div>
+
+<!-- 2 · el auto -->
+<div class="sc" id="s2"><div class="cam" id="s2cam">
+  <div class="abs" style="inset:0;background:linear-gradient(180deg,#07080b 0%,#0e0a09 55%,#231008 72%,#0b0807 100%)"></div>
+  <div class="abs" style="left:-100px;right:-100px;top:1250px;height:420px;background:radial-gradient(50% 50% at 50% 30%,rgba(255,110,30,.45),transparent 70%)"></div>
+  <svg class="abs" id="autoQ" viewBox="0 0 1000 440" style="left:40px;top:1010px;width:1000px;height:440px;overflow:visible">
+    <ellipse cx="500" cy="420" rx="520" ry="22" fill="#000" opacity=".7"/>
+    <use href="#pAuto" fill="url(#gQuemado)"/>
+    <use href="#pVidrio" fill="url(#gBrasa)" opacity=".8"/><use href="#pVidrio" fill="#1a0a05" opacity=".35"/>
+    <rect x="370" y="104" width="22" height="90" fill="#120d0b"/><rect x="554" y="104" width="16" height="90" fill="#120d0b"/>
+    <ellipse cx="300" cy="260" rx="120" ry="50" fill="url(#gOxido)"/><ellipse cx="760" cy="250" rx="140" ry="40" fill="url(#gOxido)"/>
+    <path d="M380 196 L380 338 M565 196 L565 338" stroke="#000" stroke-width="3" opacity=".6"/>
+    <use href="#pAuto" fill="none" stroke="#5a3a28" stroke-width="3" opacity=".7"/>
+    <circle cx="790" cy="345" r="62" fill="#0a0807"/><circle cx="790" cy="345" r="36" fill="none" stroke="#4a3328" stroke-width="10"/>
+    <circle cx="230" cy="345" r="62" fill="#0a0807"/><circle cx="230" cy="345" r="36" fill="none" stroke="#4a3328" stroke-width="10"/>
+  </svg>
+  <canvas id="cv2" width="1080" height="1920"></canvas>
+  <div class="abs" style="left:90px;top:520px;width:900px">
+    <span class="m d" style="font-size:100px"><span>Por dentro</span></span>
+    <span class="m d" style="font-size:100px"><span>se quema <span class="hl">todo.</span></span></span>
+  </div>
+</div></div>
+
+<!-- Q · quiz -->
+<div class="sc" id="sq"><div class="cam" id="sqcam">
+  <div class="abs" style="inset:0;background:rgba(8,6,5,.72);backdrop-filter:blur(14px)"></div>
+  <div class="abs k" style="left:90px;top:505px;color:var(--ember)" id="sqk">Adiviná antes de seguir</div>
+  <div class="stk" id="quiz" style="top:580px">
+    <div class="q" style="background:linear-gradient(120deg,#ff4b1f,#ff2d7a)">Entre los restos,<br>¿qué sobrevivió?</div>
+    <div class="ops">
+      <div class="op" id="qa"><div class="l">A</div><span>Su celular</span></div>
+      <div class="op" id="qb"><div class="l">B</div><span>Su cartera</span></div>
+      <div class="op" id="qc"><div class="fill"></div><div class="l">C</div><span>Su vaso térmico</span></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- 3 · el vaso -->
+<div class="sc" id="s3"><div class="cam" id="s3cam">
+  <div class="abs" style="inset:0;background:radial-gradient(70% 45% at 50% 62%,#3b2416 0%,#1a110c 50%,#0a0807 100%)"></div>
+  <div class="abs" id="haz" style="left:240px;top:-200px;width:600px;height:1700px;background:linear-gradient(180deg,rgba(255,230,190,.0),rgba(255,226,180,.22) 60%,rgba(255,226,180,0));clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);filter:blur(18px)"></div>
+  <div class="abs" style="left:240px;top:1420px;width:600px;height:90px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.75),transparent)"></div>
+  <svg class="abs" id="vaso3" viewBox="0 0 420 800" style="left:362px;top:790px;width:354px;height:674px;overflow:visible"><use href="#quencher"/><g clip-path="url(#cpCuerpo)"><rect id="brillo3" x="-160" y="0" width="120" height="800" fill="url(#gBrillo)" transform="skewX(-12)"/></g></svg>
+  <canvas id="cv3" width="1080" height="1920"></canvas>
+  <svg class="abs" style="left:0;top:0;width:1080px;height:1920px;overflow:visible">
+    <circle id="c3dot" cx="470" cy="1130" r="12" fill="#ffb547"/><circle id="c3ring" cx="470" cy="1130" r="12" fill="none" stroke="#ffb547" stroke-width="3"/>
+    <path id="c3lin" d="M470 1130 L300 1010 L120 1010" fill="none" stroke="#ffb547" stroke-width="3" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+  </svg>
+  <div class="abs k" id="c3tag" style="left:120px;top:960px;color:#ffb547">Intacto</div>
+  <div class="abs" style="left:90px;top:515px;width:900px">
+    <span class="m d" style="font-size:96px"><span>Su vaso <span class="hl am">Stanley.</span></span></span>
+    <span class="m d" style="font-size:96px"><span>Entero.</span></span>
+  </div>
+</div></div>
+
+<!-- 4 · rayos X -->
+<div class="sc" id="s4"><div class="cam" id="s4cam">
+  <div class="abs" style="inset:0;background:#06121a"></div>
+  <div class="abs" style="inset:0;background-image:linear-gradient(rgba(159,230,255,.07) 2px,transparent 2px),linear-gradient(90deg,rgba(159,230,255,.07) 2px,transparent 2px);background-size:60px 60px"></div>
+  <svg class="abs" viewBox="0 0 420 800" style="left:362px;top:790px;width:354px;height:674px;overflow:visible">
+    <path d="M314 176 C410 176 410 196 410 300 C410 410 400 470 300 470" fill="none" stroke="#9fe6ff" stroke-width="3" opacity=".7"/>
+    <use href="#pCuerpo" fill="rgba(159,230,255,.06)" stroke="#9fe6ff" stroke-width="3"/>
+    <path d="M92 150 C96 300 126 460 140 520 L146 540 L146 730 L254 730 L254 540 L260 520 C274 460 304 300 308 150" fill="none" stroke="#9fe6ff" stroke-width="2" stroke-dasharray="8 8" opacity=".6"/>
+    <rect x="60" y="86" width="280" height="50" rx="16" fill="none" stroke="#9fe6ff" stroke-width="3"/>
+    <path d="M232 4 L190 520" stroke="#9fe6ff" stroke-width="3" opacity=".5"/>
+    <path d="M98 260 Q200 248 302 260" stroke="#9fe6ff" stroke-width="3" fill="none"/>
+    <rect x="100" y="262" width="200" height="460" fill="rgba(159,230,255,.08)" clip-path="url(#cpCuerpo)"/>
+    <g id="cubos">
+      <use href="#hielo" x="110" y="240" width="88" height="88"/><use href="#hielo" x="196" y="300" width="80" height="80"/>
+      <use href="#hielo" x="128" y="340" width="76" height="76"/><use href="#hielo" x="176" y="410" width="72" height="72"/>
+      <use href="#hielo" x="146" y="480" width="66" height="66"/>
+    </g>
+  </svg>
+  <canvas id="cv4" width="1080" height="1920"></canvas>
+  <div class="abs" style="left:90px;top:515px;width:900px">
+    <span class="m d" style="font-size:96px"><span>Y adentro…</span></span>
+    <span class="m d" style="font-size:96px"><span>todavía tenía</span></span>
+    <span class="m d" style="font-size:150px"><span class="hl ice">hielo.</span></span>
+  </div>
+</div></div>
+
+<!-- 5 · TikTok -->
+<div class="sc" id="s5"><div class="cam" id="s5cam">
+  <div class="abs" style="inset:0;background:radial-gradient(70% 50% at 50% 65%,#2a1712,var(--ink) 70%)"></div>
+  <canvas id="cv5" width="1080" height="1920"></canvas>
+  <div class="abs" style="left:90px;top:505px;width:900px" id="s5t">
+    <div class="k" style="color:#fe2c55">Lo sube a TikTok</div>
+    <div class="d" id="vistas" style="font-size:128px;margin-top:14px;font-variant-numeric:tabular-nums;white-space:nowrap">0</div>
+    <div style="font:700 40px 'Inter Tight';color:var(--mute);margin-top:6px">personas lo ven</div>
+  </div>
+  <div style="position:absolute;left:280px;top:900px;perspective:1600px">
+    <div class="phone" id="ph5">
+      <div class="bt" style="left:-9px;top:220px;height:70px"></div><div class="bt" style="left:-9px;top:310px;height:110px"></div><div class="bt" style="right:-9px;top:300px;height:150px"></div>
+      <div class="scr">
+        <div class="isla"></div>
+        <div class="abs" style="inset:0;background:radial-gradient(80% 50% at 50% 60%,#4a2a18,#120a07 70%)"></div>
+        <svg class="abs" viewBox="0 0 420 800" style="left:150px;top:300px;width:200px;height:381px"><use href="#quencher"/></svg>
+        <div class="abs" style="left:0;right:0;bottom:0;height:420px;background:linear-gradient(transparent,rgba(0,0,0,.7))"></div>
+        <div class="tk-top">Siguiendo <b>Para ti</b></div>
+        <div class="tk-rail">
+          <div class="tk-av" style="background:linear-gradient(135deg,#d9a27a,#7a4b33)"></div>
+          <svg><use href="#i-heart"/></svg><svg><use href="#i-com"/></svg><svg><use href="#i-sav"/></svg><svg><use href="#i-sha"/></svg>
+        </div>
+        <div class="tk-cap"><b>Video original</b>♫ sonido original</div>
+        <div class="tk-bar"><i id="bar5"></i></div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+<!-- W · por qué explota -->
+<div class="sc" id="sw"><div class="cam" id="swcam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <span class="m d" style="font-size:96px"><span>¿Por qué</span></span>
+    <span class="m d" style="font-size:96px"><span><span class="hl">explota?</span></span></span>
+  </div>
+  <div class="razon" id="r1" style="top:780px"><div class="nn">1</div><div class="tx">Lo grabó una clienta, no la marca.<small>Nadie pagó por ese video.</small></div></div>
+  <div class="razon" id="r2" style="top:1000px"><div class="nn">2</div><div class="tx">Es la prueba en vivo de lo que promete el vaso.<small>Mantener el frío. Pasó un incendio.</small></div></div>
+  <div class="razon" id="r3" style="top:1270px"><div class="nn">3</div><div class="tx">Nadie lo puede actuar: pasó de verdad.</div></div>
+</div></div>
+
+<!-- P · encuesta -->
+<div class="sc" id="sp"><div class="cam" id="spcam">
+  <div class="abs" style="inset:0;background:linear-gradient(160deg,#1b1714,#0c0b0a)"></div>
+  <div class="abs k" style="left:90px;top:505px;color:var(--ember)" id="spk">Ponete en su lugar</div>
+  <div class="stk" id="poll" style="top:580px">
+    <div class="q" style="background:#111">Si fueras Stanley,<br>¿qué hacés?</div>
+    <div class="ops">
+      <div class="op" id="pa"><div class="fill"></div><div class="l">A</div><span>Le mandás vasos nuevos</span></div>
+      <div class="op" id="pb"><div class="fill"></div><div class="l">B</div><span>Le reponés el auto</span></div>
+    </div>
+  </div>
+  <div class="abs" id="spr" style="left:90px;top:1180px;width:900px">
+    <span class="m d" style="font-size:96px"><span>Stanley hizo</span></span>
+    <span class="m d" style="font-size:96px"><span><span class="hl ok">las dos.</span></span></span>
+  </div>
+</div></div>
+
+<!-- 7 · 24 h + perfil -->
+<div class="sc" id="s7"><div class="cam" id="s7cam" style="color:#111">
+  <div class="abs" style="inset:0;background:var(--paper)"></div>
+  <svg class="abs" id="reloj" viewBox="0 0 800 800" style="left:140px;top:600px;width:800px;height:800px">
+    <circle cx="400" cy="400" r="360" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="28"/>
+    <circle id="arco" cx="400" cy="400" r="360" fill="none" stroke="#ff4b1f" stroke-width="28" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 400 400)" stroke-linecap="round"/>
+  </svg>
+  <div class="abs" id="s7big" style="left:90px;right:90px;top:760px;text-align:center">
+    <div class="k" style="font-size:36px;color:#ff4b1f">Menos de</div>
+    <div class="d" style="font-size:340px;letter-spacing:-.05em;line-height:.95">24 h</div>
+    <div class="k" style="font-size:36px">después</div>
+  </div>
+  <div class="noti" id="noti" style="top:500px">
+    <div class="ic"><svg width="60" height="60"><use href="#i-nota"/></svg></div>
+    <div><div class="t1"><span>TikTok</span><span>ahora</span></div><div class="t2">Terence Reilly te respondió con un video</div></div>
+  </div>
+  <div class="abs" id="s7txt" style="left:90px;top:720px;width:900px">
+    <span class="m d" style="font-size:80px"><span>Le contesta el</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">presidente de Stanley.</span></span></span>
+  </div>
+  <div class="perfil" id="perfil7" style="top:1000px">
+    <div class="av"><div style="background-image:url(img/reilly.jpg)"></div></div>
+    <div><div class="n">Terence Reilly</div><div class="r">Presidente global de Stanley</div><div class="kk">Respondió en TikTok</div></div>
+    <div class="btn">Seguir</div>
+  </div>
+</div></div>
+
+<!-- 8 · video de Reilly -->
+<div class="sc" id="s8"><div class="cam" id="s8cam">
+  <div class="abs" style="inset:0;background:radial-gradient(70% 50% at 50% 55%,#24201d,var(--ink) 75%)"></div>
+  <div style="position:absolute;left:280px;top:430px;perspective:1600px;transform:scale(.9);transform-origin:50% 0">
+    <div class="phone" id="ph8">
+      <div class="bt" style="left:-9px;top:220px;height:70px"></div><div class="bt" style="left:-9px;top:310px;height:110px"></div><div class="bt" style="right:-9px;top:300px;height:150px"></div>
+      <div class="scr">
+        <div class="isla"></div>
+        <div class="abs" id="reillyFoto" style="left:-280px;top:0;width:1048px;height:1048px;background:url(img/reilly.jpg) center/cover"></div>
+        <div class="abs" style="left:0;right:0;top:0;height:260px;background:linear-gradient(rgba(0,0,0,.55),transparent)"></div>
+        <div class="abs" style="left:0;right:0;bottom:0;height:420px;background:linear-gradient(transparent,rgba(0,0,0,.75))"></div>
+        <div class="abs" style="left:24px;top:150px;z-index:5;padding:10px 18px;border-radius:14px;background:rgba(255,255,255,.92);color:#111;font:700 21px 'Inter Tight'">Respuesta en video</div>
+        <div class="tk-rail">
+          <div class="tk-av" style="background-image:url(img/reilly-av.png)"></div>
+          <svg><use href="#i-heart"/></svg><svg><use href="#i-com"/></svg><svg><use href="#i-sav"/></svg><svg><use href="#i-sha"/></svg>
+        </div>
+        <div class="tk-cap"><b>Terence Reilly · Stanley</b>Presidente global de Stanley</div>
+        <div class="tk-bar"><i id="bar8"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="subs" id="subs" style="top:1150px"></div>
+  <div class="src" style="top:1430px;width:900px;text-align:center" id="src8">Palabras de Terence Reilly en TikTok · fuente: ABC7</div>
+</div></div>
+
+<!-- 9 · auto nuevo -->
+<div class="sc" id="s9"><div class="cam" id="s9cam" style="color:#16110d">
+  <div class="abs" style="inset:0;background:linear-gradient(180deg,#f7d9b6 0%,#f2ede4 55%,#e6ddd0 100%)"></div>
+  <div class="abs" style="left:-200px;right:-200px;top:1360px;height:4px;background:rgba(0,0,0,.12)"></div>
+  <div class="abs" id="auto9" style="left:40px;top:950px;width:1000px;height:440px">
+    <svg viewBox="0 0 1000 440" style="width:100%;height:100%;overflow:visible">
+      <ellipse cx="500" cy="418" rx="500" ry="20" fill="#000" opacity=".18"/>
+      <use href="#pAuto" fill="url(#gPintura)"/>
+      <use href="#pVidrio" fill="url(#gCristal)"/>
+      <path d="M200 112 L300 112 L250 190 L150 190 Z" fill="#fff" opacity=".18"/>
+      <rect x="370" y="104" width="22" height="90" fill="#16261d"/><rect x="554" y="104" width="16" height="90" fill="#16261d"/>
+      <path d="M380 196 L380 338 M565 196 L565 338" stroke="#16261d" stroke-width="3" opacity=".6"/>
+      <rect x="450" y="225" width="44" height="9" rx="4" fill="#c9d8cf"/><rect x="630" y="225" width="44" height="9" rx="4" fill="#c9d8cf"/>
+      <path d="M48 205 L60 205" stroke="#e33" stroke-width="16"/>
+      <path d="M930 228 Q960 230 968 250" stroke="#fffbe0" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M90 158 L600 150" stroke="#fff" stroke-width="4" opacity=".35"/>
+      <g id="rueda1"><circle cx="790" cy="345" r="64" fill="#1a1a1a"/><circle cx="790" cy="345" r="38" fill="#c9cdd1"/><path d="M790 309 L790 381 M754 345 L826 345 M765 320 L815 370 M815 320 L765 370" stroke="#8b9095" stroke-width="7"/></g>
+      <g id="rueda2"><circle cx="230" cy="345" r="64" fill="#1a1a1a"/><circle cx="230" cy="345" r="38" fill="#c9cdd1"/><path d="M230 309 L230 381 M194 345 L266 345 M205 320 L255 370 M255 320 L205 370" stroke="#8b9095" stroke-width="7"/></g>
+      <g id="mono9">
+        <rect x="430" y="80" width="56" height="268" fill="#d62a2f"/><rect x="430" y="80" width="12" height="268" fill="#ff5a5f" opacity=".6"/>
+        <g transform="translate(458 70)">
+          <path d="M0 0 C-60 -90 -170 -40 -120 10 C-90 40 -40 20 0 0 Z" fill="#e0262b"/><path d="M0 0 C60 -90 170 -40 120 10 C90 40 40 20 0 0 Z" fill="#c81e23"/>
+          <path d="M-6 6 L-60 90 L-36 84 L-28 106 Z" fill="#b71b20"/><path d="M6 6 L60 90 L36 84 L28 106 Z" fill="#a8171c"/>
+          <circle r="22" fill="#a8171c"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <canvas id="cv9" width="1080" height="1920"></canvas>
+  <div class="abs" style="left:90px;top:520px;width:900px">
+    <span class="m d" style="font-size:104px"><span>Y le regala</span></span>
+    <span class="m d" style="font-size:104px"><span><span class="hl" style="background:#2f5d46">un auto nuevo.</span></span></span>
+  </div>
+</div></div>
+
+<!-- V · por qué le convenía -->
+<div class="sc" id="sv"><div class="cam" id="svcam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:505px;width:900px">
+    <span class="m d" style="font-size:88px"><span>¿Por qué le</span></span>
+    <span class="m d" style="font-size:88px"><span><span class="hl">convenía?</span></span></span>
+  </div>
+  <div class="card" id="cvA" style="left:90px;top:760px;background:#1c1917">
+    <div class="t" style="color:var(--mute)">Le costó</div>
+    <svg viewBox="0 0 1000 440" style="width:240px;height:106px;margin-top:22px"><use href="#pAuto" fill="#9a948b"/><circle cx="790" cy="345" r="60" fill="#5d5852"/><circle cx="230" cy="345" r="60" fill="#5d5852"/></svg>
+    <div class="s" style="margin-top:14px">un auto<br>nuevo</div>
+  </div>
+  <div class="abs d" id="cvVs" style="left:490px;top:900px;width:100px;text-align:center;font-size:54px;color:var(--mute)">vs</div>
+  <div class="card" id="cvB" style="left:590px;top:760px;background:var(--fire);color:#fff">
+    <div class="t">Ganó</div>
+    <div class="v" id="n3">US$ 0</div>
+    <div class="s">en prensa que no pagó</div>
+  </div>
+  <div class="mini" id="minis" style="top:1150px">
+    <div><b id="n1">0</b><span>impresiones en medios</span></div>
+    <div><b id="n2">0</b><span>seguidores en TikTok</span></div>
+  </div>
+  <div class="src" style="top:1440px" id="srcv">fuente: Shorty Awards, caso Stanley (valor de medios = lo que habría costado en avisos)</div>
+</div></div>
+
+<!-- 11 · contexto de ventas -->
+<div class="sc" id="s11"><div class="cam" id="s11cam" style="color:#111">
+  <div class="abs" style="inset:0;background:var(--paper)"></div>
+  <div class="abs k" style="left:90px;top:505px;color:#ff4b1f">Ventas anuales de Stanley</div>
+  <div class="abs" style="left:90px;top:565px;width:900px">
+    <span class="m d" style="font-size:84px"><span>Ese año cerró en</span></span>
+    <span class="m d" style="font-size:84px"><span><span class="hl">US$ 750 M.</span></span></span>
+    <span class="m" style="font:700 40px/1.3 'Inter Tight';color:#555;margin-top:14px"><span>Cuatro años antes vendía US$ 73 M.</span></span>
+  </div>
+  <div class="abs" style="left:90px;right:90px;top:1380px;height:3px;background:#111"></div>
+  <div class="abs" id="b19" style="left:170px;width:250px;top:1380px;height:0;background:#bcb5aa;transform:translateY(-100%)"></div>
+  <div class="abs" id="b23" style="left:560px;width:250px;top:1380px;height:0;background:linear-gradient(180deg,#ff7a3d,#ff4b1f);transform:translateY(-100%)"></div>
+  <div class="abs" style="left:170px;width:250px;top:1396px;text-align:center;font:800 30px 'Inter Tight'">2019</div>
+  <div class="abs" style="left:560px;width:250px;top:1396px;text-align:center;font:800 30px 'Inter Tight'">2023</div>
+  <div class="abs d" id="l19" style="left:170px;width:250px;text-align:center;font-size:52px;top:1262px">73 M</div>
+  <div class="abs" id="x10" style="left:200px;top:960px;width:180px;height:180px;border-radius:50%;background:#111;color:var(--paper);display:grid;place-items:center;font:900 72px 'Inter Tight';letter-spacing:-.04em">×10</div>
+  <div class="src" style="top:1450px;color:rgba(0,0,0,.55)">fuente: CNBC</div>
+</div></div>
+
+<!-- 12 · cierre interactivo -->
+<div class="sc" id="s12"><div class="cam" id="s12cam">
+  <div class="abs" style="inset:0;background:var(--ink)"></div>
+  <div class="abs" style="left:90px;top:520px;width:900px">
+    <span class="m d" style="font-size:84px"><span>¿Qué marca cuento</span></span>
+    <span class="m d" style="font-size:84px"><span>en el <span class="hl">EP.02?</span></span></span>
+  </div>
+  <div class="abs" id="caja" style="left:90px;right:90px;top:760px;height:120px;border-radius:60px;background:#1c1917;border:2px solid #34302c;display:flex;align-items:center;padding:0 22px;gap:20px">
+    <div style="width:76px;height:76px;border-radius:50%;background:url(img/avatar.png) center/cover;flex:none"></div>
+    <div id="tipeo" style="font:700 40px 'Inter Tight';color:#fff;white-space:nowrap;overflow:hidden"></div>
+    <div id="cursor" style="width:4px;height:48px;background:var(--fire);margin-left:-14px"></div>
+  </div>
+  <div class="abs" style="left:110px;top:900px;font:700 32px 'Inter Tight';color:var(--mute)" id="cajaL">Dejalo en los comentarios</div>
+  <div class="perfil" id="perfil12" style="top:1010px">
+    <div class="av"><div style="background-image:url(img/avatar.png)"></div></div>
+    <div><div class="n">Franco Valencia</div><div class="r">@francovalencia.ok</div><div class="kk">Historias reales de ventas</div></div>
+    <div class="btn" id="btn12"><span id="btn12t">Seguir</span></div>
+  </div>
+  <div class="src" style="top:1445px;width:900px;font-size:18px">Ilustración basada en la historia real (Stanley, noviembre 2023). Foto de T. Reilly: prensa (Housewares Live).</div>
+</div></div>
+
+<div id="dedo"></div><div id="onda"></div>
+<div id="hud"><div class="a">HISTORIAS DE VENTAS</div><div class="b" id="cap">EP.01</div><div class="r"></div><div class="p" id="prog"></div></div>
+<div id="vin"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+
+<script>
+(async () => {
+await document.fonts.ready;
+const DUR = 46; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const eio = (u) => { u = clamp(u); return u < .5 ? 8 * u * u * u * u : 1 - Math.pow(-2 * u + 2, 4) / 2; };
+const pos = (sel, fx = .78) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+const QC = pos('#qc'), PA = pos('#pa'), PB = pos('#pb'), BT = pos('#btn12', .5);
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+const ESC = { s1: [0, 2.7], s2: [2.5, 7.9], sq: [4.7, 7.9], s3: [7.6, 10.5], s4: [10.0, 12.4], s5: [12.15, 15.6], sw: [15.4, 21.2], sp: [21.0, 25.3], s7: [25.1, 28.3], s8: [27.9, 32.2], s9: [32.0, 34.6], sv: [34.4, 40.4], s11: [40.2, 43.7], s12: [43.5, 46] };
+for (const [k, [a, b]] of Object.entries(ESC)) { tl.set('#' + k, { visibility: 'visible' }, a); tl.set('#' + k, { visibility: 'hidden' }, b); }
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.09, d = 0.7) => tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+// toque del dedo: llega a (x,y) y toca en t
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+
+// 1 · gancho
+tl.fromTo('#s1 .cam', { scale: 1.08 }, { scale: 1, duration: 2.7, ease: 'power2.out' }, 0);
+tl.fromTo('#s1k', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .5, ease: 'power2.out' }, 0.05);
+lineas('#s1', 0.15, 0.12);
+tl.fromTo('#fuego > span', { scale: 1.35, transformOrigin: '0% 70%' }, { scale: 1, duration: .5, ease: 'back.out(2.2)' }, 0.39);
+tl.to('#s1 .cam', { y: -520, filter: 'blur(26px)', duration: .22, ease: 'power3.in' }, 2.48);
+// 2 · auto
+tl.fromTo('#s2cam', { y: 600, filter: 'blur(26px)' }, { y: 0, filter: 'blur(0px)', duration: .45, ease: E }, 2.5);
+tl.fromTo('#s2cam', { scale: 1, transformOrigin: '560px 1150px' }, { scale: 1.32, duration: 5.2, ease: 'power1.inOut' }, 2.5);
+lineas('#s2', 2.75, 0.1);
+// Q · quiz sobre el auto desenfocado
+tl.fromTo('#sq', { opacity: 0 }, { opacity: 1, duration: .3 }, 4.7);
+tl.fromTo('#sqk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, 4.8);
+tl.fromTo('#quiz', { scale: .6, y: 120, opacity: 0, rotate: -4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, 4.85);
+tl.fromTo('#quiz .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, 5.15);
+// la cámara "duda": A y B se marcan un instante
+tl.to('#qa', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, 5.9);
+tl.to('#qb', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, 6.2);
+toque(QC[0], QC[1], 6.75);
+tl.to('#qc .fill', { width: '100%', duration: .45, ease: 'power3.out' }, 6.8);
+tl.set('#qc', { className: 'op ok', color: '#fff' }, 6.8);
+tl.to('#qa, #qb', { opacity: .4, duration: .3 }, 6.85);
+tl.to('#quiz', { scale: 1.04, duration: .12, yoyo: true, repeat: 1 }, 6.8);
+// 3 · vaso
+tl.fromTo('#s3', { clipPath: `circle(0px at ${QC[0]}px ${QC[1]}px)` }, { clipPath: `circle(1700px at ${QC[0]}px ${QC[1]}px)`, duration: .6, ease: E2 }, 7.6);
+tl.fromTo('#s3cam', { scale: 1.25 }, { scale: 1.02, duration: 2.9, ease: 'power2.out' }, 7.6);
+tl.fromTo('#vaso3', { y: 40, rotate: -4 }, { y: 0, rotate: 0, duration: 1.4, ease: E }, 7.7);
+tl.fromTo('#brillo3', { attr: { x: -160 } }, { attr: { x: 620 }, duration: 1.3, ease: 'power2.inOut' }, 8.2);
+tl.fromTo('#haz', { opacity: 0 }, { opacity: 1, duration: .8 }, 7.8);
+lineas('#s3', 7.95, 0.14);
+tl.fromTo('#c3dot', { attr: { r: 0 } }, { attr: { r: 12 }, duration: .3, ease: 'back.out(3)' }, 8.6);
+tl.fromTo('#c3ring', { attr: { r: 12 }, opacity: 1 }, { attr: { r: 44 }, opacity: 0, duration: .9, ease: 'power2.out' }, 8.65);
+tl.to('#c3lin', { strokeDashoffset: 0, duration: .45, ease: 'power3.out' }, 8.7);
+tl.fromTo('#c3tag', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .35, ease: 'power2.out' }, 9.05);
+// 4 · rayos X
+tl.fromTo('#s4', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: .55, ease: 'power2.inOut' }, 10.0);
+tl.fromTo('#s4cam', { scale: 1.02 }, { scale: 1.12, duration: 2.4, ease: 'none', transformOrigin: '540px 1000px' }, 10.0);
+lineas('#s4', 10.25, 0.12);
+// 5 · TikTok
+tl.fromTo('#s5', { opacity: 0 }, { opacity: 1, duration: .25 }, 12.15);
+tl.fromTo('#ph5', { y: 900, rotateX: 38, rotateZ: -8 }, { y: 0, rotateX: 8, rotateZ: -3, duration: .9, ease: E }, 12.2);
+tl.to('#ph5', { rotateX: 0, rotateZ: 0, duration: 2.4, ease: 'power1.inOut' }, 13.1);
+tl.fromTo('#s5t > *', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: E, stagger: .08 }, 12.35);
+tl.fromTo('#bar5', { width: '0%' }, { width: '100%', duration: 3.4, ease: 'none' }, 12.2);
+tl.fromTo('#vistas', { scale: 1 }, { scale: 1.08, duration: .12, yoyo: true, repeat: 1, transformOrigin: '0 50%' }, 14.55);
+// W · por qué explota
+tl.fromTo('#sw', { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, 15.4);
+lineas('#sw', 15.65, 0.12);
+[['#r1', 16.3], ['#r2', 17.7], ['#r3', 19.3]].forEach(([r, t]) => {
+  tl.fromTo(r + ' .nn', { scale: 0 }, { scale: 1, duration: .45, ease: 'back.out(2.5)' }, t);
+  tl.fromTo(r + ' .tx', { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: .55, ease: E }, t + .08);
+});
+tl.fromTo('#swcam', { scale: 1 }, { scale: 1.03, duration: 5.8, ease: 'none' }, 15.4);
+// P · encuesta
+tl.fromTo('#sp', { clipPath: 'circle(0px at 540px 960px)' }, { clipPath: 'circle(1300px at 540px 960px)', duration: .55, ease: E2 }, 21.0);
+tl.fromTo('#spk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, 21.2);
+tl.fromTo('#poll', { scale: .6, y: 120, opacity: 0, rotate: 4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, 21.25);
+tl.fromTo('#poll .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, 21.5);
+toque(PA[0], PA[1], 22.6);
+tl.to('#pa .fill', { width: '100%', duration: .4, ease: 'power3.out' }, 22.65);
+tl.set('#pa', { className: 'op ok', color: '#fff' }, 22.65);
+toque(PB[0], PB[1], 23.5, PA);
+tl.to('#pb .fill', { width: '100%', duration: .4, ease: 'power3.out' }, 23.55);
+tl.set('#pb', { className: 'op ok', color: '#fff' }, 23.55);
+tl.set('#spr', { autoAlpha: 0 }, 0); tl.set('#spr', { autoAlpha: 1 }, 23.8);
+lineas('#spr', 23.85, 0.12);
+// 7 · 24 h
+tl.fromTo('#s7', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: .5, ease: E2 }, 25.1);
+tl.to('#arco', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 25.25);
+tl.fromTo('#s7big', { scale: .8, opacity: 0 }, { scale: 1, opacity: 1, duration: .6, ease: E }, 25.25);
+tl.to('#s7big, #reloj', { scale: .5, opacity: 0, duration: .4, ease: 'power3.in' }, 26.35);
+tl.fromTo('#noti', { y: -260, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .55, ease: 'back.out(1.6)' }, 26.5);
+tl.set('#s7txt', { autoAlpha: 0 }, 0); tl.set('#s7txt', { autoAlpha: 1 }, 26.6);
+lineas('#s7txt', 26.65, 0.1);
+tl.fromTo('#perfil7', { y: 500, rotate: 4, autoAlpha: 0 }, { y: 0, rotate: 0, autoAlpha: 1, duration: .7, ease: E }, 26.85);
+tl.fromTo('#s7cam', { scale: 1 }, { scale: 1.04, duration: 3, ease: 'none' }, 25.3);
+// 8 · video de Reilly
+tl.fromTo('#s8', { yPercent: 100 }, { yPercent: 0, duration: .5, ease: E }, 27.9);
+tl.fromTo('#ph8', { rotateY: -14, rotateX: 6 }, { rotateY: 0, rotateX: 0, duration: 1.4, ease: E }, 27.9);
+tl.fromTo('#reillyFoto', { scale: 1.0 }, { scale: 1.12, duration: 4.3, ease: 'none' }, 27.9);
+tl.fromTo('#bar8', { width: '0%' }, { width: '100%', duration: 4.3, ease: 'none' }, 27.9);
+tl.fromTo('#src8', { opacity: 0 }, { opacity: 1, duration: .3 }, 28.5);
+tl.to('#s8cam', { x: -1080, filter: 'blur(24px)', duration: .3, ease: 'power3.in' }, 31.95);
+// 9 · auto nuevo
+tl.fromTo('#s9cam', { x: 1080 }, { x: 0, duration: .45, ease: E }, 32.0);
+tl.fromTo('#auto9', { x: -1300, filter: 'blur(14px)' }, { x: 0, filter: 'blur(0px)', duration: .9, ease: 'power4.out' }, 32.15);
+tl.fromTo('#auto9', { skewX: -6 }, { skewX: 0, duration: .5, ease: 'back.out(3)' }, 32.85);
+tl.fromTo('#rueda1, #rueda2', { rotate: -720, transformOrigin: '50% 50%' }, { rotate: 0, duration: .9, ease: 'power4.out' }, 32.15);
+tl.fromTo('#mono9', { y: -900 }, { y: 0, duration: .55, ease: 'bounce.out' }, 33.05);
+lineas('#s9', 32.35, 0.12);
+// V · por qué le convenía
+tl.fromTo('#sv', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: .5, ease: E2 }, 34.4);
+lineas('#sv', 34.65, 0.12);
+tl.fromTo('#cvA', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: E }, 35.3);
+tl.fromTo('#cvVs', { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(3)' }, 35.8);
+tl.fromTo('#cvB', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: E }, 36.0);
+tl.to('#cvA', { scale: .9, opacity: .55, duration: .5, ease: 'power2.out' }, 37.3);
+tl.to('#cvB', { scale: 1.08, duration: .5, ease: 'back.out(2)' }, 37.3);
+tl.fromTo('#minis > div', { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: E, stagger: .2 }, 37.7);
+tl.fromTo('#srcv', { opacity: 0 }, { opacity: 1, duration: .3 }, 38.2);
+// 11 · ventas
+tl.fromTo('#s11', { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, 40.2);
+lineas('#s11', 40.45, 0.14);
+tl.fromTo('#b19', { height: 0 }, { height: 51, duration: .5, ease: E }, 41.0);
+tl.fromTo('#l19', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .4, ease: E }, 41.1);
+tl.fromTo('#b23', { height: 0 }, { height: 520, duration: 1.1, ease: 'expo.inOut' }, 41.4);
+tl.fromTo('#x10', { scale: 0, rotate: -40 }, { scale: 1, rotate: -8, duration: .5, ease: 'back.out(2.4)' }, 42.4);
+// 12 · cierre
+tl.fromTo('#s12', { clipPath: 'circle(0px at 540px 1000px)' }, { clipPath: 'circle(1300px at 540px 1000px)', duration: .55, ease: E2 }, 43.5);
+lineas('#s12', 43.65, 0.12);
+tl.fromTo('#caja, #cajaL', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: E, stagger: .1 }, 43.9);
+tl.fromTo('#perfil12', { y: 500, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, 44.3);
+toque(BT[0], BT[1], 45.3);
+tl.set('#btn12', { background: '#e9e4dc', color: '#111' }, 45.35);
+
+// ── dibujos por cuadro ──
+// llama vectorial: lengua con dos curvas, tres capas
+function lengua(g, x, y, w, h, t, s) {
+  const sw = Math.sin(t * 6.3 + s * 3.1) * w * .32 + Math.sin(t * 13.7 + s * 1.7) * w * .12;
+  const hh = h * (.82 + .18 * Math.sin(t * 8.9 + s * 7.3));
+  g.beginPath(); g.moveTo(x - w / 2, y);
+  g.bezierCurveTo(x - w * .62, y - hh * .42, x - w * .1 + sw * .5, y - hh * .62, x + sw, y - hh);
+  g.bezierCurveTo(x + w * .14 + sw * .5, y - hh * .6, x + w * .62, y - hh * .4, x + w / 2, y);
+  g.closePath(); g.fill();
+}
+const CAPAS = [['#c4210b', 1, 1], ['#ff5a1f', .74, .78], ['#ffa93a', .5, .55], ['#ffe6a3', .26, .3]];
+function fuego(g, focos, t, k = 1) {
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (const [x, y, w, h] of focos) { const r = g.createRadialGradient(x, y - h * .3, 0, x, y - h * .3, h * 1.1); r.addColorStop(0, `rgba(255,120,30,${.35 * k})`); r.addColorStop(1, 'rgba(255,80,20,0)'); g.fillStyle = r; g.fillRect(x - h * 1.2, y - h * 1.5, h * 2.4, h * 2.4); }
+  g.restore();
+  for (const [cw, fw, fh] of CAPAS) {
+    g.fillStyle = cw;
+    focos.forEach(([x, y, w, h, n], i) => { for (let j = 0; j < n; j++) { const s = i * 17 + j * 3.7; const ox = (j - (n - 1) / 2) * (w / n) * .8 + (hash(s + 9) - .5) * w / n * .7; const cen = 1 - Math.abs(j - (n - 1) / 2) / n; lengua(g, x + ox, y, (w / n) * (1.3 + hash(s + 4) * .9) * fw, h * fh * (.35 + cen * .55 + hash(s) * .4), t, s); } });
+  }
+  // lenguas sueltas que suben
+  focos.forEach(([x, y, w, h], i) => { for (let j = 0; j < 5; j++) { const s = i * 31 + j; const per = .9 + hash(s) * .5; const u = ((t + hash(s + 1) * per) % per) / per; const px = x + (hash(s + 2) - .5) * w * .8 + Math.sin(t * 5 + s) * 12; const py = y - h * (.7 + u * .7); const sz = (1 - u) * Math.min(w * .045, 12) * k; if (sz < 1) continue; g.fillStyle = u < .5 ? '#ffa93a' : '#ff5a1f'; g.beginPath(); g.ellipse(px, py, sz, sz * 1.8, 0, 0, 7); g.fill(); } });
+}
+function brasas(g, t, n, x0, x1, y0, alto, col = '255,170,70', vel = 1) {
+  for (let i = 0; i < n; i++) { const per = 2 + hash(i) * 2.5; const u = ((t * vel + hash(i + 50) * per) % per) / per; const x = x0 + hash(i + 7) * (x1 - x0) + Math.sin(t * 2 + i) * 30 * u; const y = y0 - u * alto; const a = Math.sin(u * Math.PI); const r = 2 + hash(i + 3) * 4; g.fillStyle = `rgba(${col},${a * .9})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); }
+}
+function humo(g, t, x, y, n, k = 1) {
+  for (let i = 0; i < n; i++) { const per = 3 + hash(i + 90) * 2; const u = ((t + hash(i + 91) * per) % per) / per; const px = x + (hash(i + 92) - .5) * 300 + u * 120; const py = y - u * 700; const r = 60 + u * 220; const a = Math.sin(u * Math.PI) * .18 * k; const gr = g.createRadialGradient(px, py, 0, px, py, r); gr.addColorStop(0, `rgba(40,34,32,${a})`); gr.addColorStop(1, 'rgba(40,34,32,0)'); g.fillStyle = gr; g.fillRect(px - r, py - r, r * 2, r * 2); }
+}
+function corazon(g, x, y, s, a, col) { g.save(); g.translate(x, y); g.scale(s / 24, s / 24); g.globalAlpha = a; g.fillStyle = col; g.fill(new Path2D('M0 8.5s-7.5-4.6-9.6-9.2C-11.1-4.1-9-8-5.4-8c2.1 0 3.6 1.2 5.4 3.2C1.8-6.8 3.3-8 5.4-8 9-8 11.1-4.1 9.6-.7 7.5 3.9 0 8.5 0 8.5z')); g.restore(); }
+function confeti(g, t, t0, x0, y0, n) {
+  const dt = t - t0; if (dt < 0) return; const cols = ['#ff4b1f', '#ffb547', '#2f5d46', '#e0262b', '#3b82f6', '#111'];
+  for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + (hash(i) - .5) * 2.2, v = 900 + hash(i + 1) * 1100; const x = x0 + Math.cos(a) * v * dt + Math.sin(dt * 4 + i) * 30 * dt; const y = y0 + Math.sin(a) * v * dt + 1300 * dt * dt * .9; if (y > 2000) continue; g.save(); g.translate(x, y); g.rotate(dt * (4 + hash(i + 2) * 8) + i); g.scale(1, Math.cos(dt * (6 + hash(i + 4) * 6) + i)); g.fillStyle = cols[i % cols.length]; g.fillRect(-9, -5, 18, 10); g.restore(); }
+}
+
+const cx = (id) => $(id).getContext('2d');
+const c1 = cx('#cv1'), c2 = cx('#cv2'), c3 = cx('#cv3'), c4 = cx('#cv4'), c5 = cx('#cv5'), c9 = cx('#cv9');
+const fmt = (v) => Math.round(v).toLocaleString('es-AR');
+const SUBS = [[28.05, 29.05, 'Te vamos a mandar unos Stanley…'], [29.05, 29.95, 'pero hay una cosa más.'], [29.95, 30.85, 'Nunca hicimos esto…'], [30.85, 31.95, 'nos encantaría reponerte el auto.']];
+const subsEl = $('#subs'); let subsK = '';
+const TIPEO = 'Nike… Coca-Cola… ¿la tuya?';
+const gr = cx('#grano'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const vis = (k, t) => t >= ESC[k][0] && t < ESC[k][1];
+const CAP = [[0, 'EP.01'], [4.7, 'ADIVINÁ'], [15.4, '¿POR QUÉ?'], [21.0, 'ENCUESTA'], [25.1, 'EP.01'], [34.4, '¿POR QUÉ?'], [40.2, 'EP.01']];
+
+window.render = (t) => {
+  tl.seek(t, false);
+  $('#prog').style.width = (t / DUR * 100) + '%';
+  $('#cap').textContent = CAP.filter(([a]) => t >= a).pop()[1];
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  $('#turb').setAttribute('seed', 1 + Math.floor(t * 15) % 40);
+  if (vis('s1', t)) { c1.clearRect(0, 0, 1080, 1920); humo(c1, t, 540, 1700, 6); fuego(c1, [[180, 1960, 300, 420, 4], [540, 1980, 420, 560, 5], [900, 1960, 320, 440, 4]], t); brasas(c1, t, 70, 0, 1080, 1900, 1500); }
+  if (vis('s2', t)) { c2.clearRect(0, 0, 1080, 1920); humo(c2, t, 540, 1000, 8, 1.5); fuego(c2, [[330, 1200, 330, 420, 5], [540, 1200, 300, 470, 4], [690, 1205, 160, 300, 3], [930, 1245, 120, 150, 2]], t); brasas(c2, t, 60, 200, 950, 1150, 900); }
+  if (vis('s3', t)) { c3.clearRect(0, 0, 1080, 1920); brasas(c3, t, 40, 150, 950, 1500, 1000, '255,190,120', .4); }
+  if (vis('s4', t)) {
+    c4.clearRect(0, 0, 1080, 1920);
+    const sy = 1920 * eio((t - 10.0) / .55); if (t < 10.65) { c4.fillStyle = 'rgba(159,230,255,.9)'; c4.fillRect(0, sy - 3, 1080, 6); const g = c4.createLinearGradient(0, sy - 160, 0, sy); g.addColorStop(0, 'rgba(159,230,255,0)'); g.addColorStop(1, 'rgba(159,230,255,.28)'); c4.fillStyle = g; c4.fillRect(0, sy - 160, 1080, 160); }
+    for (let i = 0; i < 60; i++) { const u = ((t * .12 + hash(i + 500)) % 1); c4.fillStyle = `rgba(200,245,255,${.5 * Math.sin(u * Math.PI)})`; c4.fillRect(hash(i + 501) * 1080, 1920 - u * 1920, 3, 3); }
+    $$('#cubos use').forEach((u, i) => u.setAttribute('transform', `translate(0 ${Math.sin(t * 2.2 + i * 1.3) * 6}) rotate(${Math.sin(t * 1.6 + i) * 6} 200 ${300 + i * 60})`));
+  }
+  if (vis('s5', t)) {
+    c5.clearRect(0, 0, 1080, 1920);
+    const u = (t - 12.55) / 2.0; $('#vistas').textContent = u <= 0 ? '0' : (u >= 1 ? '42.000.000+' : fmt(42e6 * ease(u)));
+    for (let i = 0; i < 26; i++) { const t0 = 12.7 + hash(i + 700) * 2.6; const dt = t - t0; if (dt < 0 || dt > 1.6) continue; const k = dt / 1.6; corazon(c5, 860 + Math.sin(dt * 5 + i) * 30 + hash(i + 701) * 60, 1700 - k * 700, 40 + hash(i + 702) * 30, Math.sin(k * Math.PI), i % 3 ? '#fe2c55' : '#ff8fa8'); }
+  }
+  if (vis('s8', t)) {
+    const s = SUBS.find(([a, b]) => t >= a && t < b); const k = s ? s[2] : '';
+    const pal = k.split(' '); const s0 = s ? s[0] : 0, s1 = s ? s[1] : 1; const on = Math.min(Math.floor(((t - s0) / (s1 - s0)) * pal.length * 1.15), pal.length - 1);
+    const html = pal.map((w, i) => `<span class="${i === on ? 'on' : ''}">${w}</span>`).join(' ');
+    if (html !== subsK) { subsEl.innerHTML = html; subsK = html; }
+    const pop = s ? ease((t - s0) / .18) : 0; subsEl.style.transform = `scale(${.85 + .15 * pop})`; subsEl.style.opacity = s ? 1 : 0;
+  }
+  if (vis('s9', t)) { c9.clearRect(0, 0, 1080, 1920); confeti(c9, t, 33.3, 540, 1050, 140); confeti(c9, t, 33.4, 200, 1250, 60); confeti(c9, t, 33.45, 880, 1250, 60); }
+  if (vis('sv', t)) {
+    const c = ease((t - 36.1) / 1.1), a = ease((t - 37.75) / 1.0), b = ease((t - 37.95) / 1.0);
+    $('#n3').textContent = 'US$ ' + Math.round(43 * c) + ' M';
+    $('#n1').textContent = a >= 1 ? '3.300 M' : fmt(3300 * a) + ' M';
+    $('#n2').textContent = '+' + Math.round(220 * b) + ' %';
+  }
+  if (vis('s12', t)) {
+    const n = Math.floor(clamp((t - 44.2) / 1.6) * TIPEO.length); $('#tipeo').textContent = TIPEO.slice(0, n);
+    $('#cursor').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2;
+    $('#btn12t').textContent = t >= 45.35 ? 'Siguiendo' : 'Seguir';
+  }
+};
+window.render(0); window.listo = true;
+})();
+</script>
+</body></html>
