@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>EP.03 Gordis Burger</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{display:none!important;position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+
+:root{--rojo:#ff3b2f;--cel:#5fc9ea;--paper2:#fff8ee}
+.hl{background:var(--rojo)}.hl.cel{background:var(--cel);color:#06202b}
+.fondo{inset:0;background:var(--ink)}
+.foto{position:absolute;border-radius:30px;overflow:hidden;background:#222;box-shadow:0 40px 90px rgba(0,0,0,.55)}
+.foto>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.foto.pol{border:12px solid #fff;border-radius:22px}
+.tag{position:absolute;left:18px;bottom:18px;padding:10px 20px;border-radius:30px;background:#111;color:#fff;font:800 30px 'Inter Tight';font-style:normal}
+.tag.rojo{background:var(--rojo)}
+.pega{position:absolute;padding:18px 30px;border-radius:20px;background:var(--rojo);color:#fff;font:900 56px 'Inter Tight';letter-spacing:-.02em;box-shadow:0 20px 50px rgba(0,0,0,.5);white-space:nowrap}
+.chip{position:absolute;padding:20px 32px;border-radius:44px;background:#1c1917;border:2px solid #3a3530;font:800 42px 'Inter Tight';white-space:nowrap}
+.chip.blanco{background:#fff;color:#111;border-color:#fff}
+.chip.rojo{background:var(--rojo);border-color:var(--rojo);color:#fff}
+.mos{position:absolute;left:-150px;top:-120px;display:grid;grid-template-columns:repeat(6,236px);gap:10px;transform-origin:50% 50%}
+.mos img{width:236px;height:236px;object-fit:cover;border-radius:18px;display:block}
+.vela{position:absolute;inset:0}
+.reloj{position:absolute;width:150px;height:150px;border-radius:50%;background:#fff;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.reloj i{position:absolute;left:72px;bottom:75px;width:6px;border-radius:3px;background:#111;transform-origin:50% 100%}
+.neon{position:absolute;padding:12px 26px;border:5px solid #ff5a4f;border-radius:18px;color:#ffd9d4;font:900 46px 'Inter Tight';letter-spacing:.12em;text-shadow:0 0 18px #ff3b2f,0 0 40px #ff3b2f;box-shadow:0 0 30px rgba(255,59,47,.6),inset 0 0 20px rgba(255,59,47,.45);background:rgba(20,5,5,.55)}
+.flecha{position:absolute;left:90px;width:850px;display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;gap:10px}
+.flecha div{padding:24px 18px;border-radius:26px;text-align:center;font:800 36px/1.15 'Inter Tight'}
+.flecha .a1{background:#1c1917;color:var(--mute);text-decoration:line-through;text-decoration-thickness:4px}
+.flecha .a2{background:var(--rojo);color:#fff}
+.flecha b{font:900 64px 'Inter Tight';text-align:center}
+.vistas{position:absolute;padding:16px 26px;border-radius:20px;background:rgba(0,0,0,.72);border:2px solid rgba(255,255,255,.25);font:800 38px 'Inter Tight';white-space:nowrap;backdrop-filter:blur(6px)}
+.cinta{position:absolute;left:0;top:0;display:flex;gap:22px}
+.res{width:250px;border-radius:26px;background:#fff;color:#111;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.res img{width:250px;height:230px;object-fit:cover;display:block}
+.res div{padding:14px 18px;font:800 28px 'Inter Tight'}.res div span{color:#f5a623;letter-spacing:2px}
+.res div small{display:block;font:600 22px 'Inter Tight';color:#777;margin-top:4px}
+.story{position:absolute;border-radius:36px;overflow:hidden;background:#000;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.story>img{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(16px) brightness(.55)}
+.story .barras{position:absolute;left:18px;right:18px;top:18px;display:flex;gap:6px}
+.story .barras i{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.4);overflow:hidden}
+.story .barras i b{display:block;height:100%;width:0;background:#fff}
+.story .quien{position:absolute;left:20px;top:40px;display:flex;align-items:center;gap:14px;font:700 26px 'Inter Tight'}
+.story .quien span{width:56px;height:56px;border-radius:50%;background:#fff center/cover;border:3px solid #ff3b2f}
+.preg{position:absolute;left:30px;right:30px;border-radius:30px;background:#fff;color:#111;overflow:hidden;text-align:center}
+.preg .t{padding:26px 20px 18px;font:900 38px/1.08 'Inter Tight';letter-spacing:-.01em;color:#fff;background:linear-gradient(135deg,#ff3b2f,#ff8a3d)}
+.preg .r{margin:18px;height:72px;border-radius:18px;background:#f0f0f0;font:700 30px/72px 'Inter Tight';color:#999;text-align:left;padding:0 22px}
+.preg .r b{color:#111}
+.encu{position:absolute;left:150px;right:150px;border-radius:34px;background:#fff;color:#111;padding:26px;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.encu .t{font:900 44px/1.1 'Inter Tight';text-align:center;letter-spacing:-.02em}
+.encu .o{display:flex;gap:16px;margin-top:22px}
+.encu .o div{flex:1;height:96px;border-radius:20px;background:#f0f0f0;display:grid;place-items:center;font:900 44px 'Inter Tight';position:relative;overflow:hidden}
+.encu .o div span{position:relative;z-index:2}
+.encu .o div i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#ff3b2f,#ff8a3d)}
+.reel{position:absolute;width:270px;height:480px;border-radius:26px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.reel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.reel::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.8))}
+.reel .pl{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(0,0,0,.45);border:3px solid #fff;z-index:2}
+.reel .pl::after{content:'';position:absolute;left:31px;top:22px;border-left:30px solid #fff;border-top:18px solid transparent;border-bottom:18px solid transparent}
+.reel b{position:absolute;left:18px;bottom:46px;z-index:2;font:900 36px 'Inter Tight'}
+.reel small{position:absolute;left:18px;bottom:16px;z-index:2;font:700 22px 'Inter Tight';color:rgba(255,255,255,.8)}
+.menu{position:absolute;left:150px;right:150px;border-radius:34px;background:var(--paper2);color:#111;padding:40px 44px;box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.menu h3{font:900 34px 'Inter Tight';letter-spacing:.2em;color:var(--rojo)}
+.menu .it{position:relative;font:800 42px 'Inter Tight';letter-spacing:-.01em;margin-top:22px;width:max-content;max-width:100%}
+.menu .it i{position:absolute;left:-8px;right:-8px;top:52%;height:6px;border-radius:3px;background:var(--rojo);transform:scaleX(0);transform-origin:0 50%}
+.menu .it.fuera{color:#8a8178}
+.grande{font:900 300px/0.9 'Inter Tight';letter-spacing:-.05em}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="i-heart" viewBox="0 0 24 24"><path fill="#fff" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.6 4.5c2.1 0 3.6 1.2 5.4 3.2 1.8-2 3.3-3.2 5.4-3.2 3.6 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+    <symbol id="i-com" viewBox="0 0 24 24"><path fill="#fff" d="M12 3C6.5 3 2 6.8 2 11.5c0 2.4 1.2 4.6 3.1 6.1L4.5 21l4-2c1.1.3 2.3.5 3.5.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3z"/></symbol>
+    <symbol id="i-sav" viewBox="0 0 24 24"><path fill="#fff" d="M6 2h12a1 1 0 0 1 1 1v19l-7-4.5L5 22V3a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-sha" viewBox="0 0 24 24"><path fill="#fff" d="M14 4l8 8-8 8v-5C8 15 4.5 17 2 21c.5-6 3.5-11 12-12V4z"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path fill="#25f4ee" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(-.8 .8)"/><path fill="#fe2c55" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z" transform="translate(.8 -.8)"/><path fill="#fff" d="M15.5 2.5h-3v13a3 3 0 1 1-3-3v-3.1a6.1 6.1 0 1 0 6 6.1V8.6a7.4 7.4 0 0 0 4.3 1.4V7a4.3 4.3 0 0 1-4.3-4.5z"/></symbol>
+  <symbol id="tilde" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#22c55e"/><path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="cruz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M7.5 7.5l9 9M16.5 7.5l-9 9" stroke="#fff" stroke-width="3" stroke-linecap="round"/></symbol>
+
+<symbol id="pin" viewBox="0 0 24 24"><path fill="#ff3b2f" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></symbol>
+</defs></svg>
+
+<!-- 1 · gancho (y punto de llegada del loop) -->
+<div class="sc" id="s1"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:490px;width:880px">
+    <span class="m d" style="font-size:86px"><span>¿Por qué una vende</span></span>
+    <span class="m d" style="font-size:86px"><span>solo en su <span class="hl cel">barrio…</span></span></span>
+    <div id="h1b"><span class="m d" style="font-size:86px"><span>…y otra tiene</span></span>
+    <span class="m d" style="font-size:86px"><span><span class="hl">filas de 3 horas?</span></span></span></div>
+  </div>
+  <div class="foto pol" id="f1a" style="left:90px;top:930px;width:400px;height:500px"><img src="img/barrio.jpg"><i class="tag">Una de barrio</i></div>
+  <div class="foto pol" id="f1b" style="left:530px;top:910px;width:420px;height:520px"><img src="img/fachada-gente.jpg"><i class="tag rojo">Gordis Burger</i></div>
+  <div class="pega" id="p1" style="left:560px;top:1290px">3 h de fila</div>
+</div></div>
+
+<!-- 2 · miles de hamburgueserías -->
+<div class="sc" id="s2"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="mos" id="mos2"></div>
+  <div class="vela" style="background:linear-gradient(180deg,rgba(12,11,10,.92) 18%,rgba(12,11,10,.35) 50%,rgba(12,11,10,.9) 82%)"></div>
+  <div class="abs" style="left:90px;top:500px;width:880px">
+    <span class="m d" style="font-size:100px"><span>Hay miles de</span></span>
+    <span class="m d" style="font-size:100px"><span><span class="hl">hamburgueserías.</span></span></span>
+  </div>
+  <div class="chip blanco" id="c2a" style="left:90px;top:1100px">Mismo pan</div>
+  <div class="chip blanco" id="c2b" style="left:90px;top:1210px">Misma carne</div>
+  <div class="chip rojo" id="c2c" style="left:90px;top:1320px">Mismo cheddar</div>
+</div></div>
+
+<!-- 3 · abren y esperan -->
+<div class="sc" id="s3"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:490px;width:880px">
+    <span class="m d" style="font-size:96px"><span>Abren el local…</span></span>
+    <div id="h3b"><span class="m d" style="font-size:96px"><span><span class="hl">…y esperan.</span></span></span></div>
+  </div>
+  <div class="foto" id="f3" style="left:90px;top:780px;width:860px;height:640px"><img src="img/vacio.jpg" style="filter:saturate(.7) brightness(.85)"></div>
+  <div class="neon" id="neon3" style="left:130px;top:820px">ABIERTO</div>
+  <div class="reloj" id="reloj3" style="left:760px;top:1220px"><i id="hm3" style="height:44px"></i><i id="hh3" style="height:62px;width:4px;left:73px;background:#ff3b2f"></i></div>
+</div></div>
+
+<!-- 4 · El Gordis, al revés -->
+<div class="sc" id="s4"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:490px;width:880px">
+    <span class="m d" style="font-size:96px"><span>El Gordis hizo</span></span>
+    <span class="m d" style="font-size:96px"><span>todo <span class="hl">al revés.</span></span></span>
+  </div>
+  <div class="perfil" id="perfil4" style="top:760px;grid-template-columns:auto 1fr">
+    <div class="av"><div style="background-image:url(img/gordis-cara.jpg)"></div></div>
+    <div><div class="n">El Gordis</div><div class="r">Federico Perales · 27 años<br>@elgordisokk</div></div>
+  </div>
+  <div class="flecha" id="fl4" style="top:1080px"><div class="a1">Abrir y esperar clientes</div><b>→</b><div class="a2">Primero clientes, después el local</div></div>
+</div></div>
+
+<!-- 5 · 2022, TikTok desde su casa -->
+<div class="sc" id="s5"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--cel)" id="k5">2022 · desde su casa</div>
+    <span class="m d" style="font-size:84px;margin-top:14px"><span>Subía videos</span></span>
+    <span class="m d" style="font-size:84px"><span>cocinando <span class="hl">burgas.</span></span></span>
+  </div>
+  <div class="phone" id="ph5" style="left:330px;top:770px;transform:scale(.66);transform-origin:50% 0">
+    <span class="bt" style="left:-9px;top:220px;height:70px"></span><span class="bt" style="right:-9px;top:260px;height:110px"></span>
+    <div class="scr"><div class="isla"></div>
+      <img src="img/b4.jpg" id="tk5img" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+      <div style="position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.35),transparent 25%,transparent 60%,rgba(0,0,0,.65))"></div>
+      <div class="tk-top">Siguiendo<b>Para ti</b></div>
+      <div class="tk-rail"><div class="tk-av" style="background-image:url(img/gordis-cara.jpg)"></div><svg><use href="#i-heart"/></svg><svg><use href="#i-com"/></svg><svg><use href="#i-sav"/></svg><svg><use href="#i-sha"/></svg></div>
+      <div class="tk-cap"><b>@elgordisokk</b>hoy vamos a hacer unas buenas burgas</div>
+      <div class="tk-bar"><i id="tkb5"></i></div>
+    </div>
+  </div>
+  <div class="vistas" id="vi5" style="left:90px;top:1300px">▶ <span id="vit5">100 mil vistas</span></div>
+</div></div>
+
+<!-- 6 · no vendía nada, reseñó +200 -->
+<div class="sc" id="s6"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:490px;width:880px">
+    <span class="m d" style="font-size:92px"><span>No vendía <span class="hl">nada.</span></span></span>
+  </div>
+  <div class="abs" id="cnt6" style="left:90px;top:640px;width:880px">
+    <div class="grande" style="font-size:230px">+<span id="n6">0</span></div>
+    <div style="font:800 46px/1.15 'Inter Tight';margin-top:6px">hamburguesas reseñadas<br><span style="color:var(--mute)">de otros locales</span></div>
+  </div>
+  <div class="abs" style="left:0;top:1080px;width:1080px;height:380px;overflow:visible"><div class="cinta" id="cinta6"></div></div>
+</div></div>
+
+<!-- Q · quiz -->
+<div class="sc" id="sq"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="k abs" id="sqk" style="left:90px;top:480px;color:var(--cel)">Adiviná antes que yo</div>
+  <div class="stk" id="quiz" style="top:560px">
+    <div class="q" style="background:var(--rojo)">¿Qué tenía antes de abrir su local?</div>
+    <div class="ops">
+      <div class="op" id="qa"><div class="fill"></div><div class="l">A</div><span>Un local a la calle</span></div>
+      <div class="op" id="qb"><div class="fill"></div><div class="l">B</div><span>Una receta secreta</span></div>
+      <div class="op" id="qc"><div class="fill"></div><div class="l">C</div><span>+2 millones de seguidores</span></div>
+    </div>
+  </div>
+  <div class="mini" id="miniq" style="top:1200px"><div><b>1,7 M</b><span>en TikTok</span></div><div><b>700 mil</b><span>en Instagram</span></div></div>
+  <div class="src" style="top:1420px">fuente: El Cronista, 2026</div>
+</div></div>
+
+<!-- J1 · adiviná dónde abre -->
+<div class="sc" id="j1"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Jugada 1</div>
+    <span class="m d" style="font-size:80px;margin-top:12px"><span>Hizo adivinar</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">dónde abría.</span></span></span>
+  </div>
+  <div class="story" id="st1" style="left:90px;top:760px;width:400px;height:700px">
+    <img src="img/fachada2.jpg">
+    <div class="barras"><i><b id="sb1" style="width:100%"></b></i><i><b id="sb2"></b></i><i><b></b></i></div>
+    <div class="quien"><span style="background-image:url(img/gordis-cara.jpg)"></span>elgordisokk</div>
+    <div class="preg" id="pg1" style="top:230px"><div class="t"><svg style="width:40px;height:40px;vertical-align:-8px"><use href="#pin"/></svg> ¿Dónde está<br>Gordis Burger?</div><div class="r" id="rp1">Escribí la esquina…</div></div>
+  </div>
+  <div class="abs" id="tx1" style="left:530px;top:800px;width:420px;font:800 40px/1.2 'Inter Tight'">
+    <div style="color:var(--mute)">“El primero que me mande foto del sticker con la esquina…</div>
+    <div id="tx1b" style="margin-top:20px"><span class="hl" style="transform:none;line-height:1.35">…se gana un mes de hamburguesas gratis.”</span></div>
+    <div class="src" style="position:static;margin-top:24px">El Gordis, en Instagram · vía La Nación</div>
+  </div>
+</div></div>
+
+<!-- J2 · votar el menú -->
+<div class="sc" id="j2"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Jugada 2</div>
+    <span class="m d" style="font-size:80px;margin-top:12px"><span>Hizo votar</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">el menú.</span></span></span>
+  </div>
+  <div class="foto" id="f2j" style="left:90px;top:760px;width:860px;height:660px"><img src="img/burga.jpg" style="object-position:50% 60%"></div>
+  <div class="encu" id="en2" style="top:820px"><div class="t">¿Cuál sumamos al menú?</div><div class="o"><div id="eA"><i></i><span>Esta</span></div><div id="eB"><i></i><span>Otra</span></div></div></div>
+  <div class="chip rojo" id="c2j" style="left:90px;top:1270px">Cada mes, la especial la crea el público</div>
+  <div class="src" style="top:1440px">encuesta: recreación ilustrativa</div>
+</div></div>
+
+<!-- J3 · mostró el proceso -->
+<div class="sc" id="j3"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--rojo)">Jugada 3</div>
+    <span class="m d" style="font-size:80px;margin-top:12px"><span>Mostró todo</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">el proceso.</span></span></span>
+  </div>
+  <div class="reel" id="r1" style="left:90px;top:770px"><img src="img/salon.jpg" style="object-position:30% 50%"><div class="pl"></div><b>La obra</b><small>Reel</small></div>
+  <div class="reel" id="r2" style="left:380px;top:770px"><img src="img/caja.jpg"><div class="pl"></div><b>La marca</b><small>Reel</small></div>
+  <div class="reel" id="r3" style="left:670px;top:770px"><img src="img/fachada2.jpg"><div class="pl"></div><b>La apertura</b><small>Reel</small></div>
+  <div class="chip blanco" id="c3j" style="left:90px;top:1300px">+1 año de obra y marca, en videos</div>
+</div></div>
+
+<!-- 11 · abrió: filas de 3 h -->
+<div class="sc" id="s11"><div class="cam">
+  <img src="img/fachada.jpg" class="abs" id="bg11" style="left:0;top:0;width:1080px;height:1920px;object-fit:cover">
+  <div class="vela" style="background:linear-gradient(180deg,rgba(12,11,10,.9) 22%,rgba(12,11,10,.25) 48%,rgba(12,11,10,.25) 62%,rgba(12,11,10,.9) 80%)"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <div class="k" style="color:var(--cel)">5 de septiembre de 2026</div>
+    <span class="m d" style="font-size:96px;margin-top:12px"><span>Abrió en <span class="hl">Palermo.</span></span></span>
+  </div>
+  <div class="chip blanco" id="c11" style="left:90px;top:700px"><svg style="width:40px;height:40px;vertical-align:-7px"><use href="#pin"/></svg> El Salvador y Fitz Roy</div>
+  <div class="abs" id="g11" style="left:90px;top:1090px;width:880px">
+    <div style="display:flex;align-items:baseline;gap:24px"><div class="grande" style="font-size:250px">3 h</div><div class="hl" style="font:900 70px 'Inter Tight';padding:.05em .2em">de fila</div></div>
+  </div>
+  <div class="src" style="top:1420px">fuente: El Cronista · foto: prensa Gordis Burger (Canal 26)</div>
+</div></div>
+
+<!-- 12 · achicó el menú, 2.º local -->
+<div class="sc" id="s12"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" style="left:90px;top:480px;width:880px">
+    <span class="m d" style="font-size:86px"><span>Tuvo que achicar</span></span>
+    <span class="m d" style="font-size:86px"><span>el <span class="hl">menú.</span></span></span>
+  </div>
+  <div class="menu" id="menu12" style="top:720px">
+    <h3>MENÚ</h3>
+    <div class="it">Gordis Bacon</div>
+    <div class="it">Gordis Tasty</div>
+    <div class="it fuera">Picante con salsa Alfredo<i></i></div>
+    <div class="it fuera">Con hash browns<i></i></div>
+    <div class="it fuera">Ensaladas<i></i></div>
+  </div>
+  <div class="chip rojo" id="c12" style="left:90px;top:1300px">Próximo: 2.º local + 3 dark kitchens</div>
+  <div class="src" style="top:1420px">fuente: El Cronista, 2026</div>
+</div></div>
+
+<!-- 13 · la gente ya lo conocía -->
+<div class="sc" id="s13"><div class="cam">
+  <img src="img/salon2.jpg" class="abs" style="left:-300px;top:0;width:1680px;height:1920px;object-fit:cover;filter:brightness(.35) saturate(.8)">
+  <div class="chip blanco" id="c13a" style="left:90px;top:500px">US$ 200.000 de inversión</div>
+  <div class="chip" id="c13b" style="left:90px;top:610px">+ un socio con años en el rubro</div>
+  <div class="abs" id="h13" style="left:90px;top:800px;width:880px">
+    <span class="m d" style="font-size:96px"><span>Pero cuando abrió,</span></span>
+    <span class="m d" style="font-size:96px"><span>la gente ya</span></span>
+    <span class="m d" style="font-size:96px"><span><span class="hl">lo conocía.</span></span></span>
+  </div>
+  <div class="src" style="top:1420px">fuente: La Nación, sept. 2026 · foto: prensa (El Cronista)</div>
+</div></div>
+
+<!-- 14 · cierre que empalma con el gancho -->
+<div class="sc" id="s14"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="mos" id="mos14"></div>
+  <div class="vela" style="background:rgba(12,11,10,.78)"></div>
+  <div class="abs" style="left:90px;top:490px;width:880px">
+    <span class="m d" style="font-size:80px"><span>Mientras tanto,</span></span>
+    <span class="m d" style="font-size:80px"><span>miles de hamburgueserías</span></span>
+    <span class="m d" style="font-size:80px"><span>se siguen</span></span>
+    <span class="m d" style="font-size:80px"><span><span class="hl">preguntando…</span></span></span>
+  </div>
+  <div class="perfil" id="perfil14" style="top:1000px">
+    <div class="av"><div style="background-image:url(img/avatar.png)"></div></div>
+    <div><div class="n">Franco Valencia</div><div class="r">@francovalencia.ok</div></div>
+    <div class="btn" id="btn14"><span id="btn14t">Seguir</span></div>
+  </div>
+  <div class="src" style="top:1400px;width:880px;font-size:17px">Fotos: prensa Gordis Burger (Canal 26, El Cronista, Rincón Bon Vivant) · Unsplash. Marcas de sus dueños.</div>
+</div></div>
+
+<div id="dedo"></div><div id="onda"></div>
+<div id="vin"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+
+<script>
+(async () => {
+await document.fonts.ready;
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+const T = {"seg": [{"k": "s1", "A": 0, "n": 5.678, "tv": 0.08, "va": 0.31}, {"k": "s2", "A": 5.678, "n": 5.761, "tv": 5.878, "va": 6.88}, {"k": "s3", "A": 11.439, "n": 4.604, "tv": 11.639, "va": 13.5}, {"k": "s4", "A": 16.043, "n": 3.798, "tv": 16.243, "va": 18.74}, {"k": "s5", "A": 19.841, "n": 5.27, "tv": 20.041, "va": 23.1}, {"k": "s6", "A": 25.111, "n": 5.03, "tv": 25.311, "va": 29.03}, {"k": "sq", "A": 30.141, "n": 5.696, "tv": 30.341, "va": 34.68}, {"k": "j1", "A": 35.837, "n": 3.817, "tv": 36.037, "va": 40.11}, {"k": "j2", "A": 39.654, "n": 5.548, "tv": 39.854, "va": 44.44}, {"k": "j3", "A": 45.202, "n": 6.02, "tv": 45.402, "va": 50.75}, {"k": "s11", "A": 51.223, "n": 4.789, "tv": 51.423, "va": 57.42}, {"k": "s12", "A": 56.011, "n": 4.919, "tv": 56.211, "va": 62.77}, {"k": "s13", "A": 60.93, "n": 7.522, "tv": 61.13, "va": 68.41}, {"k": "s14", "A": 68.452, "n": 4.17, "tv": 68.652, "va": 76.34}], "voz": [[0.31, 5.87, 0.08], [6.88, 12.4, 5.878], [13.5, 17.77, 11.639], [18.74, 22.14, 16.243], [23.1, 28.09, 20.041], [29.03, 33.76, 25.311], [34.68, 36.67, 30.341], [36.67, 39.05, 33.184], [40.11, 43.53, 36.037], [44.44, 49.73, 39.854], [50.75, 56.55, 45.402], [57.42, 61.89, 51.423], [62.77, 67.38, 56.211], [68.41, 75.4, 61.13], [76.34, 80.25, 68.652]], "dur": 72.623, "vel": 1.08};
+const DUR = T.dur; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const pos = (sel, fx = .78) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+// W(t): segundo de la VOZ original → segundo del video (la voz manda)
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
+const S = {}; T.seg.forEach((s, i) => { S[s.k] = s; s.B = s.A + s.n; });
+
+// mosaicos de hamburguesas
+for (const id of ['mos2', 'mos14']) { const m = $('#' + id); for (let i = 0; i < 54; i++) { const im = document.createElement('img'); im.src = `img/b${1 + Math.floor(hash(i * 3.3 + (id === 'mos14' ? 7 : 0)) * 15)}.jpg`; m.appendChild(im); } }
+// cinta de reseñas
+const NOTAS = ['8,5', '7', '9', '6,5', '8', '9,5', '7,5', '8'];
+const ci = $('#cinta6');
+for (let i = 0; i < 12; i++) { const d = document.createElement('div'); d.className = 'res'; const n = NOTAS[i % 8]; d.innerHTML = `<img src="img/b${1 + (i * 4) % 15}.jpg"><div>${n}/10 <span>★★★★</span><small>Reseña #${12 + i * 17}</small></div>`; ci.appendChild(d); }
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+
+const QC = pos('#qc'), EA = pos('#eA', .5), BT = pos('#btn14', .5);
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+T.seg.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < T.seg.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, s.B + 0.3); });
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.1, d = 0.7) => tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+const kick = (sel, t) => tl.fromTo(sel + ' .k', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: .45, ease: 'power2.out' }, t);
+const pop = (sel, t, y = 50) => tl.fromTo(sel, { y, scale: .85, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .5, ease: 'back.out(1.8)' }, t);
+const sube = (sel, t, y = 160) => tl.fromTo(sel, { y, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: E }, t);
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+const iris = (k, x = 540, y = 960) => tl.fromTo('#' + k, { clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(1400px at ${x}px ${y}px)`, duration: .55, ease: E2 }, S[k].A);
+const barre = (k, dir) => { const desde = { izq: 'inset(0 0 0 100%)', der: 'inset(0 100% 0 0)', arr: 'inset(100% 0 0 0)', aba: 'inset(0 0 100% 0)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0 0 0 0%)', duration: .5, ease: E2 }, S[k].A); };
+const latigo = (sale, entra) => { const t = S[entra].A; tl.to(`#${sale} .cam`, { x: -900, filter: 'blur(24px)', duration: .22, ease: 'power3.in' }, t - .02); tl.fromTo(`#${entra} .cam`, { x: 900, filter: 'blur(24px)' }, { x: 0, filter: 'blur(0px)', duration: .45, ease: E }, t + .18); };
+const deriva = (k, s = 1.05) => tl.fromTo(`#${k} .cam`, { scale: 1 }, { scale: s, duration: S[k].n + .3, ease: 'none' }, S[k].A);
+
+// 1 · gancho
+lineas('#s1', 0.05, 0.1);
+tl.set('#h1b', { autoAlpha: 0 }, 0); tl.set('#h1b', { autoAlpha: 1 }, W(3.45)); lineas('#h1b', W(3.45));
+tl.fromTo('#f1a', { y: 260, rotate: -12, autoAlpha: 0 }, { y: 0, rotate: -4, autoAlpha: 1, duration: .7, ease: 'back.out(1.4)' }, W(2.2));
+tl.fromTo('#f1b', { y: 260, rotate: 12, autoAlpha: 0 }, { y: 0, rotate: 3, autoAlpha: 1, duration: .7, ease: 'back.out(1.4)' }, W(3.7));
+tl.to('#f1a', { filter: 'grayscale(1) brightness(.6)', duration: .5 }, W(4.3));
+tl.fromTo('#p1', { scale: 2.4, rotate: -14, autoAlpha: 0 }, { scale: 1, rotate: -6, autoAlpha: 1, duration: .45, ease: 'back.out(2.2)' }, W(5.2));
+deriva('s1', 1.04);
+// 2 · miles
+latigo('s1', 's2');
+tl.fromTo('#mos2', { scale: 2.6, rotate: -4 }, { scale: 1, rotate: 0, duration: 2.2, ease: 'power3.out' }, S.s2.A);
+tl.to('#mos2', { y: -140, duration: S.s2.n, ease: 'none' }, S.s2.A);
+lineas('#s2', W(7.0), .12);
+pop('#c2a', W(10.05)); pop('#c2b', W(10.9)); pop('#c2c', W(11.8));
+// 3 · abren y esperan
+iris('s3', 540, 1100);
+lineas('#s3', S.s3.A + .25);
+tl.set('#h3b', { autoAlpha: 0 }, 0); tl.set('#h3b', { autoAlpha: 1 }, W(16.1)); lineas('#h3b', W(16.1));
+sube('#f3', S.s3.A + .3, 220);
+tl.fromTo('#neon3', { autoAlpha: 0 }, { autoAlpha: 1, duration: .08, repeat: 3, yoyo: true }, S.s3.A + .9);
+tl.set('#neon3', { autoAlpha: 1 }, S.s3.A + 1.3);
+pop('#reloj3', W(16.6));
+tl.fromTo('#hm3', { rotate: 0 }, { rotate: 1440, duration: S.s3.B - W(16.6), ease: 'none' }, W(16.6));
+tl.fromTo('#hh3', { rotate: 40 }, { rotate: 160, duration: S.s3.B - W(16.6), ease: 'none' }, W(16.6));
+deriva('s3', 1.05);
+// 4 · al revés
+barre('s4', 'arr');
+lineas('#s4', S.s4.A + .2);
+sube('#perfil4', W(19.0), 300);
+tl.fromTo('#perfil4 .av', { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(2)' }, W(19.2));
+tl.fromTo('#fl4 .a1', { x: -80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E }, W(20.9));
+tl.fromTo('#fl4 b', { scale: 0 }, { scale: 1, duration: .35, ease: 'back.out(2)' }, W(21.4));
+tl.fromTo('#fl4 .a2', { x: 80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, W(21.7));
+deriva('s4', 1.04);
+// 5 · TikTok desde su casa
+latigo('s4', 's5');
+kick('#s5', S.s5.A + .3); lineas('#s5', S.s5.A + .4);
+tl.fromTo('#ph5', { y: 700 }, { y: 0, duration: .9, ease: E }, S.s5.A + .25);
+tl.fromTo('#tk5img', { scale: 1.25 }, { scale: 1, duration: S.s5.n, ease: 'none' }, S.s5.A);
+tl.fromTo('#tkb5', { width: '0%' }, { width: '100%', duration: S.s5.n, ease: 'none' }, S.s5.A);
+pop('#vi5', W(25.7));
+deriva('s5', 1.04);
+// 6 · +200 reseñas
+iris('s6', 540, 700);
+lineas('#s6', S.s6.A + .15);
+tl.fromTo('#cnt6', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .5, ease: E }, W(30.4));
+tl.fromTo('#cinta6', { x: 1100 }, { x: -2400, duration: S.s6.B - W(30.3) + .3, ease: 'none' }, W(30.3));
+deriva('s6', 1.03);
+// Q · quiz
+barre('sq', 'izq');
+tl.fromTo('#sqk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, S.sq.A + .2);
+tl.fromTo('#quiz', { scale: .6, y: 120, opacity: 0, rotate: -4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, S.sq.A + .25);
+tl.fromTo('#quiz .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, S.sq.A + .55);
+const RESP = W(36.94);
+tl.to('#qa', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - 1.1);
+tl.to('#qb', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - .75);
+toque(QC[0], QC[1], RESP - .05);
+tl.to('#qc .fill', { width: '100%', duration: .45, ease: 'power3.out' }, RESP);
+tl.set('#qc', { className: 'op ok', color: '#fff' }, RESP);
+tl.to('#qa, #qb', { opacity: .4, duration: .3 }, RESP + .05);
+tl.to('#quiz', { scale: 1.04, duration: .12, yoyo: true, repeat: 1 }, RESP);
+tl.fromTo('#miniq > div', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E, stagger: .12 }, RESP + .5);
+// jugadas
+const jugada = (k) => { barre(k, 'izq'); kick('#' + k, S[k].A + .2); lineas('#' + k, S[k].A + .3); deriva(k, 1.04); };
+jugada('j1');
+tl.fromTo('#st1', { y: 500, rotate: 4 }, { y: 0, rotate: -2, duration: .8, ease: E }, S.j1.A + .3);
+tl.fromTo('#sb2', { width: '0%' }, { width: '100%', duration: S.j1.n, ease: 'none' }, S.j1.A + .3);
+pop('#pg1', W(41.4));
+tl.fromTo('#tx1 > div:first-child', { autoAlpha: 0, x: 40 }, { autoAlpha: 1, x: 0, duration: .5, ease: E }, W(41.0));
+tl.fromTo('#tx1b', { autoAlpha: 0, scale: .9 }, { autoAlpha: 1, scale: 1, duration: .5, ease: 'back.out(1.8)' }, W(42.5));
+jugada('j2');
+sube('#f2j', S.j2.A + .3, 220);
+pop('#en2', W(45.4));
+toque(EA[0], EA[1], W(46.4));
+tl.to('#eA i', { width: '100%', duration: .5, ease: 'power3.out' }, W(46.45));
+tl.to('#eA', { color: '#fff', duration: .2 }, W(46.5));
+pop('#c2j', W(47.7));
+jugada('j3');
+tl.fromTo('#r1, #r2, #r3', { y: 400, autoAlpha: 0, rotate: (i) => [-6, 0, 6][i] }, { y: 0, autoAlpha: 1, rotate: (i) => [-3, 0, 3][i], duration: .7, ease: 'back.out(1.3)', stagger: .35 }, W(51.6));
+tl.fromTo('#r1 img, #r2 img, #r3 img', { scale: 1.2 }, { scale: 1, duration: 3, ease: 'none', stagger: .35 }, W(51.6));
+pop('#c3j', W(53.4));
+// 11 · abrió
+latigo('j3', 's11');
+tl.fromTo('#bg11', { scale: 1.25 }, { scale: 1.05, duration: S.s11.n + .3, ease: 'none' }, S.s11.A);
+kick('#s11', S.s11.A + .3); lineas('#s11', W(58.5));
+pop('#c11', W(59.4));
+tl.fromTo('#g11', { scale: 2.2, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .5, ease: 'back.out(1.5)', transformOrigin: '20% 50%' }, W(61.1));
+// 12 · menú
+barre('s12', 'arr');
+lineas('#s12', S.s12.A + .2);
+sube('#menu12', S.s12.A + .35, 260);
+tl.to('#menu12 .it i', { scaleX: 1, duration: .3, ease: 'power2.out', stagger: .22 }, W(63.4));
+tl.to('#menu12 .fuera', { opacity: .45, duration: .3, stagger: .22 }, W(63.5));
+pop('#c12', W(66.4));
+deriva('s12', 1.04);
+// 13 · ya lo conocía
+iris('s13', 540, 960);
+tl.fromTo('#s13 > .cam > img', { x: 0 }, { x: 260, duration: S.s13.n + .3, ease: 'none' }, S.s13.A);
+pop('#c13a', W(68.9)); pop('#c13b', W(71.0));
+lineas('#h13', W(72.6), .14);
+// 14 · cierre → empalma con el gancho
+barre('s14', 'arr');
+tl.fromTo('#mos14', { scale: 1.6 }, { scale: 1, duration: S.s14.n, ease: 'power2.out' }, S.s14.A);
+lineas('#s14', S.s14.A + .2, .16);
+sube('#perfil14', S.s14.A + .9, 400);
+toque(BT[0], BT[1], S.s14.A + 2.6);
+tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, S.s14.A + 2.65);
+
+const fmt = (v) => Math.round(v).toLocaleString('es-AR');
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const vis = (k, t) => t >= S[k].A && t < S[k].B + .3;
+const C6 = [W(30.6), W(31.9)];
+window.render = (t) => {
+  tl.seek(t, false);
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  if (vis('s6', t)) $('#n6').textContent = fmt(200 * ease((t - C6[0]) / (C6[1] - C6[0])));
+  if (vis('s5', t)) $('#vit5').textContent = t >= W(27.3) ? 'millones de vistas' : '100 mil vistas';
+  if (vis('s14', t)) $('#btn14t').textContent = t >= S.s14.A + 2.65 ? 'Siguiendo' : 'Seguir';
+};
+window.render(0); window.listo = true;
+})();
+</script>
+</body></html>
