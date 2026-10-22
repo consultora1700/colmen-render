@@ -1,0 +1,244 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}canvas{position:absolute;inset:0}</style></head>
+<body><script type="module">
+// Toma 1 · EP. 01 "El vaso que sobrevivió": grúa de noche sobre el auto en llamas que baja hasta el vaso en el portavasos.
+// Todo depende de t (render determinista por cuadro). Unidades: metros. Frente del auto hacia +z.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+window.DURACION = 5;
+const P = new URLSearchParams(location.search);
+const W = 1080, H = 1920;
+const r = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+r.setSize(W, H); r.setPixelRatio(1);
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.0;
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(r.domElement);
+const esc = new THREE.Scene();
+esc.background = new THREE.Color('#07090d');
+esc.fog = new THREE.FogExp2('#090a0e', 0.055);
+const cam = new THREE.PerspectiveCamera(32, W / H, 0.02, 200);
+
+// ── azar determinístico
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const ruido = (t, s) => 0.5 * Math.sin(t * 7.3 + s) + 0.3 * Math.sin(t * 13.1 + s * 2.1) + 0.2 * Math.sin(t * 23.7 + s * 3.3);
+const suave = (x) => x * x * (3 - 2 * x);
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+
+// ── reflejos: un entorno con fuego (para el metal del vaso y el asfalto mojado)
+const envEsc = new THREE.Scene();
+envEsc.background = new THREE.Color('#05060a');
+const bola = (c, x, y, z, s) => { const m = new THREE.Mesh(new THREE.SphereGeometry(s, 16, 12), new THREE.MeshBasicMaterial({ color: c })); m.position.set(x, y, z); envEsc.add(m); };
+bola('#ff7a1a', 0, 2, -3, 1.6); bola('#ffb347', 2, 1.5, -2, 0.9); bola('#ff4d0d', -2.5, 1, -1, 1.1); bola('#ffd28a', 0, 4, 0, 0.6);
+bola('#4a5a7a', 6, 3, 6, 1.5); bola('#ffcf8a', -7, 4, 5, 0.4);
+const pm = new THREE.PMREMGenerator(r);
+esc.environment = pm.fromScene(envEsc, 0.02).texture;
+esc.environmentIntensity = 0.55;
+
+// ── suelo: asfalto mojado
+const cv = document.createElement('canvas'); cv.width = cv.height = 512; const cx = cv.getContext('2d');
+cx.fillStyle = '#777'; cx.fillRect(0, 0, 512, 512);
+for (let i = 0; i < 2600; i++) { const v = 90 + hash(i) * 120 | 0; cx.fillStyle = `rgb(${v},${v},${v})`; cx.fillRect(hash(i + 1) * 512, hash(i + 2) * 512, 2 + hash(i + 3) * 3, 2 + hash(i + 3) * 3); }
+for (let i = 0; i < 26; i++) { const g = cx.createRadialGradient(0, 0, 0, 0, 0, 60); g.addColorStop(0, 'rgba(10,10,10,.95)'); g.addColorStop(1, 'rgba(10,10,10,0)'); cx.save(); cx.translate(hash(i + 9) * 512, hash(i + 10) * 512); cx.scale(1 + hash(i) * 2, 0.6 + hash(i + 4)); cx.fillStyle = g; cx.beginPath(); cx.arc(0, 0, 60, 0, 7); cx.fill(); cx.restore(); }
+const rug = new THREE.CanvasTexture(cv); rug.wrapS = rug.wrapT = THREE.RepeatWrapping; rug.repeat.set(6, 6);
+const suelo = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshStandardMaterial({ color: '#141312', roughness: 0.9, roughnessMap: rug, metalness: 0.0, envMapIntensity: 1.4 }));
+suelo.rotation.x = -Math.PI / 2; suelo.receiveShadow = true; esc.add(suelo);
+// cordón de vereda
+const cordon = new THREE.Mesh(new THREE.BoxGeometry(80, 0.16, 0.3), new THREE.MeshStandardMaterial({ color: '#2a2826', roughness: 0.8 }));
+cordon.position.set(0, 0.08, -2.4); cordon.receiveShadow = true; esc.add(cordon);
+const vereda = new THREE.Mesh(new THREE.BoxGeometry(80, 0.15, 6), new THREE.MeshStandardMaterial({ color: '#1d1b1a', roughness: 0.95 }));
+vereda.position.set(0, 0.075, -5.55); esc.add(vereda);
+
+// ── luces: ambiente frío de noche + farol lejano + fuego
+esc.add(new THREE.HemisphereLight('#2a3550', '#0a0806', 0.35));
+const luna = new THREE.DirectionalLight('#8fa6d6', 0.35); luna.position.set(-6, 10, 4); esc.add(luna);
+const farol = new THREE.PointLight('#ffc27a', 0, 30, 2); farol.position.set(-9, 6, -6); esc.add(farol);
+const fuegos = [[0, 1.1, 0.6, 14], [0, 1.6, -1.6, 7], [-0.3, 0.9, -0.1, 4]].map(([x, y, z, i], k) => {
+  const l = new THREE.PointLight('#ff7a2a', i, 14, 2); l.position.set(x, y, z); l.castShadow = k === 0;
+  if (l.castShadow) { l.shadow.mapSize.set(1024, 1024); l.shadow.bias = -0.002; l.shadow.radius = 6; }
+  esc.add(l); return { l, i, s: k * 3.1 };
+});
+// luz cálida que "besa" el vaso desde atrás
+const beso = new THREE.SpotLight('#ffb070', 1.6, 3, 0.6, 0.8, 2); esc.add(beso); esc.add(beso.target);
+
+// ── el auto
+const g = await new GLTFLoader().loadAsync('img/quemados.glb');
+let auto;
+g.scene.traverse((o) => { if (o.isMesh && o.name.includes('#25')) auto = o; });
+g.scene.traverse((o) => { if (o.isMesh && o !== auto) o.visible = false; });
+g.scene.updateMatrixWorld(true);
+const B = new THREE.Box3().setFromObject(auto); const C = B.getCenter(new THREE.Vector3());
+const ESC = 0.015;
+const autoG = new THREE.Group(); esc.add(autoG);
+g.scene.scale.setScalar(ESC); g.scene.position.set(-C.x * ESC, -B.min.y * ESC, -C.z * ESC);
+autoG.add(g.scene);
+auto.castShadow = true; auto.receiveShadow = true;
+auto.material.envMapIntensity = 0.6;
+
+// ── el vaso (tipo Quencher 40 oz): torneado + manija + tapa + sorbete
+const vaso = new THREE.Group();
+const perfil = [[0, 0], [0.036, 0], [0.039, 0.006], [0.039, 0.085], [0.041, 0.1], [0.046, 0.15], [0.05, 0.215], [0.052, 0.255], [0.052, 0.262], [0, 0.262]].map(([x, y]) => new THREE.Vector2(x, y));
+const grab = (() => { const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const x = c.getContext('2d'); x.fillStyle = '#ffffff'; x.fillRect(0, 0, 1024, 512); x.save(); x.translate(768, 300); x.rotate(-Math.PI / 2); x.fillStyle = '#6a5136'; x.font = '800 50px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('STANLEY', 0, 0); x.restore(); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const metal = new THREE.MeshPhysicalMaterial({ map: grab, color: '#f0dcb8', metalness: 0.55, roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.12, envMapIntensity: 1.3, sheen: 0.3, sheenColor: new THREE.Color('#fff1d6') });
+const cuerpo = new THREE.Mesh(new THREE.LatheGeometry(perfil, 64), metal); cuerpo.castShadow = true; vaso.add(cuerpo);
+const aro = new THREE.Mesh(new THREE.CylinderGeometry(0.054, 0.054, 0.028, 64), new THREE.MeshPhysicalMaterial({ color: '#cdbb98', metalness: 0.7, roughness: 0.3, clearcoat: 0.5 }));
+aro.position.y = 0.276; vaso.add(aro);
+const tapa = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.054, 0.014, 64), new THREE.MeshStandardMaterial({ color: '#8f826c', roughness: 0.6 }));
+tapa.position.y = 0.297; vaso.add(tapa);
+const sorbete = new THREE.Mesh(new THREE.CylinderGeometry(0.0055, 0.0055, 0.16, 16), new THREE.MeshStandardMaterial({ color: '#9c917e', roughness: 0.7 }));
+sorbete.position.set(0.012, 0.37, 0); sorbete.rotation.z = -0.12; vaso.add(sorbete);
+const manija = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.009, 16, 40, Math.PI), metal);
+manija.rotation.z = -Math.PI / 2; manija.position.set(0.05, 0.18, 0); vaso.add(manija);
+// gotitas de condensación (frío adentro)
+const gotaG = new THREE.SphereGeometry(0.0022, 8, 6), gotaM = new THREE.MeshPhysicalMaterial({ color: '#ffffff', roughness: 0.02, transmission: 0.6, thickness: 0.002, metalness: 0 });
+for (let i = 0; i < 0; i++) { const a = hash(i + 700) * Math.PI * 2, y = 0.03 + hash(i + 701) * 0.22, rr = 0.04 + y * 0.05; const gt = new THREE.Mesh(gotaG, gotaM); gt.position.set(Math.cos(a) * (rr + 0.002), y, Math.sin(a) * (rr + 0.002)); vaso.add(gt); }
+const VASO = new THREE.Vector3(Number(P.get('vx') ?? 0.0), Number(P.get('vy') ?? 0.52), Number(P.get('vz') ?? -0.45));
+vaso.position.copy(VASO); vaso.rotation.y = Number(P.get('rot') ?? 2.75); esc.add(vaso);
+// consola y portavasos quemados (el vaso apoya adentro)
+const carbon = new THREE.MeshStandardMaterial({ color: '#0e0b0a', roughness: 0.95, metalness: 0.05, roughnessMap: rug });
+const consola = new THREE.Mesh(new THREE.BoxGeometry(0.26, VASO.y - 0.22, 0.62), carbon); consola.position.set(VASO.x, 0.22 + (VASO.y - 0.22) / 2 - 0.03, VASO.z + 0.12); consola.castShadow = consola.receiveShadow = true; esc.add(consola);
+const porta = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.058, 0.024, 40, 1, true), carbon); porta.material.side = THREE.DoubleSide; porta.position.set(VASO.x, VASO.y - 0.025, VASO.z); esc.add(porta);
+vaso.position.y = VASO.y - 0.02;
+// luna fría sobre el vaso: separa el acero del fuego
+const frio = new THREE.SpotLight('#9fb8ff', 2.2, 4, 0.45, 0.9, 2); frio.position.set(VASO.x + 0.9, VASO.y + 1.3, VASO.z - 0.7); frio.target.position.copy(VASO); esc.add(frio); esc.add(frio.target);
+beso.position.set(VASO.x - 0.3, VASO.y + 0.7, VASO.z + 0.6); beso.target.position.copy(VASO);
+
+// ── partículas: fuego (aditivo), humo y brasas
+const tex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d'); const gr = x.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,.75)'); gr.addColorStop(0.6, 'rgba(255,255,255,.22)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+const texLlama = (() => { const c = document.createElement('canvas'); c.width = 128; c.height = 256; const x = c.getContext('2d');
+  const gr = x.createRadialGradient(64, 190, 0, 64, 170, 120); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,.7)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = gr; x.beginPath(); x.moveTo(64, 0); x.bezierCurveTo(100, 90, 128, 150, 118, 200); x.bezierCurveTo(108, 250, 20, 250, 10, 200); x.bezierCurveTo(0, 150, 28, 90, 64, 0); x.fill();
+  return new THREE.CanvasTexture(c); })();
+const focos = [ // [x0,x1, y0,y1, z0,z1, peso] zonas que arden (asientos de atrás, capó, techo)
+  [-0.6, 0.6, 0.5, 0.9, 0.2, 1.2, 0.5], [-0.55, 0.55, 0.85, 0.95, -1.9, -1.2, 0.3], [-0.5, -0.1, 0.55, 0.75, -0.2, 0.15, 0.1], [-0.6, 0.6, 0.2, 0.4, 1.4, 2.0, 0.1]];
+const FN = 70, llamas = [];
+for (let i = 0; i < FN; i++) {
+  let k = 0, u = hash(i + 10), acc = 0; for (; k < focos.length; k++) { acc += focos[k][6]; if (u <= acc) break; } const f = focos[Math.min(k, focos.length - 1)];
+  const m = new THREE.SpriteMaterial({ map: tex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, fog: false });
+  const s = new THREE.Sprite(m); esc.add(s);
+  llamas.push({ s, x: f[0] + hash(i + 11) * (f[1] - f[0]), y: f[2] + hash(i + 12) * (f[3] - f[2]), z: f[4] + hash(i + 13) * (f[5] - f[4]), vida: 0.5 + hash(i + 14) * 0.7, off: hash(i + 15) * 9, alto: 0.9 + hash(i + 16) * 1.3 });
+}
+// ── fuego procedural: planos que miran a cámara (solo giran en Y) con ruido fbm que sube
+const fuegoMat = (sem) => new THREE.ShaderMaterial({
+  uniforms: { uT: { value: 0 }, uS: { value: sem } },
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+  fragmentShader: `uniform float uT; uniform float uS; varying vec2 vUv;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
+    float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++){ v += a * n(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }
+    void main(){
+      vec2 uv = vUv; float t = uT * 1.6 + uS * 10.0;
+      vec2 q = vec2(uv.x * 3.0, uv.y * 2.2 - t);
+      float d = fbm(q + vec2(fbm(q * 1.3 + t * 0.3), 0.0) * 0.9);
+      float forma = 1.0 - abs(uv.x - 0.5) * 2.0 * (0.6 + uv.y * 1.2);
+      float f = clamp(forma * (1.25 - uv.y * 1.15) + (d - 0.55) * 1.7, 0.0, 1.0);
+      f = smoothstep(0.12, 0.95, f);
+      vec3 c = mix(vec3(0.55, 0.06, 0.0), vec3(1.0, 0.42, 0.06), smoothstep(0.0, 0.5, f));
+      c = mix(c, vec3(1.0, 0.86, 0.55), smoothstep(0.6, 1.0, f));
+      float base = smoothstep(0.0, 0.08, uv.y);
+      gl_FragColor = vec4(c * f * 1.25, f * base);
+    }` });
+const lenguas = [[0, 0.55, 0.75, 1.1, 1.7], [-0.3, 0.5, 0.35, 0.8, 1.3], [0.32, 0.5, 1.05, 0.8, 1.4], [0, 0.85, -1.6, 1.0, 0.9], [0.25, 0.85, -1.35, 0.6, 0.7], [-0.25, 0.3, 1.7, 0.7, 0.8], [0.1, 0.55, 0.05, 0.5, 0.75]].map(([x, y, z, w, hh], i) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, hh), fuegoMat(i * 0.37)); m.position.set(x, y + hh / 2, z); esc.add(m); return m;
+});
+const humos = [];
+for (let i = 0; i < 46; i++) { const m = new THREE.SpriteMaterial({ map: tex, color: '#1c1714', transparent: true, depthWrite: false, opacity: 0.5 }); const s = new THREE.Sprite(m); esc.add(s); humos.push({ s, x: (hash(i + 300) - 0.5) * 1.4, z: -1.6 + hash(i + 301) * 2.8, vida: 2.4 + hash(i + 302) * 1.6, off: hash(i + 303) * 9 }); }
+const BN = 90, bGeo = new THREE.BufferGeometry(), bPos = new Float32Array(BN * 3);
+bGeo.setAttribute('position', new THREE.BufferAttribute(bPos, 3));
+const brasas = new THREE.Points(bGeo, new THREE.PointsMaterial({ color: '#ffb35c', size: 0.022, map: tex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+esc.add(brasas);
+const col = new THREE.Color();
+function particulas(t) {
+  for (const p of llamas) {
+    const e = ((t + p.off) % p.vida) / p.vida;
+    const sube = e * p.alto;
+    p.s.position.set(p.x + Math.sin(t * 3 + p.off * 5) * 0.08 * e, p.y + sube, p.z + Math.cos(t * 2.4 + p.off) * 0.06 * e);
+    const tam = (0.42 - 0.28 * e) * (0.7 + 0.6 * hash(p.off * 100));
+    p.s.scale.set(tam * 1.2, tam * 1.2, 1);
+    if (e < 0.15) col.setRGB(1.0, 0.85, 0.55); else if (e < 0.5) col.setRGB(1.0, 0.45, 0.12); else col.setRGB(0.75, 0.16, 0.04);
+    p.s.material.color.copy(col);
+    p.s.material.opacity = 0.12 * Math.sin(Math.PI * Math.min(1, e * 1.25));
+  }
+  for (const h of humos) {
+    const e = ((t + h.off) % h.vida) / h.vida;
+    h.s.position.set(h.x + e * 0.9, 1.4 + e * 4.5, h.z + e * 0.4);
+    const tam = 0.8 + e * 2.6; h.s.scale.set(tam, tam, 1);
+    h.s.material.opacity = 0.55 * Math.sin(Math.PI * e);
+  }
+  for (let i = 0; i < BN; i++) {
+    const vida = 1.5 + hash(i + 500) * 2, e = ((t + hash(i + 501) * 7) % vida) / vida;
+    bPos[i * 3] = (hash(i + 502) - 0.5) * 1.8 + Math.sin(t * 1.7 + i) * 0.3 * e;
+    bPos[i * 3 + 1] = 1.2 + e * (3 + hash(i + 503) * 3);
+    bPos[i * 3 + 2] = -1.0 + hash(i + 504) * 2.6 + Math.cos(t + i) * 0.3 * e;
+  }
+  bGeo.attributes.position.needsUpdate = true;
+  for (const f of fuegos) f.l.intensity = f.i * (0.82 + 0.18 * ruido(t, f.s));
+  for (const m of lenguas) { m.material.uniforms.uT.value = t; m.rotation.y = Math.atan2(cam.position.x - m.position.x, cam.position.z - m.position.z); }
+}
+
+// ── bokeh de la calle (luces lejanas desenfocadas)
+for (let i = 0; i < 22; i++) {
+  const m = new THREE.SpriteMaterial({ map: tex, color: hash(i + 900) > 0.5 ? '#ffcf8a' : '#9fb4ff', transparent: true, opacity: 0.18 + hash(i + 901) * 0.2, depthWrite: false, fog: false });
+  const s = new THREE.Sprite(m); const d = 18 + hash(i + 902) * 20; s.position.set(-20 + hash(i + 903) * 40, 2.5 + hash(i + 904) * 6, d * (hash(i + 906) > 0.5 ? 1 : -1)); const k = 0.6 + hash(i + 905) * 1.4; s.scale.set(k, k, 1); esc.add(s);
+}
+
+// ── cámara: grúa alta y abierta → baja, rodea → entra por la ventana hasta el vaso
+const ruta = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(6.0, 5.4, -6.6),
+  new THREE.Vector3(4.4, 3.0, -4.6),
+  new THREE.Vector3(3.0, 1.45, -1.6),
+  new THREE.Vector3(1.9, 1.06, -0.72),
+  new THREE.Vector3(1.14, 0.97, -0.5),
+], false, 'catmullrom', 0.5);
+const mira = (u) => new THREE.Vector3().lerpVectors(new THREE.Vector3(0, 0.9, 0), new THREE.Vector3(VASO.x, VASO.y + 0.17, VASO.z), suave(cl((u - 0.25) / 0.75)));
+
+// ── post: bloom + grano + viñeta + aberración suave
+const comp = new EffectComposer(r);
+comp.addPass(new RenderPass(esc, cam));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.45, 0.5, 0.86); comp.addPass(bloom);
+const pelicula = new ShaderPass({
+  uniforms: { tDiffuse: { value: null }, uT: { value: 0 } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uT; varying vec2 vUv;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)) + uT * 37.0) * 43758.5453); }
+    void main(){
+      vec2 d = vUv - 0.5; float ca = 0.0016 * length(d) * 2.0;
+      vec3 c = vec3(texture2D(tDiffuse, vUv + d * ca).r, texture2D(tDiffuse, vUv).g, texture2D(tDiffuse, vUv - d * ca).b);
+      c += (h(vUv * 900.0) - 0.5) * 0.045;
+      float v = smoothstep(0.95, 0.25, length(d * vec2(1.0, 0.75)));
+      c *= mix(0.42, 1.0, v);
+      c = mix(c, c * vec3(1.04, 0.98, 0.92), 0.6);
+      gl_FragColor = vec4(c, 1.0);
+    }` });
+comp.addPass(pelicula);
+comp.addPass(new OutputPass());
+
+window.render = (t) => {
+  const u = cl(t / window.DURACION);
+  const k = suave(u) * 0.85 + u * 0.15;
+  cam.position.copy(ruta.getPoint(k));
+  cam.lookAt(mira(k));
+  cam.fov = 34 - 9 * suave(cl((u - 0.5) / 0.5)); cam.updateProjectionMatrix();
+  particulas(t);
+  pelicula.uniforms.uT.value = Math.floor(t * 24) / 24;
+  comp.render();
+};
+if (P.get('debug')) {
+  esc.fog = null; esc.background = new THREE.Color('#556'); esc.add(new THREE.AmbientLight('#fff', 2.5));
+  llamas.forEach((p) => (p.s.visible = false)); humos.forEach((h) => (h.s.visible = false)); brasas.visible = false; fuegos.forEach((f) => (f.l.visible = false));
+  for (let z = -2; z <= 2; z += 0.5) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.05), new THREE.MeshBasicMaterial({ color: z === 0 ? '#0f0' : '#f00' })); m.position.set(0, 1.6, z); esc.add(m); }
+  const vistas = [[0, 9, 0.01], [7, 0.8, 0], [3, 2.5, 3]];
+  window.render = (t) => { const v = vistas[Math.min(2, Math.floor(t))]; cam.position.set(...v); cam.lookAt(0, 0.5, 0); cam.fov = 40; cam.updateProjectionMatrix(); r.toneMappingExposure = 1; r.render(esc, cam); };
+}
+window.render(0); window.listo = true;
+</script></body></html>
