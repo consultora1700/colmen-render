@@ -365,7 +365,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 (async () => {
 await document.fonts.ready;
 await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
-const T = {"seg": [{"k": "s1", "A": 0, "n": 5.0}, {"k": "s2", "A": 5.0, "n": 5.2}, {"k": "s3", "A": 10.2, "n": 5.6}, {"k": "sq", "A": 15.8, "n": 5.0}, {"k": "s5", "A": 20.8, "n": 6.0}, {"k": "s6", "A": 26.8, "n": 4.6}, {"k": "s7", "A": 31.4, "n": 6.2}, {"k": "s8", "A": 37.6, "n": 5.2}, {"k": "s9", "A": 42.8, "n": 5.4}, {"k": "s10", "A": 48.2, "n": 4.6}, {"k": "s11", "A": 52.8, "n": 5.4}, {"k": "s12", "A": 58.2, "n": 5.8}, {"k": "s13", "A": 64.0, "n": 4.8}], "dur": 68.8};
+const T = {"seg": [{"k": "s1", "A": 0, "n": 4.456, "tv": 0.08, "va": 0.0}, {"k": "s2", "A": 4.456, "n": 8.15, "tv": 4.656, "va": 5.15}, {"k": "s3", "A": 12.606, "n": 5.02, "tv": 12.806, "va": 14.63}, {"k": "sq", "A": 17.626, "n": 5.483, "tv": 17.826, "va": 20.75}, {"k": "s5", "A": 23.11, "n": 5.02, "tv": 23.31, "va": 26.14}, {"k": "s6", "A": 28.13, "n": 4.715, "tv": 28.33, "va": 32.21}, {"k": "s7", "A": 32.845, "n": 5.569, "tv": 33.045, "va": 37.93}, {"k": "s8", "A": 38.413, "n": 4.622, "tv": 38.613, "va": 42.53}, {"k": "s9", "A": 43.036, "n": 8.094, "tv": 43.236, "va": 48.12}, {"k": "s10", "A": 51.13, "n": 4.05, "tv": 51.33, "va": 57.48}, {"k": "s11", "A": 55.18, "n": 5.743, "tv": 55.38, "va": 62.03}, {"k": "s12", "A": 60.923, "n": 5.17, "tv": 61.123, "va": 68.89}, {"k": "s13", "A": 66.093, "n": 4.674, "tv": 66.293, "va": 73.59}], "voz": [[0.0, 3.7, 0.08], [5.15, 13.25, 4.656], [14.63, 19.35, 12.806], [20.75, 22.8, 17.826], [23.15, 24.7, 21.224], [26.14, 30.86, 23.31], [32.21, 36.6, 28.33], [37.93, 41.19, 33.045], [42.53, 46.82, 38.613], [48.12, 56.16, 43.236], [57.48, 60.72, 51.33], [62.03, 67.53, 55.38], [68.89, 72.26, 61.123], [73.59, 76.1, 66.293]], "dur": 70.767, "vel": 1.08};
 const MP = {"Cr\u00e9teil": [391.8, 173.1], "Paris": [386.3, 167.8], "Lyon": [515.4, 401.2], "Marseille": [542.8, 586.4], "Lille": [423.1, 34.5], "Nantes": [184.2, 291.3], "Strasbourg": [666.2, 188.9], "Toulouse": [339.2, 563.8], "Bordeaux": [234.5, 470.5], "Limoges": [329.8, 395.9], "Rennes": [177.4, 224.3], "Montpellier": [465.6, 563.1], "Nice": [640.8, 556.3], "Rouen": [321.5, 124.1], "Grenoble": [561.0, 444.1], "Clermont": [424.7, 399.7], "Dijon": [525.7, 283.7], "Tours": [300.3, 278.5], "Brest": [31.8, 203.2], "Aix": [547.0, 569.1], "Belfort": [620.1, 259.6], "Reims": [473.4, 137.7], "Caen": [245.3, 143.7], "Metz": [584.8, 148.2], "Pau": [245.3, 586.4], "Poitiers": [282.1, 339.5], "Orl\u00e9ans": [363.5, 240.1], "Amiens": [383.7, 90.2]};
 const DUR = T.dur; window.DURACION = DUR;
 const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
@@ -375,6 +375,7 @@ const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
 const pos = (sel, fx = .78) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
 const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
 const R = (k, x) => S[k].A + x;
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
 
 // mapa: ciudades + puntos internos
 const ciudades = Object.values(MP);
@@ -419,12 +420,12 @@ const cascada = (id, t, paso) => tl.fromTo(`#${id} .nt`, { x: 120, autoAlpha: 0 
 lineas('#s1', .05, .1);
 cascada('nt1', R('s1', 1.2), .45);
 tl.to('#nt1', { y: -240, duration: 2.4, ease: 'power1.in' }, R('s1', 2.6));
-glitch('s1', R('s1', 4.6));
+glitch('s1', S.s1.B - .25);
 // 2 · reclamo escolar
 corte('s2');
 kick('#s2', R('s2', .3)); lineas('#s2', R('s2', .4));
 sube('#f2', R('s2', .3), 220);
-tl.fromTo('#ch2 > span', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)', stagger: .35 }, R('s2', 1.6));
+tl.fromTo('#ch2 > span', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)', stagger: (i) => [0, .9, 3.3][i] }, W(8.5));
 deriva('s2', 1.03);
 // 3 · Snapchat + contagio
 barre('s3', 'izq');
@@ -432,13 +433,13 @@ lineas('#s3', R('s3', .3));
 tl.fromTo('#mp4', { autoAlpha: 0 }, { autoAlpha: 1, duration: .4 }, R('s3', .8));
 tl.fromTo('#pts4 .pt', { scale: 0 }, { scale: 1, duration: .2, ease: 'back.out(3)', stagger: .025 }, R('s3', 1.1));
 pop('#cn4', R('s3', 1.4));
-const C4 = [R('s3', 1.5), R('s3', 3.4)];
+const C4 = [R('s3', 1.5), W(18.7)];
 // Q · quiz
 corte('sq');
 tl.fromTo('#sqk', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, ease: E }, R('sq', .2));
 tl.fromTo('#quiz', { scale: .6, y: 120, opacity: 0, rotate: -4 }, { scale: 1, y: 0, opacity: 1, rotate: 0, duration: .6, ease: 'back.out(1.7)' }, R('sq', .25));
 tl.fromTo('#quiz .op', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: .4, ease: E, stagger: .1 }, R('sq', .55));
-const RESP = R('sq', 3.6);
+const RESP = W(23.2);
 tl.to('#qa', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - 1.1);
 tl.to('#qc', { background: '#e6e6e6', duration: .15, yoyo: true, repeat: 1 }, RESP - .75);
 toque(QB[0], QB[1], RESP - .05);
@@ -449,21 +450,21 @@ tl.to('#qa, #qc', { opacity: .4, duration: .3 }, RESP + .05);
 corte('s5');
 sube('#f5', R('s5', .2), 260);
 tl.fromTo('#f5 img', { scale: 1.2 }, { scale: 1, duration: S.s5.n, ease: 'none' }, S.s5.A);
-tl.fromTo('#tx5', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, R('s5', 1.2));
-sella('#se5', R('s5', 3.6), -5);
-glitch('s5', R('s5', 3.6));
+tl.fromTo('#tx5', { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, W(26.2));
+sella('#se5', W(28.65), -5);
+glitch('s5', W(28.65));
 // 6 · 17 de octubre
 barre('s6', 'arr');
 tl.fromTo('#bg7', { scale: 1.3 }, { scale: 1.05, duration: S.s6.n + .3, ease: 'none' }, S.s6.A);
 kick('#s6', R('s6', .3)); pop('#cn7', R('s6', .5));
-const C7 = [R('s6', .6), R('s6', 2.3)];
+const C7 = [W(33.3), W(34.9)];
 tl.fromTo('#mp7', { autoAlpha: 0 }, { autoAlpha: 1, duration: .4 }, R('s6', 1.1));
 tl.fromTo('#pts7 .pt', { scale: 0 }, { scale: 1, duration: .2, ease: 'back.out(3)', stagger: .015 }, R('s6', 1.2));
 // 7 · el lado oscuro
 corte('s7');
 lineas('#s7', R('s7', .25), .12);
-cascada('nt7', R('s7', 1.9), .55);
-glitch('s7', R('s7', 4.9));
+cascada('nt7', W(39.0), .6);
+glitch('s7', S.s7.B - .25);
 // 8 · Limoges
 iris('s8', 540, 1000);
 tl.fromTo('#l8a', { scale: 1.2 }, { scale: 1.05, duration: 3, ease: 'none' }, S.s8.A);
@@ -471,8 +472,8 @@ tl.fromTo('#l8b', { opacity: 0, scale: 1.15 }, { opacity: 1, scale: 1.02, durati
 lineas('#s8', R('s8', .3), .12); pop('#c8', R('s8', 1.6));
 // 9 · el daño
 corte('s9');
-pop('#cn9b', R('s9', .3)); pop('#cn9a', R('s9', 1.5)); pop('#cn9c', R('s9', 2.7));
-const C9b = [R('s9', .4), R('s9', 1.5)], C9a = [R('s9', 1.6), R('s9', 2.6)], C9c = [R('s9', 2.8), R('s9', 3.8)];
+pop('#cn9b', W(48.2)); pop('#cn9a', W(50.85)); pop('#cn9c', W(52.95));
+const C9b = [W(48.3), W(49.4)], C9a = [W(50.95), W(51.7)], C9c = [W(53.05), W(53.7)];
 // 10 · nada que ver
 barre('s10', 'aba');
 lineas('#s10', R('s10', .3), .14);
@@ -480,26 +481,26 @@ deriva('s10', 1.05);
 // 11 · gobierno
 corte('s11');
 tl.fromTo('#a1, #a2', { scale: 0, rotate: (i) => [-20, 20][i] }, { scale: 1, rotate: (i) => [-6, 6][i], duration: .5, ease: 'back.out(2)', stagger: .15 }, R('s11', .3));
-tl.fromTo('#ci10', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, R('s11', .9));
-pop('#ll', R('s11', 2.2));
-tl.to('#lli', { x: -270, duration: .45, ease: 'power3.inOut' }, R('s11', 3.4));
-tl.to('#ll', { backgroundColor: '#3a3642', duration: .45 }, R('s11', 3.4));
-tl.to('#llt', { x: 300, duration: .45, ease: 'power3.inOut' }, R('s11', 3.4));
+tl.fromTo('#ci10', { y: 200, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6, ease: E }, W(62.6));
+pop('#ll', W(64.95));
+tl.to('#lli', { x: -270, duration: .45, ease: 'power3.inOut' }, W(65.9));
+tl.to('#ll', { backgroundColor: '#3a3642', duration: .45 }, W(65.9));
+tl.to('#llt', { x: 300, duration: .45, ease: 'power3.inOut' }, W(65.9));
 // 12 · remate
 corte('s12');
 lineas('#s12', R('s12', .2), .12);
-tl.set('#h12b', { autoAlpha: 0 }, 0); tl.set('#h12b', { autoAlpha: 1 }, R('s12', 1.6)); lineas('#h12b', R('s12', 1.6));
-glitch('s12', R('s12', 1.6));
-tl.fromTo('#vs12 > div', { y: 80, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: 'back.out(1.6)', stagger: .5 }, R('s12', 2.5));
-sube('#f12', R('s12', 3.6), 200);
+tl.set('#h12b', { autoAlpha: 0 }, 0); tl.set('#h12b', { autoAlpha: 1 }, W(71.1)); lineas('#h12b', W(71.1));
+glitch('s12', W(71.1));
+tl.fromTo('#vs12 > div', { y: 80, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: 'back.out(1.6)', stagger: .5 }, W(72.26) + .3);
+sube('#f12', W(72.26) + 1.4, 200);
 // 13 · "Nadie." → loop a "¿Quién controla…?"
 corte('s13');
 lineas('#s13', R('s13', .2), .12);
-tl.fromTo('#nd', { scale: 2.2, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.8)', transformOrigin: '0 50%' }, R('s13', 1.0));
-glitch('s13', R('s13', 1.0));
-sube('#perfil14', R('s13', 1.8), 300);
-toque(BT[0], BT[1], R('s13', 3.0));
-tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, R('s13', 3.05));
+tl.fromTo('#nd', { scale: 2.2, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .35, ease: 'back.out(1.8)', transformOrigin: '0 50%' }, W(75.6));
+glitch('s13', W(75.6));
+sube('#perfil14', W(75.6) + .7, 300);
+toque(BT[0], BT[1], W(75.6) + 1.75);
+tl.set('#btn14', { background: '#e9e4dc', color: '#111' }, W(75.6) + 1.8);
 
 const fmt = (v) => Math.round(v).toLocaleString('es-AR');
 const gr = $('#grano').getContext('2d'); const RUIDO = [];
@@ -512,8 +513,8 @@ window.render = (t) => {
   if (vis('s3', t)) $('#n4').textContent = cuenta(C4, 1027, t);
   if (vis('s6', t)) $('#n7').textContent = cuenta(C7, 550000, t);
   if (vis('s9', t)) { $('#n9b').textContent = cuenta(C9b, 3000, t); $('#n9a').textContent = cuenta(C9a, 2500, t); $('#n9c').textContent = cuenta(C9c, 500, t); }
-  if (vis('s11', t)) $('#llt').textContent = t >= R('s11', 3.6) ? 'OFF' : 'ON';
-  if (vis('s13', t)) $('#btn14t').textContent = t >= R('s13', 3.05) ? 'Siguiendo' : 'Seguir';
+  if (vis('s11', t)) $('#llt').textContent = t >= W(65.9) + .2 ? 'OFF' : 'ON';
+  if (vis('s13', t)) $('#btn14t').textContent = t >= W(75.6) + 1.8 ? 'Siguiendo' : 'Seguir';
 };
 window.render(0); window.listo = true;
 })();
