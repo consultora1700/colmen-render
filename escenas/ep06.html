@@ -337,7 +337,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
     <div style="font:800 38px 'Inter Tight'">Tendrías que haber arrancado en</div>
     <div class="d mono" id="ny13" style="font-size:120px;letter-spacing:-.02em">2026</div>
   </div>
-  <div class="sello" id="se13" style="left:430px;top:1310px">SIN GASTAR UN PESO</div>
+  <div class="sello" id="se13" style="left:250px;top:1300px">SIN GASTAR UN PESO</div>
   <div class="src" style="top:1440px;color:#8a7f70">13 sueldos por año (con aguinaldo). Cálculo propio sobre la DDJJ de Máximo Kirchner.</div>
 </div></div>
 
@@ -539,7 +539,7 @@ pop('#c11', W(89.8));
 // 13 · años de sueldo → 1600
 barre('s13', 'izq');
 tl.fromTo('#a13', { autoAlpha: 0, y: 80 }, { autoAlpha: 1, y: 0, duration: .5, ease: E }, W(94.1));
-C_.n13 = [W(95.6), W(97.4), 426, 0];
+C_.n13 = [W(95.6), W(97.4), 426, 0]; tl.fromTo('#n13', { autoAlpha: 0 }, { autoAlpha: 1, duration: .15 }, W(95.55));
 tl.fromTo('#y13', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .4, ease: E }, W(96.2));
 C_.ny13 = [W(96.3), W(98.4), 1600, 2026];
 tl.to('#sp13', { opacity: .55, duration: 2, ease: 'power1.inOut' }, W(96.3));
