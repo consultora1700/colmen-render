@@ -1,0 +1,28 @@
+# Quita el fondo de fotos (rembg, birefnet-general-lite) en una máquina de GitHub, no en el VPS de producción.
+# Se dispara con un push que cambie recortes/pedido.json (lo escribe recortar-remoto.sh) o a mano.
+# Entrada: recortes/in/*.jpg|png → salida: artifact "recortes" con un PNG transparente por foto.
+name: recortar
+on:
+  workflow_dispatch:
+  push:
+    paths: ['recortes/pedido.json']
+
+concurrency:
+  group: recortar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recortar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11', cache: pip, cache-dependency-path: recortes/requirements.txt }
+      - run: pip install -q -r recortes/requirements.txt
+      - uses: actions/cache@v4
+        with: { path: ~/.u2net, key: rembg-birefnet-general-lite }
+      - name: Recortar
+        run: python recortes/recortar.py recortes/in recortes/out
+      - uses: actions/upload-artifact@v4
+        with: { name: recortes, path: recortes/out, retention-days: 3 }
