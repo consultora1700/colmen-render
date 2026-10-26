@@ -3,7 +3,7 @@ import json, cv2, numpy as np
 from comun import leer, FPS, T_ANCLA, T_ENCIENDE
 S = 2  # se trackea a 540x960
 desde = int((T_ENCIENDE - 1.0) * FPS); ancla = int(T_ANCLA * FPS)
-fr = [f for i, f in enumerate(leer('orig.mp4', 540, 960, gris=True)) if i >= desde]
+fr = [f for i, f in enumerate(leer('orig.m4v', 540, 960, gris=True)) if i >= desde]
 mask = np.zeros_like(fr[0]); mask[:480, :] = 255          # mitad de arriba
 par = []                                                  # par[k]: cuadro k -> k+1
 for a, b in zip(fr[:-1], fr[1:]):

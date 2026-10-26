@@ -3,7 +3,7 @@ import subprocess, numpy as np, wave
 import neon
 from comun import T_ENCIENDE
 SR = 48000
-raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', 'orig.mp4', '-vn', '-ac', '2', '-ar', str(SR), '-f', 's16le', '-'], capture_output=True).stdout
+raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', 'orig.m4v', '-vn', '-ac', '2', '-ar', str(SR), '-f', 's16le', '-'], capture_output=True).stdout
 orig = np.frombuffer(raw, np.int16).reshape(-1, 2).astype(np.float32) / 32768
 n = len(orig); t = np.arange(n) / SR
 rng = np.random.default_rng(3)

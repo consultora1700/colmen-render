@@ -10,7 +10,7 @@ if not prueba:
     enc = subprocess.Popen(['ffmpeg', '-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
                             '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', 'out/video-mudo.mp4'], stdin=subprocess.PIPE)
 rng = np.random.default_rng(7)
-for i, f in enumerate(leer('orig.mp4')):
+for i, f in enumerate(leer('orig.m4v')):
     t = i / FPS
     if prueba and not any(abs(t - p) < 0.5 / FPS for p in prueba): continue
     L, P, S = neon.intensidades(t - T_ENCIENDE)
