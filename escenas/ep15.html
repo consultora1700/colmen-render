@@ -389,7 +389,7 @@ sella('#eS', V('sE', 'adentro'), -5); golpe('sE', V('sE', 'adentro'), 1.06);
 barre('sF', 'izq'); flash(S.sF.A, .25);
 pop('#fT', R('sF', .05), 20);
 sube('#fA', V('sF', 'antropic'), 60);
-sube('#fN', V('sF', 'la ia hizo'), 60); C_.n90 = [V('sF', 'la ia hizo'), V('sF', 'trabajo', true), 90, 0, ent];
+sube('#fN', V('sF', 'la ia hizo'), 60); C_.n90 = [V('sF', '90'), V('sF', 'trabajo', true), 90, 0, ent];
 golpe('sF', V('sF', 'trabajo'), 1.04);
 pop('#fQ', V('sF', 'el mismo'), 40);
 // G · videollamada
@@ -494,7 +494,7 @@ const corta = (h, n) => { let out = '', k = 0, dentro = false; for (const ch of 
 window.render = (t) => {
   tl.seek(t, false);
   gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
-  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / (t1 - t0)));
+  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / Math.min(0.45, Math.max(0.05, t1 - t0))));  // el número llega al valor dicho en <0,5 s: lo que se ve = lo que se dice
   for (const id in TX) {
     let html = ''; const L = TX[id];
     L.forEach(([a, b, h]) => { if (t < a) return; const n = plano(h).length; const u = clamp((t - a) / Math.max(.2, b - a)); html += (html ? '\n' : '') + corta(h, Math.ceil(n * u)); });
@@ -503,7 +503,7 @@ window.render = (t) => {
   if ($('#btnt')) $('#btnt').textContent = t >= TBT + .05 ? 'Siguiendo' : 'Seguir';
   EXTRA(t); subtitulos(t);
 };
-for (const id in C_) { const [t0, t1] = C_[id]; const n = Math.min(24, Math.round((t1 - t0) * 14)); for (let i = 0; i < n; i++) sx('tic', t0 + i * (t1 - t0) / n); }
+for (const id in C_) { const [t0, t1] = C_[id]; const d = Math.min(0.45, Math.max(0.05, t1 - t0)); for (let i = 0; i < 7; i++) sx('tic', t0 + i * d / 7); }
 for (const id in TX) for (const [a, b] of TX[id]) for (let t = a; t < b; t += .075) sx('tecla', t);
 window.render(0); window.listo = true;
 })();
