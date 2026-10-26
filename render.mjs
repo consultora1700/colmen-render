@@ -15,7 +15,9 @@ const srv = http.createServer((q, r) => {
 });
 await new Promise((ok) => srv.listen(0, '127.0.0.1', ok));
 const b = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
+// lienzo: 1080x1920 por defecto (reels); una escena puede pedir otro con <html data-lienzo="1920x1080">
+const LZ = (fs.readFileSync(path.join(base, pagina), 'utf8').match(/data-lienzo="(\d+)x(\d+)"/) || [0, 1080, 1920]).slice(1).map(Number);
+const p = await b.newPage({ viewport: { width: LZ[0], height: LZ[1] } });
 p.on('pageerror', (e) => console.log('[error]', e.message));
 await p.goto(`http://127.0.0.1:${srv.address().port}/${pagina}`);
 await p.waitForFunction('window.listo === true', null, { timeout: 180000 });
