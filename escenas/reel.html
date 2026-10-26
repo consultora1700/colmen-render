@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es" data-lienzo="1080x1920"><head><meta charset="utf-8">
+<title>Reel · Todos saben dónde se vende</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Special+Elite&family=Permanent+Marker&family=Playfair+Display:wght@800;900&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--rojo:#d7262e;--hilo:#c4161c;--papel:#f1ead8;--amar:#f7d54a;--tinta:#1d1a16;--mute:rgba(241,234,216,.65)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0b0a09}
+body{font-family:'Inter Tight',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+#vista{position:absolute;inset:0;overflow:hidden}
+#mundo{position:absolute;left:0;top:0;width:3900px;height:6000px;transform-origin:0 0}
+#corcho{position:absolute;left:0;top:0}
+.pan{position:absolute;width:1080px;height:1920px}
+.pol{position:absolute;background:#f6f3ec;padding:20px 20px 84px;box-shadow:0 30px 50px rgba(0,0,0,.55)}
+.pol img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.15) brightness(.92) sepia(.15)}
+.pol .ph{width:100%;overflow:hidden}
+.pol .cap{position:absolute;left:20px;right:20px;bottom:14px;font:400 42px/1 'Permanent Marker';color:#222;text-align:center}
+.pol .lic{position:absolute;right:20px;bottom:-28px;font:600 16px 'Inter Tight';color:rgba(241,234,216,.75);white-space:nowrap}
+.pin{position:absolute;left:50%;top:-14px;width:40px;height:40px;margin-left:-20px;border-radius:50%;z-index:30;background:radial-gradient(circle at 35% 30%,#ff7a74 0,#d7262e 40%,#7d0d12 100%);box-shadow:0 10px 10px rgba(0,0,0,.5)}
+.pin.am{background:radial-gradient(circle at 35% 30%,#fff1a8 0,#e8b923 40%,#8a6408 100%)}
+.ficha{position:absolute;background:var(--papel);color:var(--tinta);padding:36px 40px;box-shadow:0 26px 40px rgba(0,0,0,.5);
+  background-image:linear-gradient(rgba(215,38,46,.55),rgba(215,38,46,.55)),repeating-linear-gradient(180deg,transparent 0 51px,rgba(60,110,200,.22) 51px 53px);
+  background-size:100% 3px,100% 100%;background-position:0 96px,0 0;background-repeat:no-repeat,repeat}
+.ficha .k{font:400 30px 'Special Elite';letter-spacing:.06em;color:#5a5148;text-transform:uppercase}
+.ficha .t{font:400 70px/1.05 'Special Elite';margin-top:30px}
+.ficha .tx{font:400 38px/1.3 'Special Elite';margin-top:18px}
+.src{font:600 19px/1.25 'Inter Tight';color:#6b6157;margin-top:16px}
+.nota{position:absolute;background:var(--amar);color:#1b1607;padding:28px 30px 24px;box-shadow:0 22px 30px rgba(0,0,0,.45);font:400 62px/1.02 'Permanent Marker'}
+.nota small{display:block;font:400 32px/1.15 'Permanent Marker';opacity:.8;margin-top:8px}
+.nota.ro{background:#ff8a7a}
+.sello{position:absolute;z-index:35;padding:8px 26px;border:8px solid var(--rojo);border-radius:14px;color:var(--rojo);font:900 76px 'Inter Tight';letter-spacing:.05em;white-space:nowrap;text-transform:uppercase;mix-blend-mode:multiply}
+.big{font:900 260px/.85 'Inter Tight';letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.ruta{display:grid;grid-template-columns:44px 1fr auto;gap:0 26px;align-items:center;margin-top:30px}
+.ruta i{width:40px;height:40px;border-radius:50%;background:var(--rojo);box-shadow:0 0 0 9px rgba(215,38,46,.25)}
+.ruta span{font:400 40px 'Special Elite';color:#5a5148}
+.ruta b{font:900 76px/1 'Inter Tight';letter-spacing:-.04em;white-space:nowrap}
+.exp{position:absolute;width:880px;background:#d9b77a;box-shadow:0 26px 40px rgba(0,0,0,.55);padding:50px 46px 70px;color:#2a1e0e}
+.exp::before{content:'';position:absolute;left:0;top:-36px;width:280px;height:42px;background:#d9b77a;border-radius:12px 12px 0 0}
+.exp .k{font:400 32px 'Special Elite';letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.exp .n{font:900 88px/1 'Inter Tight';letter-spacing:-.03em;margin-top:16px}
+.exp .c{font:400 40px/1.25 'Special Elite';margin-top:14px}
+.exp .p{font:900 150px/1 'Inter Tight';letter-spacing:-.05em;margin-top:24px;color:#7d0d12}
+.exp .p small{font:800 40px 'Inter Tight';letter-spacing:0;margin-left:10px;color:#2a1e0e}
+.exp .src{position:absolute;left:46px;bottom:24px;color:#3a2c18}
+.scr{position:absolute;inset:0;visibility:hidden;z-index:60}
+.osc{position:absolute;inset:0;background:rgba(8,7,6,.88)}
+.fullfoto{position:absolute;left:-300px;top:0;width:1680px;height:1920px;object-fit:cover;filter:grayscale(.85) contrast(1.15) brightness(.4)}
+.titx{position:absolute;left:90px;width:880px;font:900 104px/.95 'Inter Tight';letter-spacing:-.045em}
+.titx em{font-style:normal;color:var(--rojo)}
+.h{font:400 38px 'Special Elite';letter-spacing:.1em;color:var(--mute);text-transform:uppercase}
+#luz{position:absolute;inset:0;z-index:70;pointer-events:none;background:radial-gradient(85% 60% at 50% 45%,rgba(255,200,120,.05) 0,transparent 45%,rgba(0,0,0,.55) 100%)}
+#grano{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:72;opacity:.07;mix-blend-mode:overlay}
+#sub{position:absolute;left:90px;width:900px;top:1290px;z-index:80;text-align:center;font:900 62px/1.08 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:10px #000;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.7)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:90}
+#ley{position:absolute;left:90px;width:880px;top:1480px;z-index:79;font:600 22px/1.3 'Inter Tight';color:rgba(255,255,255,.6);text-align:center;opacity:0}
+</style></head>
+<body>
+<div id="vista"><div id="mundo">
+  <canvas id="corcho" width="1950" height="3000" style="width:3900px;height:6000px"></canvas>
+  <!-- r1 · la pregunta (panel 0,0) -->
+  <div class="pan" style="left:0;top:0">
+    <div class="pol" id="r1f" style="left:110px;top:400px;width:480px;height:420px;transform:rotate(-4deg)"><i class="pin"></i><div class="ph" style="height:316px"><img src="img/v31a.jpg"></div><div class="cap">Villa 31</div><div class="lic">ProtoplasmaKid · CC BY-SA 4.0</div></div>
+    <div class="nota" id="r1a" style="left:640px;top:410px;width:350px;transform:rotate(4deg)"><i class="pin am"></i>1.500<small>policías</small></div>
+    <div class="nota ro" id="r1b" style="left:660px;top:640px;width:330px;transform:rotate(-3deg)"><i class="pin am"></i>17<small>detenidos</small></div>
+    <div class="ficha" id="r1q" style="left:90px;top:850px;width:900px;transform:rotate(-1deg)"><i class="pin"></i><div class="k">Expediente N° 001</div><div class="t" style="font-size:58px;margin-top:22px">Todos saben dónde se vende.</div><div class="t" id="r1q2" style="font:400 72px/1 'Permanent Marker';color:var(--rojo);margin-top:18px">¿Por qué nadie lo cierra?</div></div>
+  </div>
+  <!-- r2 · la plata (panel 1,0) -->
+  <div class="pan" style="left:1300px;top:0">
+    <div class="ficha" id="r2" style="left:90px;top:470px;width:900px;transform:rotate(1deg)"><i class="pin"></i><div class="k">1 kilo de cocaína</div>
+      <div class="ruta" id="rr1"><i></i><span>Bolivia</span><b>US$2.000</b></div>
+      <div class="ruta" id="rr2"><i></i><span>Frontera Salta</span><b>US$2.800</b></div>
+      <div class="ruta" id="rr3"><i></i><span>Interior</span><b>~US$4.000</b></div>
+      <div class="ruta" id="rr4"><i></i><span>España</span><b style="color:var(--rojo)">€30.000</b></div>
+      <div class="src">La Nación (feb-2026), vía Periodismo 365. Aproximado.</div></div>
+    <div class="sello" id="r2x" style="left:640px;top:380px;transform:rotate(9deg)">×15</div>
+  </div>
+  <!-- r3 · lavado (panel 2,0) -->
+  <div class="pan" style="left:2600px;top:0">
+    <div class="ficha" id="r3" style="left:90px;top:480px;width:900px;transform:rotate(-1.2deg)"><i class="pin"></i><div class="k">Condenas por lavado · 2019–2024</div>
+      <div class="big" style="margin-top:20px"><span id="n91">0</span></div><div class="tx">en todo el país, en 5 años.</div><div class="src">GAFI/GAFILAT, Evaluación Mutua 2024</div></div>
+    <div class="nota ro" id="r3n" style="left:470px;top:1020px;width:520px;transform:rotate(3deg);font-size:48px"><i class="pin am"></i>“Bajo para un país de su tamaño”<small>— GAFI</small></div>
+  </div>
+  <!-- r4 · Reynoso (panel 0,1) -->
+  <div class="pan" style="left:0;top:2100px">
+    <div class="pol" id="r4f" style="left:540px;top:300px;width:450px;height:400px;transform:rotate(4deg)"><i class="pin"></i><div class="ph" style="height:296px"><img src="img/tribunales.jpg"></div><div class="cap" style="font-size:36px">Tribunales</div></div>
+    <div class="exp" id="r4" style="left:100px;top:600px;transform:rotate(-1.5deg)"><i class="pin"></i><div class="k">Juez federal · Orán, Salta</div><div class="n">Raúl Reynoso</div><div class="c">cobraba a imputados a cambio de beneficios</div><div class="p">13 <small>años</small></div><div class="src">TOF 1 Salta 2019 · confirmada por Casación 2023</div></div>
+    <div class="sello" id="r4s" style="left:430px;top:990px;transform:rotate(-9deg)">Condenado</div>
+  </div>
+  <!-- r5 · Bento (panel 1,1) -->
+  <div class="pan" style="left:1300px;top:2100px">
+    <div class="exp" id="r5" style="left:100px;top:560px;transform:rotate(1.4deg)"><i class="pin"></i><div class="k">Juez federal · Mendoza</div><div class="n">Walter Bento</div><div class="c">jefe de una banda que cobraba coimas a acusados de contrabando y narcotráfico</div><div class="p">18 <small>años · feb-2026</small></div><div class="src">TOF 2 Mendoza · la defensa apela</div></div>
+    <div class="sello" id="r5s" style="left:460px;top:1030px;transform:rotate(7deg)">Condenado</div>
+  </div>
+</div></div>
+
+<div class="scr" id="c6"><div class="osc"></div>
+  <div class="abs" id="c6a" style="left:90px;top:470px;width:900px"><div class="h">Lo obvio</div><div class="titx" style="position:static;margin-top:16px">El búnker existe.</div></div>
+  <div class="abs" id="c6b" style="left:90px;top:760px;width:900px"><div class="h" style="color:#ff6b6b">Lo conectado</div><div class="titx" style="position:static;margin-top:16px;font-size:80px">Que todos lo vean y nadie lo cierre necesita que <em>alguien no lo vea</em>.</div></div>
+</div>
+<div class="scr" id="c7">
+  <img class="fullfoto" id="c7f" src="img/v31b.jpg">
+  <div class="titx" id="c7a" style="top:520px;font-size:80px">No cuentes detenidos.</div>
+  <div class="titx" id="c7b" style="top:640px;font-size:80px;color:var(--amar)">Preguntá cuánta plata se congeló.</div>
+  <div class="titx" id="c7c" style="top:640px">Todos saben dónde <em>se vende</em>.</div>
+</div>
+<div id="ley">Fuentes en la descripción. Sin condena firme rige la presunción de inocencia.</div>
+<div id="sub"></div>
+<div id="luz"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+<div id="flash"></div>
+<script>
+(async () => {
+await document.fonts.ready;
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+const T = {"seg": [{"k": "r1", "A": 0.0, "va": 0.37829199999999996, "n": 13.979}, {"k": "r2", "A": 13.979, "va": 18.544249999999998, "n": 17.963}, {"k": "r3", "A": 31.942, "va": 39.481583, "n": 21.482}, {"k": "r4", "A": 53.424, "va": 64.469625, "n": 14.979}, {"k": "r5", "A": 68.403, "va": 81.388042, "n": 11.31}, {"k": "r6", "A": 79.713, "va": 94.512333, "n": 13.006}, {"k": "r7", "A": 92.719, "va": 110.454875, "n": 14.441}], "voz": [[0.378, 0.633, 0.12], [1.281, 2.85, 0.619], [3.027, 4.67, 2.138], [4.8, 6.83, 3.68], [7.34, 8.95, 5.723], [9.06, 10.25, 7.219], [10.3, 13.81, 8.297], [14.151, 15.09, 11.628], [15.26, 16.51, 12.592], [18.544, 19.586, 14.099], [19.935, 20.746, 15.283], [21.484, 27.686, 16.266], [27.886, 30.326, 21.833], [30.616, 32.486, 24.207], [32.746, 33.806, 26.059], [33.968, 35.266, 27.121], [35.335, 36.486, 28.31], [36.596, 39.166, 29.407], [39.482, 42.626, 32.062], [42.896, 45.706, 35.031], [45.996, 47.746, 37.726], [48.157, 49.686, 39.526], [50.096, 53.406, 41.135], [53.583, 54.526, 44.167], [54.836, 56.146, 45.256], [56.468, 63.886, 46.674], [64.47, 66.772, 53.544], [66.902, 69.832, 55.659], [70.087, 74.292, 58.429], [74.336, 81.212, 62.124], [81.388, 82.472, 68.523], [82.523, 87.152, 69.509], [87.385, 92.192, 73.738], [92.743, 93.912, 78.196], [94.512, 94.971, 79.833], [95.422, 96.358, 80.51], [96.767, 97.938, 81.602], [98.72, 100.258, 82.899], [100.648, 106.698, 84.515], [106.938, 107.798, 89.984], [108.388, 109.778, 91.01], [110.455, 110.689, 92.839], [111.288, 117.04, 93.321], [117.37, 119.08, 98.601], [119.614, 122.2, 100.366], [122.69, 124.12, 102.893], [124.568, 126.23, 104.415]], "dur": 107.16, "vel": 1.15}; const PAL = [[1.38, 1.88, "1500"], [1.88, 2.6, "polic\u00edas,"], [3.24, 3.76, "17"], [3.76, 4.42, "detenidos."], [4.84, 5.0, "Y"], [5.0, 5.08, "al"], [5.08, 5.26, "otro"], [5.26, 5.56, "d\u00eda,"], [5.76, 5.9, "la"], [5.9, 6.12, "esquina"], [6.12, 6.34, "sigue"], [6.34, 6.58, "ah\u00ed."], [7.38, 7.72, "Todos"], [7.72, 7.96, "saben"], [7.96, 8.2, "d\u00f3nde"], [8.2, 8.38, "se"], [8.38, 8.7, "vende."], [9.1, 9.26, "El"], [9.26, 9.56, "vecino"], [9.56, 9.8, "lo"], [9.8, 10.0, "sabe,"], [10.34, 10.54, "el"], [10.54, 11.0, "remisero"], [11.0, 11.26, "lo"], [11.26, 11.48, "sabe,"], [11.92, 12.12, "el"], [12.12, 12.26, "pibe"], [12.26, 12.48, "de"], [12.48, 12.84, "15"], [12.84, 13.1, "a\u00f1os"], [13.1, 13.36, "lo"], [13.36, 13.56, "sabe."], [14.34, 14.84, "Entonces,"], [15.3, 15.5, "\u00bfpor"], [15.5, 15.58, "qu\u00e9"], [15.58, 15.82, "nadie"], [15.82, 16.04, "lo"], [16.04, 16.26, "cierra?"], [18.596, 18.836, "Pista"], [18.836, 19.336, "2."], [19.976, 20.156, "La"], [20.156, 20.496, "plata."], [21.656, 21.816, "Seg\u00fan"], [21.816, 22.076, "datos"], [22.076, 22.716, "publicados"], [22.716, 22.956, "por"], [22.956, 23.096, "la"], [23.096, 23.476, "Naci\u00f3n,"], [23.876, 23.996, "un"], [23.996, 24.176, "kilo"], [24.176, 24.396, "de"], [24.396, 24.716, "coca\u00edna"], [24.716, 25.036, "cuesta"], [25.036, 25.356, "unos"], [25.356, 25.736, "2000"], [25.736, 26.216, "d\u00f3lares"], [26.216, 26.696, "reci\u00e9n"], [26.696, 26.816, "hecho"], [26.816, 26.896, "en"], [26.896, 27.436, "Bolivia."], [27.926, 28.076, "En"], [28.076, 28.176, "la"], [28.176, 28.576, "frontera"], [28.576, 28.726, "con"], [28.726, 29.176, "Salta,"], [29.226, 30.076, "2800."], [30.656, 30.976, "Puesto"], [30.976, 31.056, "en"], [31.056, 31.136, "el"], [31.136, 31.656, "interior"], [31.656, 31.876, "del"], [31.876, 32.236, "pa\u00eds,"], [32.916, 33.056, "cerca"], [33.056, 33.256, "de"], [33.256, 33.556, "4000."], [34.296, 34.516, "Y"], [34.516, 34.716, "en"], [34.716, 35.016, "Espa\u00f1a,"], [35.516, 35.676, "30"], [35.676, 35.836, ".000"], [35.836, 36.236, "euros."], [36.636, 36.876, "Cada"], [36.876, 37.396, "frontera"], [37.396, 37.636, "que"], [37.636, 38.156, "cruza"], [38.156, 38.916, "multiplica."], [39.856, 40.036, "Y"], [40.036, 40.216, "esa"], [40.216, 40.616, "plata"], [40.616, 41.136, "tiene"], [41.136, 41.276, "que"], [41.276, 41.576, "aparecer"], [41.576, 41.836, "en"], [41.836, 41.976, "alg\u00fan"], [41.976, 42.376, "lado."], [43.096, 43.696, "Autos,"], [43.756, 44.556, "campos,"], [44.736, 45.456, "departamentos."], [46.036, 46.216, "Una"], [46.216, 46.476, "empresa"], [46.476, 46.716, "que"], [46.716, 47.036, "factura"], [47.036, 47.196, "de"], [47.196, 47.496, "m\u00e1s."], [48.276, 48.496, "Eso"], [48.496, 48.716, "se"], [48.716, 48.836, "llama"], [48.836, 49.436, "lavado."], [50.136, 50.536, "\u00bfCu\u00e1ntas"], [50.536, 50.956, "condenas"], [50.956, 51.156, "por"], [51.156, 51.476, "lavado"], [51.476, 51.676, "tuvo"], [51.676, 51.876, "la"], [51.876, 52.176, "Argentina"], [52.176, 52.396, "en"], [52.396, 52.656, "5"], [52.656, 53.156, "a\u00f1os?"], [53.676, 54.276, "91."], [54.876, 55.236, "En"], [55.236, 55.496, "todo"], [55.496, 55.636, "el"], [55.636, 55.896, "pa\u00eds."], [56.756, 56.956, "El"], [56.956, 57.256, "GAFI,"], [57.396, 57.616, "el"], [57.616, 57.976, "organismo"], [57.976, 58.456, "internacional"], [58.456, 58.776, "que"], [58.776, 58.996, "controla"], [58.996, 59.376, "esto,"], [59.776, 59.836, "dijo"], [59.836, 59.996, "que"], [59.996, 60.136, "es"], [60.136, 60.336, "poco"], [60.336, 60.536, "para"], [60.536, 60.676, "un"], [60.676, 60.776, "pa\u00eds"], [60.776, 60.956, "de"], [60.956, 61.156, "nuestro"], [61.156, 61.736, "tama\u00f1o."], [61.996, 62.076, "Y"], [62.076, 62.196, "que"], [62.196, 62.336, "la"], [62.336, 62.616, "mayor\u00eda"], [62.616, 62.896, "eran"], [62.896, 63.216, "casos"], [63.216, 63.636, "simples."], [64.562, 64.782, "Pista"], [64.782, 65.462, "4."], [65.742, 66.002, "\u00bfQui\u00e9n"], [66.002, 66.522, "firma?"], [67.222, 67.442, "Y"], [67.442, 67.642, "ac\u00e1"], [67.642, 67.862, "el"], [67.862, 68.322, "expediente"], [68.322, 68.642, "se"], [68.642, 68.762, "pone"], [68.762, 69.582, "pesado."], [70.242, 70.502, "Ra\u00fal"], [70.502, 71.102, "Reynoso,"], [71.642, 71.822, "juez"], [71.822, 72.142, "federal"], [72.142, 72.282, "de"], [72.282, 72.502, "Oran,"], [72.762, 72.842, "en"], [72.842, 73.022, "la"], [73.022, 73.282, "frontera"], [73.282, 73.442, "con"], [73.442, 74.042, "Bolivia."], [74.782, 75.142, "Condenado"], [75.142, 75.342, "a"], [75.342, 75.562, "13"], [75.562, 75.902, "a\u00f1os"], [75.902, 76.102, "por"], [76.102, 76.582, "cobrarles"], [76.582, 77.122, "imputados"], [77.122, 77.222, "a"], [77.222, 77.422, "cambio"], [77.422, 77.642, "de"], [77.642, 78.022, "beneficios"], [78.022, 78.142, "en"], [78.142, 78.302, "sus"], [78.302, 79.162, "causas."], [79.542, 79.902, "Castaci\u00f3n"], [79.902, 80.142, "lo"], [80.142, 80.962, "confirm\u00f3."], [81.522, 81.762, "Walter"], [81.762, 82.222, "Bento,"], [82.682, 82.842, "juez"], [82.842, 83.122, "federal"], [83.122, 83.262, "de"], [83.262, 83.882, "Mendoza."], [84.382, 84.462, "En"], [84.462, 84.842, "febrero"], [84.842, 85.002, "de"], [85.002, 85.162, "este"], [85.162, 85.422, "a\u00f1o,"], [85.682, 86.042, "18"], [86.042, 86.342, "a\u00f1os"], [86.342, 86.542, "de"], [86.542, 86.902, "prisi\u00f3n."], [87.682, 87.882, "El"], [87.882, 88.122, "tribunal"], [88.122, 88.382, "lo"], [88.382, 88.662, "consider\u00f3"], [88.662, 88.942, "jefe"], [88.942, 89.082, "de"], [89.082, 89.222, "una"], [89.222, 89.402, "banda"], [89.402, 89.662, "que"], [89.662, 89.942, "cobraba"], [89.942, 90.282, "coimas"], [90.282, 90.462, "a"], [90.462, 90.802, "acusados"], [90.802, 91.042, "de"], [91.042, 91.362, "contrabando"], [91.362, 91.482, "y"], [91.482, 91.942, "narcotr\u00e1fico."], [92.822, 92.982, "Su"], [92.982, 93.302, "defensa"], [93.302, 93.662, "apela."], [95.468, 95.668, "Lo"], [95.668, 96.108, "obvio,"], [96.868, 97.008, "que"], [97.008, 97.108, "el"], [97.108, 97.328, "b\u00fanker"], [97.328, 97.688, "existe."], [98.808, 98.968, "Lo"], [98.968, 99.088, "que"], [99.088, 99.268, "est\u00e1"], [99.268, 100.008, "conectado,"], [100.688, 100.828, "que"], [100.828, 100.928, "un"], [100.928, 101.248, "b\u00fanker"], [101.248, 101.508, "que"], [101.508, 101.788, "todos"], [101.788, 102.028, "ven"], [102.028, 102.228, "y"], [102.228, 102.548, "nadie"], [102.548, 102.888, "cierra"], [102.888, 103.368, "necesita"], [103.368, 103.608, "que"], [103.608, 103.928, "alguien"], [103.928, 104.108, "no"], [104.108, 104.328, "lo"], [104.328, 105.428, "vea."], [105.628, 105.748, "No"], [105.748, 106.448, "siempre."], [107.028, 107.168, "No"], [107.168, 107.548, "todos."], [108.428, 108.588, "Pero"], [108.588, 108.828, "lo"], [108.828, 109.528, "suficientes."], [111.43, 111.59, "As\u00ed"], [111.59, 112.45, "que"], [112.45, 113.01, "la"], [113.01, 113.33, "pr\u00f3xima"], [113.33, 113.63, "vez"], [113.63, 113.81, "que"], [113.81, 114.13, "veas"], [114.13, 114.33, "un"], [114.33, 114.77, "operativo"], [114.77, 115.13, "con"], [115.13, 115.87, "1500"], [115.87, 116.79, "polic\u00edas,"], [117.45, 117.57, "no"], [117.57, 117.83, "cuentes"], [117.83, 118.01, "los"], [118.01, 118.83, "detenidos."], [119.71, 120.03, "Pregunta"], [120.03, 120.63, "cu\u00e1nta"], [120.63, 120.83, "plata"], [120.83, 121.09, "se"], [121.09, 121.95, "congel\u00f3."], [122.73, 122.99, "Porque"], [122.99, 123.35, "mientras"], [123.35, 123.87, "tanto,"], [124.73, 124.87, "todos"], [124.87, 125.17, "saben"], [125.17, 125.45, "d\u00f3nde"], [125.45, 125.69, "se"], [125.69, 125.97, "vende."]]; const SUBS = [[1.38, 1.88, "1500"], [1.88, 2.6, "polic\u00edas,"], [3.24, 3.76, "17"], [3.76, 4.42, "detenidos."], [4.84, 5.0, "Y"], [5.0, 5.08, "al"], [5.08, 5.26, "otro"], [5.26, 5.56, "d\u00eda,"], [5.76, 5.9, "la"], [5.9, 6.12, "esquina"], [6.12, 6.34, "sigue"], [6.34, 6.58, "ah\u00ed."], [7.38, 7.72, "Todos"], [7.72, 7.96, "saben"], [7.96, 8.2, "d\u00f3nde"], [8.2, 8.38, "se"], [8.38, 8.7, "vende."], [9.1, 9.26, "El"], [9.26, 9.56, "vecino"], [9.56, 9.8, "lo"], [9.8, 10.0, "sabe,"], [10.34, 10.54, "el"], [10.54, 11.0, "remisero"], [11.0, 11.26, "lo"], [11.26, 11.48, "sabe,"], [11.92, 12.12, "el"], [12.12, 12.26, "pibe"], [12.26, 12.48, "de"], [12.48, 12.84, "15"], [12.84, 13.1, "a\u00f1os"], [13.1, 13.36, "lo"], [13.36, 13.56, "sabe."], [14.34, 14.84, "Entonces,"], [15.3, 15.5, "\u00bfpor"], [15.5, 15.58, "qu\u00e9"], [15.58, 15.82, "nadie"], [15.82, 16.04, "lo"], [16.04, 16.26, "cierra?"], [18.596, 18.836, "Pista"], [18.836, 19.336, "2."], [19.976, 20.156, "La"], [20.156, 20.496, "plata."], [21.656, 21.816, "Seg\u00fan"], [21.816, 22.076, "datos"], [22.076, 22.716, "publicados"], [22.716, 22.956, "por"], [22.956, 23.216, "La"], [23.216, 23.476, "Naci\u00f3n,"], [23.876, 23.996, "un"], [23.996, 24.176, "kilo"], [24.176, 24.396, "de"], [24.396, 24.716, "coca\u00edna"], [24.716, 25.036, "cuesta"], [25.036, 25.356, "unos"], [25.356, 25.736, "2000"], [25.736, 26.216, "d\u00f3lares"], [26.216, 26.696, "reci\u00e9n"], [26.696, 26.816, "hecho"], [26.816, 26.896, "en"], [26.896, 27.436, "Bolivia."], [27.926, 28.076, "En"], [28.076, 28.176, "la"], [28.176, 28.576, "frontera"], [28.576, 28.726, "con"], [28.726, 29.176, "Salta,"], [29.226, 30.076, "2800."], [30.656, 30.976, "Puesto"], [30.976, 31.056, "en"], [31.056, 31.136, "el"], [31.136, 31.656, "interior"], [31.656, 31.876, "del"], [31.876, 32.236, "pa\u00eds,"], [32.916, 33.056, "cerca"], [33.056, 33.256, "de"], [33.256, 33.556, "4000."], [34.296, 34.516, "Y"], [34.516, 34.716, "en"], [34.716, 35.016, "Espa\u00f1a,"], [35.516, 35.836, "30.000"], [35.836, 36.236, "euros."], [36.636, 36.876, "Cada"], [36.876, 37.396, "frontera"], [37.396, 37.636, "que"], [37.636, 38.156, "cruza"], [38.156, 38.916, "multiplica."], [39.856, 40.036, "Y"], [40.036, 40.216, "esa"], [40.216, 40.616, "plata"], [40.616, 41.136, "tiene"], [41.136, 41.276, "que"], [41.276, 41.576, "aparecer"], [41.576, 41.836, "en"], [41.836, 41.976, "alg\u00fan"], [41.976, 42.376, "lado."], [43.096, 43.696, "Autos,"], [43.756, 44.556, "campos,"], [44.736, 45.456, "departamentos."], [46.036, 46.216, "Una"], [46.216, 46.476, "empresa"], [46.476, 46.716, "que"], [46.716, 47.036, "factura"], [47.036, 47.196, "de"], [47.196, 47.496, "m\u00e1s."], [48.276, 48.496, "Eso"], [48.496, 48.716, "se"], [48.716, 48.836, "llama"], [48.836, 49.436, "lavado."], [50.136, 50.536, "\u00bfCu\u00e1ntas"], [50.536, 50.956, "condenas"], [50.956, 51.156, "por"], [51.156, 51.476, "lavado"], [51.476, 51.676, "tuvo"], [51.676, 51.876, "la"], [51.876, 52.176, "Argentina"], [52.176, 52.396, "en"], [52.396, 52.656, "5"], [52.656, 53.156, "a\u00f1os?"], [53.676, 54.276, "91."], [54.876, 55.236, "En"], [55.236, 55.496, "todo"], [55.496, 55.636, "el"], [55.636, 55.896, "pa\u00eds."], [56.756, 56.956, "El"], [56.956, 57.256, "GAFI,"], [57.396, 57.616, "el"], [57.616, 57.976, "organismo"], [57.976, 58.456, "internacional"], [58.456, 58.776, "que"], [58.776, 58.996, "controla"], [58.996, 59.376, "esto,"], [59.776, 59.836, "dijo"], [59.836, 59.996, "que"], [59.996, 60.136, "es"], [60.136, 60.336, "poco"], [60.336, 60.536, "para"], [60.536, 60.676, "un"], [60.676, 60.776, "pa\u00eds"], [60.776, 60.956, "de"], [60.956, 61.156, "nuestro"], [61.156, 61.736, "tama\u00f1o."], [61.996, 62.076, "Y"], [62.076, 62.196, "que"], [62.196, 62.336, "la"], [62.336, 62.616, "mayor\u00eda"], [62.616, 62.896, "eran"], [62.896, 63.216, "casos"], [63.216, 63.636, "simples."], [64.562, 64.782, "Pista"], [64.782, 65.462, "4."], [65.742, 66.002, "\u00bfQui\u00e9n"], [66.002, 66.522, "firma?"], [67.222, 67.442, "Y"], [67.442, 67.642, "ac\u00e1"], [67.642, 67.862, "el"], [67.862, 68.322, "expediente"], [68.322, 68.642, "se"], [68.642, 68.762, "pone"], [68.762, 69.582, "pesado."], [70.242, 70.502, "Ra\u00fal"], [70.502, 71.102, "Reynoso,"], [71.642, 71.822, "juez"], [71.822, 72.142, "federal"], [72.142, 72.282, "de"], [72.282, 72.502, "Or\u00e1n,"], [72.762, 72.842, "en"], [72.842, 73.022, "la"], [73.022, 73.282, "frontera"], [73.282, 73.442, "con"], [73.442, 74.042, "Bolivia."], [74.782, 75.142, "Condenado"], [75.142, 75.342, "a"], [75.342, 75.562, "13"], [75.562, 75.902, "a\u00f1os"], [75.902, 76.102, "por"], [76.102, 76.582, "cobrarles"], [76.582, 77.122, "imputados"], [77.122, 77.222, "a"], [77.222, 77.422, "cambio"], [77.422, 77.642, "de"], [77.642, 78.022, "beneficios"], [78.022, 78.142, "en"], [78.142, 78.302, "sus"], [78.302, 79.162, "causas."], [79.542, 79.902, "Casaci\u00f3n"], [79.902, 80.142, "lo"], [80.142, 80.962, "confirm\u00f3."], [81.522, 81.762, "Walter"], [81.762, 82.222, "Bento,"], [82.682, 82.842, "juez"], [82.842, 83.122, "federal"], [83.122, 83.262, "de"], [83.262, 83.882, "Mendoza."], [84.382, 84.462, "En"], [84.462, 84.842, "febrero"], [84.842, 85.002, "de"], [85.002, 85.162, "este"], [85.162, 85.422, "a\u00f1o,"], [85.682, 86.042, "18"], [86.042, 86.342, "a\u00f1os"], [86.342, 86.542, "de"], [86.542, 86.902, "prisi\u00f3n."], [87.682, 87.882, "El"], [87.882, 88.122, "tribunal"], [88.122, 88.382, "lo"], [88.382, 88.662, "consider\u00f3"], [88.662, 88.942, "jefe"], [88.942, 89.082, "de"], [89.082, 89.222, "una"], [89.222, 89.402, "banda"], [89.402, 89.662, "que"], [89.662, 89.942, "cobraba"], [89.942, 90.282, "coimas"], [90.282, 90.462, "a"], [90.462, 90.802, "acusados"], [90.802, 91.042, "de"], [91.042, 91.362, "contrabando"], [91.362, 91.482, "y"], [91.482, 91.942, "narcotr\u00e1fico."], [92.822, 92.982, "Su"], [92.982, 93.302, "defensa"], [93.302, 93.662, "apela."], [95.468, 95.668, "Lo"], [95.668, 96.108, "obvio,"], [96.868, 97.008, "que"], [97.008, 97.108, "el"], [97.108, 97.328, "b\u00fanker"], [97.328, 97.688, "existe."], [98.808, 98.968, "Lo"], [98.968, 99.088, "que"], [99.088, 99.268, "est\u00e1"], [99.268, 100.008, "conectado,"], [100.688, 100.828, "que"], [100.828, 100.928, "un"], [100.928, 101.248, "b\u00fanker"], [101.248, 101.508, "que"], [101.508, 101.788, "todos"], [101.788, 102.028, "ven"], [102.028, 102.228, "y"], [102.228, 102.548, "nadie"], [102.548, 102.888, "cierra"], [102.888, 103.368, "necesita"], [103.368, 103.608, "que"], [103.608, 103.928, "alguien"], [103.928, 104.108, "no"], [104.108, 104.328, "lo"], [104.328, 105.428, "vea."], [105.628, 105.748, "No"], [105.748, 106.448, "siempre."], [107.028, 107.168, "No"], [107.168, 107.548, "todos."], [108.428, 108.588, "Pero"], [108.588, 109.058, "los"], [109.058, 109.528, "suficientes."], [111.43, 111.59, "As\u00ed"], [111.59, 112.45, "que"], [112.45, 113.01, "la"], [113.01, 113.33, "pr\u00f3xima"], [113.33, 113.63, "vez"], [113.63, 113.81, "que"], [113.81, 114.13, "veas"], [114.13, 114.33, "un"], [114.33, 114.77, "operativo"], [114.77, 115.13, "con"], [115.13, 115.87, "1500"], [115.87, 116.79, "polic\u00edas,"], [117.45, 117.57, "no"], [117.57, 117.83, "cuentes"], [117.83, 118.01, "los"], [118.01, 118.83, "detenidos."], [119.71, 120.17, "Pregunt\u00e1"], [120.17, 120.63, "cu\u00e1nta"], [120.63, 120.83, "plata"], [120.83, 121.09, "se"], [121.09, 121.95, "congel\u00f3."], [122.73, 122.99, "Porque"], [122.99, 123.35, "mientras"], [123.35, 123.87, "tanto,"], [124.73, 124.87, "todos"], [124.87, 125.17, "saben"], [125.17, 125.45, "d\u00f3nde"], [125.45, 125.69, "se"], [125.69, 125.97, "vende."]];
+const DUR = T.dur; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s);
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
+const nz = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const PW = PAL.map((w) => nz(w[2])); window.FALTAN = [];
+const P = (k, frase, fin = false) => { const q = frase.split(/\s+/).map(nz).filter(Boolean), desde = S[k].va - 0.2;
+  for (let j = 0; j < PW.length; j++) { if (PAL[j][0] < desde) continue; if (q.every((w, i) => PW[j + i] && PW[j + i].startsWith(w))) return fin ? PAL[j + q.length - 1][1] : PAL[j][0]; }
+  window.FALTAN.push(k + ': ' + frase); return S[k].va + 0.5; };
+const V = (k, frase, fin) => W(P(k, frase, fin)); const A = (k, x = 0) => S[k].A + x;
+{ const g = $('#corcho').getContext('2d'); const im = g.createImageData(1950, 3000);
+  for (let i = 0; i < 1950 * 3000; i++) { const v = hash(i * 0.913); const w = hash(i * 0.271 + 7); const b = 70 + v * 55 - (w > .94 ? 45 : 0) + (w < .03 ? 40 : 0); im.data[i * 4] = b * 1.45; im.data[i * 4 + 1] = b; im.data[i * 4 + 2] = b * .58; im.data[i * 4 + 3] = 255; }
+  g.putImageData(im, 0, 0); }
+const tl = gsap.timeline({ paused: true }); const E = 'expo.out', E2 = 'power3.inOut';
+const SFX = []; window.SFX = SFX; const sx = (n, t) => SFX.push([n, +(+t).toFixed(3)]);
+tl.set({}, {}, DUR);
+const clava = (sel, t) => { sx('click', t + .18); sx('pop', t); tl.fromTo(sel, { y: -70, scale: 1.12, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.6)' }, t); };
+const sube = (sel, t, y = 70) => { sx('whoosh', t - .1); tl.fromTo(sel, { y, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E }, t); };
+const sella = (sel, t) => { sx('boom', t); sx('chas', t); tl.fromTo(sel, { scale: 2.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .3, ease: 'back.out(2.2)' }, t); };
+const C_ = {}; const cuenta = (id, t0, t1, a, b) => { C_[id] = [t0, t1, a, b]; };
+const cam = { x: 0, y: 0 }; const aplicar = () => { $('#mundo').style.transform = `translate(${-cam.x}px,${-cam.y}px)`; };
+const va = (t, x, y, d = .55) => { sx('whoosh', t - .05); tl.to(cam, { x, y, duration: d, ease: E2, onUpdate: aplicar }, t - .1); };
+tl.set(cam, { x: 0, y: 0, onUpdate: aplicar }, 0);
+const muestra = (id, t0, t1) => { tl.set('#' + id, { visibility: 'visible' }, t0); tl.fromTo('#' + id, { autoAlpha: 0 }, { autoAlpha: 1, duration: .25 }, t0); if (t1 != null) tl.set('#' + id, { visibility: 'hidden' }, t1); };
+tl.set('.pol,.ficha,.nota,.sello,.exp,.ruta', { autoAlpha: 0 }, 0);
+// r1
+clava('#r1f', .05); clava('#r1a', Math.max(.25, V('r1', '1500'))); clava('#r1b', V('r1', '17'));
+clava('#r1q', V('r1', 'todos saben') - .1); tl.set('#r1q2', { autoAlpha: 0 }, 0);
+tl.fromTo('#r1q2', { autoAlpha: 0, scale: 1.4 }, { autoAlpha: 1, scale: 1, duration: .3, ease: 'back.out(2)' }, V('r1', 'por qué')); sx('golpe', V('r1', 'por qué'));
+// r2
+va(A('r2'), 1300, 0); clava('#r2', A('r2') + .15);
+sube('#rr1', V('r2', '2000') - .2, 30); sube('#rr2', V('r2', '2800') - .2, 30); sube('#rr3', V('r2', 'cerca de') - .1, 30); sube('#rr4', V('r2', '30') - .1, 30);
+sella('#r2x', V('r2', 'multiplica'));
+// r3
+va(A('r3'), 2600, 0); clava('#r3', A('r3') + .15); cuenta('n91', V('r3', '91'), V('r3', 'en todo'), 0, 91); clava('#r3n', V('r3', 'el gafi'));
+// r4
+va(A('r4'), 0, 2100); clava('#r4f', A('r4') + .1); clava('#r4', V('r4', 'raúl reynoso')); sella('#r4s', V('r4', 'condenado'));
+tl.to('#ley', { opacity: 1, duration: .3 }, A('r4')); tl.to('#ley', { opacity: 0, duration: .3 }, A('r6'));
+// r5
+va(A('r5'), 1300, 2100); clava('#r5', A('r5') + .1); sella('#r5s', V('r5', '18 años'));
+// r6
+muestra('c6', A('r6'), A('r7')); sube('#c6a', A('r6') + .1); sube('#c6b', V('r6', 'lo que está'));
+// r7
+muestra('c7', A('r7')); tl.fromTo('#c7f', { scale: 1.02 }, { scale: 1.14, duration: S.r7.n + 1, ease: 'none' }, A('r7'));
+tl.set('#c7a,#c7b,#c7c', { autoAlpha: 0 }, 0); sube('#c7a', V('r7', 'no cuentes')); sube('#c7b', V('r7', 'preguntá'));
+tl.to('#c7a,#c7b', { autoAlpha: 0, duration: .3 }, V('r7', 'porque mientras') - .15); sube('#c7c', V('r7', 'todos saben')); sx('boom', V('r7', 'todos saben'));
+// subtítulos
+const SUB = $('#sub'); const TROZOS = []; { let cur = []; const corte = (w) => /[.,;:?!…]$/.test(w[2]);
+  SUBS.forEach((w, i) => { cur.push(w); const largo = cur.map((x) => x[2]).join(' ').length; if (corte(w) || cur.length >= 4 || largo > 20 || i === SUBS.length - 1) { TROZOS.push(cur); cur = []; } }); }
+const TZ = TROZOS.map((c, i) => [W(c[0][0]) - 0.05, i + 1 < TROZOS.length ? Math.min(W(TROZOS[i + 1][0][0]) - 0.05, W(c[c.length - 1][1]) + 0.6) : W(c[c.length - 1][1]) + 0.5, c]);
+const subt = (t) => { const k = TZ.findIndex(([a, b]) => t >= a && t < b); if (k < 0 || t > DUR - 1.1) { SUB.innerHTML = ''; return; }
+  SUB.innerHTML = TZ[k][2].map((w) => `<span style="color:${t >= W(w[0]) - 0.03 ? '#ffd23f' : '#fff'}">${w[2].replace(/[<>]/g, '')}</span>`).join(' '); };
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const NUM = Object.keys(C_).map((id) => [document.getElementById(id), ...C_[id]]);
+window.render = (t) => { tl.seek(t, false);
+  $('#vista').style.transform = `translate(${(Math.sin(t * .7) * 4).toFixed(2)}px,${(Math.cos(t * .55) * 3).toFixed(2)}px)`;
+  gr.putImageData(RUIDO[Math.floor(t * 24) % 6], 0, 0);
+  for (const [el, t0, t1, a, b] of NUM) el.textContent = Math.round(a + (b - a) * ease((t - t0) / Math.min(0.6, Math.max(0.05, t1 - t0))));
+  subt(t); };
+for (const id in C_) { const [t0, t1] = C_[id]; const d = Math.min(0.6, Math.max(0.05, t1 - t0)); for (let i = 0; i < 7; i++) sx('tic', t0 + i * d / 7); }
+window.render(0); window.listo = true;
+})();
+</script>
+</body></html>
