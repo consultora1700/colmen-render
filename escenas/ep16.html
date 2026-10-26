@@ -268,7 +268,7 @@ const VIS = T.seg.filter((s) => document.getElementById(s.k));
 const tl = gsap.timeline({ paused: true });
 const E = 'expo.out', E2 = 'power4.inOut';
 const SFX = []; window.SFX = SFX; const sx = (n, t) => SFX.push([n, +(+t).toFixed(3)]);
-VIS.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < VIS.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, VIS[i + 1].A + 0.3); });
+VIS.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < VIS.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, VIS[i + 1].A + 0.5); });
 tl.set({}, {}, DUR);
 const lineas = (sel, t, st = 0.1, d = 0.6) => sx('click', t) && tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
 const pop = (sel, t, y = 50) => sx('pop', t) && tl.fromTo(sel, { y, scale: .85, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)' }, t);
@@ -277,7 +277,8 @@ const entra = (sel, t, x = -220) => sx('whoosh', t - .1) && tl.fromTo(sel, { x, 
 const sella = (sel, t, r = -7) => sx('boom', t) && sx('chas', t) && tl.fromTo(sel, { scale: 2.6, rotate: r - 10, autoAlpha: 0 }, { scale: 1, rotate: r, autoAlpha: 1, duration: .35, ease: 'back.out(2.2)' }, t);
 const flash = (t, o = .5) => tl.fromTo('#flash', { opacity: o }, { opacity: 0, duration: .3, immediateRender: false }, t);
 const golpe = (k, t, s = 1.05) => sx('golpe', t) && tl.fromTo(`#${k} .cam`, { scale: s }, { scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, t);
-const barre = (k, dir) => { sx('whoosh', S[k].A - .05); const desde = { izq: 'inset(0 0 0 100%)', der: 'inset(0 100% 0 0)', arr: 'inset(100% 0 0 0)', aba: 'inset(0 0 100% 0)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0 0 0 0%)', duration: .45, ease: E2 }, S[k].A); };
+// barre: mismas unidades en los 4 lados del inset; si no, GSAP no interpola y salta al final (cuadros negros)
+const barre = (k, dir) => { sx('whoosh', S[k].A - .05); const desde = { izq: 'inset(0% 0% 0% 100%)', der: 'inset(0% 100% 0% 0%)', arr: 'inset(100% 0% 0% 0%)', aba: 'inset(0% 0% 100% 0%)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .45, ease: E2 }, S[k].A); };
 const deriva = (img, k) => tl.fromTo(img, { scale: 1.15 }, { scale: 1, duration: S[k].n + 20, ease: 'none' }, S[k].A);
 const toque = (x, y, t, desde = [x + 160, y + 260]) => {
   tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
