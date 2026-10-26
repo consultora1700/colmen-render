@@ -1,0 +1,38 @@
+# Efectos sobre video real (seguimiento de cámara + composición + sonido) en una máquina de GitHub, no en el VPS.
+# Se dispara con un push que cambie trabajos/pedido.json (lo escribe vfx-remoto.sh). Cada trabajo trae su run.sh.
+name: vfx
+on:
+  workflow_dispatch:
+    inputs:
+      trabajo: { description: 'Carpeta dentro de trabajos/', default: 'subte-neon' }
+      modo: { description: 'prueba | video', default: 'prueba' }
+  push:
+    paths: ['trabajos/pedido.json']
+
+concurrency:
+  group: vfx-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vfx:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -q numpy pillow opencv-python-headless
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Trabajo
+        id: p
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then T='${{ inputs.trabajo }}'; M='${{ inputs.modo }}'; P=''; else T=$(jq -r .trabajo trabajos/pedido.json); M=$(jq -r .modo trabajos/pedido.json); P=$(jq -r '.pruebas // ""' trabajos/pedido.json); fi
+          echo "trabajo=$T" >> "$GITHUB_OUTPUT"; echo "modo=$M" >> "$GITHUB_OUTPUT"; echo "pruebas=$P" >> "$GITHUB_OUTPUT"
+      - name: Correr
+        working-directory: trabajos/${{ steps.p.outputs.trabajo }}
+        env: { MODO: '${{ steps.p.outputs.modo }}', PRUEBAS: '${{ steps.p.outputs.pruebas }}' }
+        run: |
+          if [ -z "$PRUEBAS" ]; then unset PRUEBAS; fi
+          bash run.sh
+      - uses: actions/upload-artifact@v4
+        with: { name: vfx, path: 'trabajos/${{ steps.p.outputs.trabajo }}/out', retention-days: 3 }
