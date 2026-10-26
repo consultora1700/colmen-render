@@ -437,7 +437,8 @@ const TROZOS = []; { let cur = [];
 const TZ = TROZOS.map((c, i) => [W(c[0][0]) - 0.05, i + 1 < TROZOS.length ? Math.min(W(TROZOS[i + 1][0][0]) - 0.05, W(c[c.length - 1][1]) + 0.6) : W(c[c.length - 1][1]) + 0.5, c]);
 let SUBK = -1;
 const subtitulos = (t) => {
-  if (t > DUR - 1.2) { SUB.innerHTML = ''; return; }
+  const PF = document.getElementById('perfil');
+  if (t > DUR - 1.2 || (PF && +getComputedStyle(PF).opacity > 0.05 && getComputedStyle(PF).visibility !== 'hidden' && PF.closest('.sc').style.visibility !== 'hidden' && getComputedStyle(PF.closest('.sc')).visibility === 'visible')) { SUB.innerHTML = ''; return; }
   const k = TZ.findIndex(([a, b]) => t >= a && t < b);
   if (k < 0) { SUB.innerHTML = ''; return; }
   const [a, , c] = TZ[k];
