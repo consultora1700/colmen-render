@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>EP.13 Cajeros vacíos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{display:none!important;position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+
+:root{--verde:#22c55e;--oro:#ffd23f;--rojo:#ef3340;--cian:#38bdf8;--bg:#0a0c0b}
+.fondo{inset:0;background:var(--bg)}
+.bgfoto{position:absolute;left:-200px;top:0;width:1480px;height:1920px;object-fit:cover;filter:grayscale(.6) brightness(.2) blur(2px)}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 5px);pointer-events:none}
+.chip{position:absolute;padding:14px 26px;border-radius:44px;background:#11161c;border:2px solid #24303a;font:800 32px 'Inter Tight';white-space:nowrap;color:#fff}
+.tag{display:inline-block;padding:8px 18px;border-radius:12px;font:800 26px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase}
+.sello{position:absolute;padding:10px 30px;border:8px solid var(--rojo);border-radius:18px;color:var(--rojo);font:900 72px 'Inter Tight';letter-spacing:.02em;background:rgba(255,255,255,.97);white-space:nowrap;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.sello.ok{border-color:#16a34a;color:#0a7a2a}
+.tit{position:absolute;left:90px;top:480px;width:870px}
+.big{font:900 150px/0.9 'Inter Tight';letter-spacing:-.06em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lab{font:800 34px/1.15 'Inter Tight';color:var(--mute)}
+.src{font-size:19px;line-height:1.3}
+.mono{font-family:'JetBrains Mono',monospace}
+.cut{position:absolute;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))}
+.cd{position:absolute;left:90px;width:850px;border-radius:30px;background:#14161a;border:2px solid #262a31;padding:26px 30px}
+.cd .k{font:800 22px 'Inter Tight';letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.cd .v{font:900 54px/1.05 'Inter Tight';letter-spacing:-.03em;margin-top:8px}
+.barras{position:absolute;left:90px;width:850px}
+.barras .f{display:grid;grid-template-columns:230px 1fr;align-items:center;gap:20px;margin-top:20px}
+.barras .f span{font:800 32px/1.1 'Inter Tight'}
+.barras .bb{position:relative;height:84px;border-radius:20px;background:#1f1d22}
+.barras .bb i{position:absolute;left:0;top:0;bottom:0;border-radius:20px}
+.barras .bb b{position:absolute;left:22px;top:0;line-height:84px;font:900 44px 'Inter Tight';white-space:nowrap;color:#fff}
+.mos{position:absolute;left:90px;width:850px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.mos>div{border-radius:30px;padding:26px 26px 24px;background:#14161a;border:2px solid #262a31}
+.mos b{display:block;font:900 72px/1 'Inter Tight';letter-spacing:-.04em;white-space:nowrap}
+.mos span{display:block;font:800 29px/1.15 'Inter Tight';margin-top:12px}
+.mos small{display:block;font:600 19px/1.25 'Inter Tight';color:var(--mute);margin-top:10px}
+.burb{position:absolute;max-width:700px;padding:24px 30px;border-radius:34px;font:700 36px/1.25 'Inter Tight'}
+.burb small{display:block;font:800 20px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.rec{position:absolute;right:140px;font:800 20px 'Inter Tight';letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+
+.gente{display:flex;gap:14px}
+.gente svg{width:70px;height:110px}
+.cel{position:absolute;width:420px;height:860px;border-radius:70px;background:#0a0a0b;padding:14px;box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 50px 100px rgba(0,0,0,.6)}
+.cel .scr{width:100%;height:100%;border-radius:58px;background:#f4f6f5;overflow:hidden;position:relative;color:#111}
+.billete{position:absolute;width:230px;height:104px;border-radius:12px;background:linear-gradient(135deg,#9fe3d6,#d9f3ee);border:3px solid #6cc4b4;box-shadow:0 14px 30px rgba(0,0,0,.4);display:grid;place-items:center;font:900 34px 'Inter Tight';color:#0f5a4d}
+.cien{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;width:540px}
+.cien i{display:block;aspect-ratio:1;border-radius:50%;background:#2a2f2c}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <symbol id="pers" viewBox="0 0 70 110"><circle cx="35" cy="22" r="18" fill="currentColor"/><path d="M6 108c0-34 12-50 29-50s29 16 29 50z" fill="currentColor"/></symbol>
+</defs></svg>
+
+<!-- 1 · gancho -->
+<div class="sc" id="s1" style="visibility:visible"><div class="cam">
+  <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.3)">
+  <div class="tit" id="t1">
+    <span class="m d" style="font-size:80px"><span>Cada cajero atiende</span></span>
+    <span class="m d" style="font-size:80px"><span>menos de <span class="hl" style="background:var(--rojo)">4 personas</span></span></span>
+    <span class="m d" style="font-size:80px"><span>por hora</span></span>
+  </div>
+  <div class="abs gente" id="t1g" style="left:90px;top:860px"><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff;opacity:.35"><use href="#pers"/></svg></div>
+  <div class="sello" id="t1s" style="left:300px;top:1100px;font-size:80px">NO FALTA PLATA</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informe de Pagos Minoristas (jul-2026): 2.459 extracciones por cajero al mes ≈ 82 por día.</div>
+</div></div>
+
+<!-- A · la caída -->
+<div class="sc" id="sA"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="tit" id="aT"><span class="m d" style="font-size:66px;color:var(--mute)"><span>Extracciones en cajeros</span></span><span class="m d" style="font-size:66px"><span>por mes</span></span></div>
+  <div class="barras" id="aB" style="top:680px">
+    <div class="f"><span>Julio 2024</span><div class="bb" style="height:130px"><i id="a1" style="background:#6b7280"></i><b style="line-height:130px;font-size:60px">94,9 M</b></div></div>
+    <div class="f"><span>Julio 2026</span><div class="bb" style="height:130px"><i id="a2" style="background:var(--rojo)"></i><b style="line-height:130px;font-size:60px"><em id="a2v" style="font-style:normal">94,9</em> M</b></div></div>
+  </div>
+  <div class="sello" id="aS" style="left:480px;top:1040px;font-size:120px">−57 %</div>
+  <div class="chip" id="aC" style="left:90px;top:1270px;background:#fff;color:#111;border-color:#fff">Fuente: Banco Central (BCRA)</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informes de Pagos Minoristas ago-2024 y ago-2026 (dato de julio). 17.062 → 16.662 cajeros.</div>
+</div></div>
+
+<!-- B · al celular -->
+<div class="sc" id="sB"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="tit" id="bT"><span class="m d" style="font-size:76px"><span>¿Adónde se fue?</span></span><span class="m d" style="font-size:76px"><span>Al <span class="hl ok">celular</span></span></span></div>
+  <div class="cel" id="bC" style="left:560px;top:700px;transform:rotate(6deg)"><div class="scr">
+    <div style="margin:110px 40px 0;font:800 28px 'Inter Tight';color:#666">Pagar con QR</div>
+    <svg viewBox="0 0 21 21" style="display:block;width:300px;margin:30px auto 0" shape-rendering="crispEdges" id="qr"></svg>
+    <div id="bOk" style="margin:40px 40px 0;height:90px;border-radius:24px;background:var(--verde);color:#fff;font:900 36px/90px 'Inter Tight';text-align:center">Pagado ✓</div>
+  </div></div>
+  <div class="abs" id="bQ" style="left:90px;top:720px;width:460px"><div class="big" style="font-size:120px;color:var(--verde)"><span id="qrv">0</span> M</div><div class="lab" style="font-size:30px;color:#fff">pagos con QR en agosto</div><div class="tag" style="background:var(--verde);color:#04210f;margin-top:12px">+67 % en un año</div></div>
+  <div class="abs" id="bT2" style="left:90px;top:1010px;width:460px"><div class="big" style="font-size:120px;color:var(--cian)"><span id="trv">0</span> M</div><div class="lab" style="font-size:30px;color:#fff">transferencias en un mes</div></div>
+  <div class="cd" id="b18" style="top:1250px;width:850px;display:flex;align-items:center;gap:26px;padding:20px 28px;z-index:3"><div class="big" style="font-size:90px;color:var(--oro)">18 a 1</div><div style="font:800 28px/1.15 'Inter Tight'">pagos electrónicos por cada extracción (2025)</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA: Pagos Minoristas ago-2026; Inclusión Financiera abr-2026 (en 2024 eran 10 a 1).</div>
+</div></div>
+
+<!-- C · el giro: no murió el efectivo, murió la fila -->
+<div class="sc" id="sC"><div class="cam">
+  <div class="abs fondo" style="background:#0d0b05"></div>
+  <div class="abs" id="cT" style="left:90px;top:480px"><span class="anal" style="display:inline-block;padding:10px 20px;border-radius:14px;background:var(--oro);color:#1a1405;font:900 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase">Lo raro</span></div>
+  <div class="mos" id="cM" style="top:570px">
+    <div id="c1"><b>2,7 → 1,7</b><span>veces por mes que cada adulto va al cajero</span><small>2024 → 2025</small></div>
+    <div id="c2" style="border-color:var(--oro)"><b style="color:var(--oro)">≈ igual</b><span>la plata total que se retira</span><small>BCRA: “prácticamente sin cambios”</small></div>
+  </div>
+  <div class="abs" id="cX" style="left:90px;top:900px;width:850px">
+    <div class="lab" style="font-size:30px">Promedio por extracción</div>
+    <div style="display:flex;align-items:baseline;gap:24px;margin-top:6px"><span style="font:900 64px 'Inter Tight';color:var(--mute);text-decoration:line-through">$29.900</span><span class="big" style="font-size:110px;color:#fff">$<span id="cxv">29.900</span></span></div>
+    <div class="tag" style="background:#fff;color:#111;margin-top:10px">×4 en dos años (en pesos)</div>
+  </div>
+  <div class="sello" id="cS" style="left:150px;top:1220px;font-size:82px">MURIÓ LA FILA</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informe de Inclusión Financiera (abr-2026) y Pagos Minoristas (jul-2024 vs jul-2026, montos nominales).</div>
+</div></div>
+
+<!-- D · quién mató al cajero -->
+<div class="sc" id="sD"><div class="cam">
+  <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" id="bgD" style="filter:grayscale(1) brightness(.16)">
+  <div class="tit" id="dT"><span class="m d" style="font-size:74px"><span>¿Quién mató</span></span><span class="m d" style="font-size:74px"><span>al <span class="hl">cajero</span>?</span></span></div>
+  <div class="cd" id="d1" style="top:720px"><div class="k">Cajero de otro banco · tope habitual</div><div class="v">$60.000 por día</div></div>
+  <div class="abs" id="d3" style="left:120px;top:910px;width:800px;height:140px"><div class="billete" style="left:0;top:0">$20.000</div><div class="billete" style="left:250px;top:0">$20.000</div><div class="billete" style="left:500px;top:0">$20.000</div></div>
+  <div class="chip" id="d4" style="left:90px;top:1080px;font-size:34px">Muchos bancos cobran por sacar ahí</div>
+  <div class="cd" id="d5" style="top:1190px;display:flex;align-items:center;gap:26px;border-color:var(--rojo)"><div class="big" style="font-size:100px;color:var(--rojo)">−6,3 %</div><div style="font:800 30px/1.15 'Inter Tight'">sucursales bancarias<br>en un año (2025)</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA Com. A 8092 (mínimo $60.000 en otras redes); topes y cargos varían por banco. Inclusión Financiera abr-2026.</div>
+</div></div>
+
+<!-- E · Mercado Pago -->
+<div class="sc" id="sE"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="eT" style="left:90px;top:480px"><span class="tag" style="background:#fff;color:#111">Mercado Pago · 3 meses · toda Latinoamérica</span></div>
+  <div class="cd" id="e1" style="top:570px;border-color:var(--cian)"><div class="k">Pagos procesados</div><div class="big" style="font-size:130px;color:var(--cian);margin-top:6px">US$ <span id="e1v">0</span> M</div></div>
+  <div class="cd" id="e2" style="top:840px"><div class="k">Plata de usuarios que administra</div><div class="big" style="font-size:110px;margin-top:6px">US$ <span id="e2v">0</span> M</div></div>
+  <div class="cd" id="e3" style="top:1080px;border-color:var(--verde)"><div class="k">Créditos prestados</div><div class="big" style="font-size:110px;color:var(--verde);margin-top:6px">+US$ <span id="e3v">0</span> M</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">MercadoLibre, resultados 2T 2026 (8-K ante la SEC): volumen de pagos, activos bajo gestión y cartera de créditos.</div>
+</div></div>
+
+<!-- F · Suecia -->
+<div class="sc" id="sF"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="fT" style="left:90px;top:480px"><span class="tag" style="background:#fecc00;color:#00336a">Suecia · 2025</span></div>
+  <div class="abs lab" id="fL" style="left:90px;top:560px;font-size:34px;color:#fff">De cada 100, pagaron en efectivo su última compra:</div>
+  <div class="abs cien" id="fC" style="left:90px;top:640px"></div>
+  <div class="abs" id="fN" style="left:670px;top:660px;width:280px"><div class="big" style="font-size:200px;color:var(--oro)">5</div><div style="font:900 40px/1.05 'Inter Tight'">hace 15 años,<br>eran 40</div></div>
+  <div class="sello" id="fS" style="left:260px;top:1210px;font-size:50px;padding:8px 22px">PERO TIENEN MIEDO</div>
+  <div class="chip" id="f1" style="left:90px;top:1330px;font-size:32px">Si se corta internet</div>
+  <div class="chip" id="f2" style="left:470px;top:1330px;font-size:32px">Si hay una guerra</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Riksbank, Payments Report 2026: casi la mitad ve negativo que desaparezca el efectivo.</div>
+</div></div>
+
+<!-- Z · cierre + loop -->
+<div class="sc" id="sZ"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="z1" style="left:90px;top:520px;width:880px"><span class="m d" style="font-size:82px;color:var(--mute)"><span>El negocio nunca</span></span><span class="m d" style="font-size:82px;color:var(--mute)"><span>fue la plata.</span></span></div>
+  <div class="abs" id="z2" style="left:90px;top:740px;width:880px"><span class="m d" style="font-size:96px"><span>Es el <span class="hl ok">paso</span> de la plata.</span></span></div>
+  <div class="abs" id="z3" style="left:90px;top:880px;width:880px"><span class="m d" style="font-size:54px;color:var(--oro)"><span>El que maneja cómo pagás,</span></span><span class="m d" style="font-size:54px;color:var(--oro)"><span>maneja tu plata.</span></span></div>
+  <div class="perfil" id="perfil" style="top:1080px;left:240px;width:700px;padding:26px;gap:20px">
+    <div class="av" style="width:120px;height:120px"><div style="background-image:url(img/avatar.png)"></div></div>
+    <div><div class="n" style="font-size:40px">Franco Valencia</div><div class="r" style="font-size:24px">@francovalencia.ok</div></div>
+    <div class="btn" id="btn" style="height:76px;line-height:76px;font-size:32px"><span id="btnt">Seguir</span></div>
+  </div>
+  <div class="abs src" id="crd" style="left:90px;top:1390px;width:880px;font-size:16px;line-height:1.35">Foto: Ezarate (CC BY-SA 4.0) vía Wikimedia Commons. Datos: BCRA, MercadoLibre (SEC), Riksbank.</div>
+  <div class="abs" id="loop" style="inset:0;opacity:0">
+    <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.3)">
+    <div class="tit"><span class="m d" style="font-size:80px"><span>Cada cajero atiende</span></span><span class="m d" style="font-size:80px"><span>menos de <span class="hl" style="background:var(--rojo)">4 personas</span></span></span><span class="m d" style="font-size:80px"><span>por hora</span></span></div>
+  </div>
+</div></div>
+
+<div id="dedo"></div><div id="onda"></div>
+<div id="flash" style="position:absolute;inset:0;z-index:56;background:#fff;opacity:0;pointer-events:none"></div>
+<div id="vin"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+
+<script>
+(async () => {
+await document.fonts.ready;
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+const T = {"seg": [{"k": "s1", "A": 0.0, "va": 0.0, "n": 5.942}, {"k": "sA", "A": 5.942, "va": 7.3164169999999995, "n": 9.838}, {"k": "sB", "A": 15.78, "va": 19.816708, "n": 14.786}, {"k": "sC", "A": 30.566, "va": 38.223833, "n": 14.065}, {"k": "sD", "A": 44.631, "va": 56.332291999999995, "n": 12.943}, {"k": "sE", "A": 57.574, "va": 72.239125, "n": 11.578}, {"k": "sF", "A": 69.152, "va": 86.145333, "n": 11.007}, {"k": "sZ", "A": 80.159, "va": 99.401042, "n": 7.103}], "voz": [[0.0, 1.002, 0.12], [1.213, 4.805, 1.204], [5.41, 6.469, 4.696], [7.316, 11.46, 6.062], [12.123, 13.199, 10.047], [13.455, 14.468, 11.236], [15.118, 17.286, 12.426], [17.775, 18.707, 14.647], [19.817, 20.812, 15.9], [21.505, 22.065, 17.074], [22.795, 26.089, 17.86], [26.395, 28.148, 21.074], [28.618, 31.417, 22.925], [31.784, 32.848, 25.71], [33.52, 37.238, 26.946], [38.224, 39.126, 30.686], [39.8, 40.785, 31.777], [41.167, 41.822, 32.942], [42.638, 45.328, 33.812], [45.716, 46.986, 36.499], [47.644, 51.581, 37.919], [52.308, 53.445, 41.72], [53.951, 55.083, 43.021], [56.332, 57.344, 44.751], [58.069, 59.261, 45.941], [59.676, 60.976, 47.291], [61.239, 64.853, 48.687], [65.275, 66.028, 52.2], [66.626, 67.938, 53.158], [68.535, 71.289, 54.616], [72.239, 72.904, 57.694], [73.232, 76.346, 58.574], [76.71, 77.531, 61.64], [77.902, 78.974, 62.658], [79.366, 82.333, 63.901], [82.815, 85.073, 66.836], [86.145, 90.948, 69.272], [91.584, 92.293, 73.845], [92.55, 95.536, 74.707], [96.139, 97.221, 77.659], [97.576, 98.413, 78.911], [99.401, 100.834, 80.279], [101.246, 102.393, 81.844], [103.058, 104.278, 83.153], [104.638, 105.371, 84.528], [106.155, 106.709, 85.468]], "dur": 87.262, "vel": 1.12}; const PAL = [[0.0, 0.34, "En"], [0.34, 0.88, "Argentina,"], [1.46, 1.52, "cada"], [1.52, 1.88, "cajero"], [1.88, 2.36, "autom\u00e1tico"], [2.36, 2.74, "atiende"], [2.74, 3.08, "hoy"], [3.08, 3.3, "menos"], [3.3, 3.6, "de"], [3.6, 3.96, "cuatro"], [3.96, 4.36, "personas"], [4.36, 4.6, "por"], [4.6, 4.92, "hora."], [5.46, 5.6, "Y"], [5.6, 5.68, "no"], [5.68, 5.76, "es"], [5.76, 5.92, "porque"], [5.92, 6.18, "falte"], [6.18, 6.44, "plata."], [7.4, 7.5, "En"], [7.5, 7.76, "julio"], [7.76, 7.92, "de"], [7.92, 8.52, "2024,"], [9.0, 9.14, "hubo"], [9.14, 9.7, "95"], [9.7, 10.3, "millones"], [10.3, 10.52, "de"], [10.52, 10.8, "extracciones"], [10.8, 11.0, "en"], [11.0, 11.92, "cajeros."], [12.26, 12.36, "En"], [12.36, 12.66, "julio"], [12.66, 12.82, "de"], [12.82, 12.96, "este"], [12.96, 13.22, "a\u00f1o,"], [13.52, 13.96, "41"], [13.96, 14.62, "millones."], [15.1, 15.36, "M\u00e1s"], [15.36, 15.48, "de"], [15.48, 15.6, "la"], [15.6, 15.8, "mitad"], [15.8, 16.14, "menos"], [16.14, 16.44, "en"], [16.44, 16.7, "solo"], [16.7, 16.84, "dos"], [16.84, 17.32, "a\u00f1os."], [17.8, 17.96, "Lo"], [17.96, 18.08, "dice"], [18.08, 18.2, "el"], [18.2, 18.38, "Banco"], [18.38, 18.66, "Central."], [19.82, 19.98, "\u00bfA"], [19.98, 20.12, "d\u00f3nde"], [20.12, 20.3, "se"], [20.3, 20.36, "fue"], [20.36, 20.52, "la"], [20.52, 20.76, "gente?"], [21.4, 21.64, "Al"], [21.64, 22.02, "celular."], [22.86, 23.02, "En"], [23.02, 23.44, "agosto,"], [23.72, 23.96, "hubo"], [23.96, 24.82, "117"], [24.82, 25.12, "millones"], [25.12, 25.32, "de"], [25.32, 25.48, "pagos"], [25.48, 25.7, "con"], [25.7, 26.04, "QR."], [26.48, 26.98, "67"], [26.98, 27.4, "%"], [27.4, 27.58, "m\u00e1s"], [27.58, 27.7, "que"], [27.7, 27.8, "hace"], [27.8, 27.96, "un"], [27.96, 28.12, "a\u00f1o."], [28.12, 28.82, "Y"], [28.82, 30.28, "779"], [30.28, 30.58, "millones"], [30.58, 30.84, "de"], [30.84, 31.46, "transferencias."], [31.9, 32.02, "En"], [32.02, 32.28, "un"], [32.28, 32.5, "solo"], [32.5, 32.78, "mes."], [33.58, 33.72, "Por"], [33.72, 33.9, "cada"], [33.9, 34.0, "vez"], [34.0, 34.06, "que"], [34.06, 34.22, "alguien"], [34.22, 34.48, "saca"], [34.48, 34.78, "plata,"], [35.1, 35.2, "hace"], [35.2, 35.78, "18"], [35.78, 36.06, "pagos"], [36.06, 36.26, "con"], [36.26, 36.42, "el"], [36.42, 36.64, "celular"], [36.64, 36.76, "o"], [36.76, 36.92, "la"], [36.92, 37.17, "tarjeta."], [38.22, 38.38, "Pero"], [38.38, 38.5, "ac\u00e1"], [38.5, 38.66, "viene"], [38.66, 38.82, "lo"], [38.82, 39.34, "raro."], [39.86, 40.02, "La"], [40.02, 40.22, "plata"], [40.22, 40.32, "que"], [40.32, 40.52, "se"], [40.52, 41.14, "saca"], [41.14, 41.42, "casi"], [41.42, 41.58, "no"], [41.58, 42.12, "baj\u00f3."], [42.64, 42.82, "En"], [42.82, 43.42, "2025,"], [43.84, 43.92, "la"], [43.92, 44.08, "gente"], [44.08, 44.32, "fue"], [44.32, 44.66, "menos"], [44.66, 44.88, "veces"], [44.88, 45.0, "al"], [45.0, 45.36, "cajero."], [45.74, 45.96, "Pero"], [45.96, 46.32, "retir\u00f3"], [46.32, 46.52, "casi"], [46.52, 46.7, "lo"], [46.7, 47.02, "mismo."], [47.72, 48.02, "Hoy,"], [48.22, 48.44, "cada"], [48.44, 48.56, "vez"], [48.56, 48.66, "que"], [48.66, 48.94, "vas,"], [49.26, 49.52, "sacas"], [49.52, 49.96, "cuatro"], [49.96, 50.28, "veces"], [50.28, 50.46, "m\u00e1s"], [50.46, 50.74, "pesos"], [50.74, 50.9, "que"], [50.9, 51.06, "hace"], [51.06, 51.22, "dos"], [51.22, 51.58, "a\u00f1os."], [52.36, 52.52, "No"], [52.52, 52.8, "dejamos"], [52.8, 52.86, "de"], [52.86, 53.0, "usar"], [53.0, 53.56, "reflectivo."], [54.02, 54.4, "Dejamos"], [54.4, 54.52, "de"], [54.52, 54.68, "hacer"], [54.68, 54.88, "la"], [54.88, 55.42, "fila."], [56.22, 56.48, "\u00bfY"], [56.48, 56.68, "qui\u00e9n"], [56.68, 56.86, "mat\u00f3"], [56.86, 56.98, "al"], [56.98, 57.34, "cajero?"], [57.34, 58.24, "No"], [58.24, 58.42, "fue"], [58.42, 58.64, "solo"], [58.64, 59.0, "Mercado"], [59.0, 59.3, "Pago."], [59.86, 60.04, "Fueron"], [60.04, 60.22, "tambi\u00e9n"], [60.22, 60.38, "los"], [60.38, 60.84, "bancos."], [61.32, 61.4, "En"], [61.4, 61.54, "el"], [61.54, 61.76, "cajero"], [61.76, 61.9, "de"], [61.9, 62.02, "otro"], [62.02, 62.36, "banco,"], [62.68, 62.78, "el"], [62.78, 62.92, "tope"], [62.92, 63.16, "suele"], [63.16, 63.36, "ser"], [63.36, 63.76, "60"], [63.76, 64.04, ".000"], [64.04, 64.36, "pesos"], [64.36, 64.6, "por"], [64.6, 65.06, "d\u00eda."], [65.34, 65.5, "\u00a1Tres"], [65.5, 65.98, "billetes!"], [66.68, 67.0, "Muchos"], [67.0, 67.2, "te"], [67.2, 67.38, "cobran"], [67.38, 67.52, "por"], [67.52, 67.72, "sacar"], [67.72, 68.08, "ah\u00ed."], [68.58, 68.64, "Y"], [68.64, 68.76, "en"], [68.76, 68.86, "un"], [68.86, 69.0, "a\u00f1o"], [69.0, 69.44, "cerraron"], [69.44, 69.6, "m\u00e1s"], [69.6, 69.86, "del"], [69.86, 70.08, "6"], [70.08, 70.46, "%"], [70.46, 70.62, "de"], [70.62, 70.74, "las"], [70.74, 71.78, "sucursales."], [72.32, 72.58, "Mientras"], [72.58, 72.98, "tanto,"], [73.52, 73.66, "Mercado"], [73.66, 73.84, "Pago"], [73.84, 74.26, "movi\u00f3"], [74.26, 74.74, "101"], [74.74, 75.06, ".000"], [75.06, 75.34, "millones"], [75.34, 75.54, "de"], [75.54, 75.78, "d\u00f3lares"], [75.78, 76.02, "en"], [76.02, 76.54, "pagos."], [76.7, 76.86, "En"], [76.86, 77.06, "solo"], [77.06, 77.2, "tres"], [77.2, 77.5, "meses."], [77.98, 78.2, "En"], [78.2, 78.38, "toda"], [78.38, 79.14, "Latinoam\u00e9rica."], [79.76, 80.08, "Guarda"], [80.08, 80.52, "23"], [80.52, 80.82, ".000"], [80.82, 81.16, "millones"], [81.16, 81.36, "de"], [81.36, 81.56, "d\u00f3lares"], [81.56, 81.74, "de"], [81.74, 81.86, "sus"], [81.86, 82.4, "usuarios."], [82.86, 82.96, "Y"], [82.96, 83.18, "tiene"], [83.18, 83.58, "prestados"], [83.58, 83.76, "m\u00e1s"], [83.76, 83.9, "de"], [83.9, 84.32, "16"], [84.32, 84.54, ".000"], [84.54, 84.98, "millones."], [86.26, 86.66, "Suecia"], [86.66, 86.92, "ya"], [86.92, 87.08, "lleg\u00f3"], [87.08, 87.18, "a"], [87.18, 87.3, "donde"], [87.3, 87.7, "vamos."], [88.08, 88.26, "Solo"], [88.26, 88.62, "cinco"], [88.62, 88.8, "de"], [88.8, 88.96, "cada"], [88.96, 89.26, "cien"], [89.26, 89.66, "pagaron"], [89.66, 89.9, "en"], [89.9, 90.2, "efectivo"], [90.2, 90.34, "su"], [90.34, 90.6, "\u00faltima"], [90.6, 90.92, "compra."], [91.66, 91.78, "\u00bfY"], [91.78, 91.9, "sabe"], [91.9, 92.02, "qu\u00e9"], [92.02, 92.22, "pas\u00f3?"], [92.78, 93.04, "Casi"], [93.04, 93.18, "la"], [93.18, 93.4, "mitad"], [93.4, 93.58, "de"], [93.58, 93.68, "los"], [93.68, 93.9, "suecos"], [93.9, 94.08, "ve"], [94.08, 94.38, "mal"], [94.38, 94.52, "que"], [94.52, 94.66, "el"], [94.66, 94.96, "efectivo"], [94.96, 95.78, "desaparezca."], [96.18, 96.26, "Por"], [96.26, 96.38, "si"], [96.38, 96.5, "se"], [96.5, 96.72, "corta"], [96.72, 97.12, "Internet."], [97.6, 97.7, "Por"], [97.7, 97.82, "si"], [97.82, 97.9, "hay"], [97.9, 98.12, "una"], [98.12, 98.42, "guerra."], [99.5, 99.64, "El"], [99.64, 100.0, "negocio"], [100.0, 100.28, "nunca"], [100.28, 100.42, "fue"], [100.42, 100.6, "la"], [100.6, 100.82, "plata."], [101.32, 101.48, "Es"], [101.48, 101.68, "el"], [101.68, 101.86, "paso"], [101.86, 102.04, "de"], [102.04, 102.18, "la"], [102.18, 102.4, "plata."], [103.14, 103.24, "Y"], [103.24, 103.32, "el"], [103.32, 103.44, "que"], [103.44, 103.72, "maneja"], [103.72, 103.92, "c\u00f3mo"], [103.92, 104.62, "pagas,"], [104.84, 105.0, "maneja"], [105.0, 105.12, "tu"], [105.12, 105.34, "plata."], [106.2, 106.38, "Por"], [106.38, 106.52, "eso"], [106.52, 106.94, "hoy..."]];
+const DUR = T.dur; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s);
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
+const R = (k, x = 0) => S[k].A + x;
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
+// P(escena, 'frase'): segundo de la voz en que se dice esa frase dentro de la escena → V(...) la pasa al tiempo del video
+const nz = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const PW = PAL.map((w) => nz(w[2])); window.FALTAN = [];
+const P = (k, frase, fin = false) => {
+  const q = frase.split(/\s+/).map(nz).filter(Boolean), desde = S[k].va - 0.2;
+  for (let j = 0; j < PW.length; j++) { if (PAL[j][0] < desde) continue; if (q.every((w, i) => PW[j + i] && PW[j + i].startsWith(w))) return fin ? PAL[j + q.length - 1][1] : PAL[j][0]; }
+  window.FALTAN.push(k + ': ' + frase); return S[k].va + 0.5;
+};
+const V = (k, frase, fin) => W(P(k, frase, fin));
+const VIS = T.seg.filter((s) => document.getElementById(s.k));
+
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+const SFX = []; window.SFX = SFX; const sx = (n, t) => SFX.push([n, +(+t).toFixed(3)]);
+VIS.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < VIS.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, VIS[i + 1].A + 0.3); });
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.1, d = 0.6) => sx('click', t) && tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+const pop = (sel, t, y = 50) => sx('pop', t) && tl.fromTo(sel, { y, scale: .85, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)' }, t);
+const sube = (sel, t, y = 120) => sx('whoosh', t - .1) && tl.fromTo(sel, { y, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E }, t);
+const entra = (sel, t, x = -220) => sx('whoosh', t - .1) && tl.fromTo(sel, { x, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E }, t);
+const sella = (sel, t, r = -7) => sx('boom', t) && sx('chas', t) && tl.fromTo(sel, { scale: 2.6, rotate: r - 10, autoAlpha: 0 }, { scale: 1, rotate: r, autoAlpha: 1, duration: .35, ease: 'back.out(2.2)' }, t);
+const flash = (t, o = .5) => tl.fromTo('#flash', { opacity: o }, { opacity: 0, duration: .3, immediateRender: false }, t);
+const golpe = (k, t, s = 1.05) => sx('golpe', t) && tl.fromTo(`#${k} .cam`, { scale: s }, { scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, t);
+const barre = (k, dir) => { sx('whoosh', S[k].A - .05); const desde = { izq: 'inset(0 0 0 100%)', der: 'inset(0 100% 0 0)', arr: 'inset(100% 0 0 0)', aba: 'inset(0 0 100% 0)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0 0 0 0%)', duration: .45, ease: E2 }, S[k].A); };
+const deriva = (img, k) => tl.fromTo(img, { scale: 1.15 }, { scale: 1, duration: S[k].n + 20, ease: 'none' }, S[k].A);
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+const pos = (sel, fx = .5) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+const C_ = {}; const ent = (v) => Math.round(v);
+// texto que se escribe solo: TX[id] = [[t0, t1, html], ...] (cada línea se tipea entre t0 y t1)
+const TX = {};
+const tipea = (id, t0, t1, html) => (TX[id] = TX[id] || []).push([t0, t1, html]);
+
+
+const miles = (v) => Math.round(v).toLocaleString('es-AR'); const dec = (n) => (v) => v.toFixed(n).replace('.', ',');
+const ancho = (sel, t, pct, d = .7) => sx('pop', t) && tl.fromTo(sel, { width: '0%' }, { width: pct + '%', duration: d, ease: E }, t);
+// QR de mentira (patrón fijo) para el celular
+{ let q = ''; for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) { const ojo = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7; const borde = (a, b) => ojo(a, b) && (x === a || x === a + 6 || y === b || y === b + 6 || (x > a + 1 && x < a + 5 && y > b + 1 && y < b + 5)); const on = ojo(0, 0) || ojo(14, 0) || ojo(0, 14) ? borde(0, 0) || borde(14, 0) || borde(0, 14) : hash(x * 31 + y * 7) > .5; if (on) q += `<rect x="${x}" y="${y}" width="1" height="1"/>`; } $('#qr').innerHTML = q; }
+for (let i = 0; i < 100; i++) $('#fC').insertAdjacentHTML('beforeend', '<i></i>');
+let EXTRA = () => {};
+
+// 1 · gancho
+deriva('#s1 .bgfoto', 's1');
+tl.fromTo('#t1g svg', { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .3, ease: 'back.out(2)', stagger: .12 }, V('s1', 'menos'));
+sx('pop', V('s1', 'menos'));
+sella('#t1s', V('s1', 'falte'), -5); golpe('s1', V('s1', 'falte'), 1.06); flash(V('s1', 'falte'), .4);
+// A · caída
+barre('sA', 'izq');
+lineas('#aT', R('sA', .05));
+sube('#aB', V('sA', 'en julio'), 40);
+ancho('#a1', V('sA', '95'), 100, .8);
+ancho('#a2', V('sA', '41'), 41 / 94.9 * 100, .9); C_.a2v = [V('sA', '41'), V('sA', 'millones', true) + .4, 41, 94.9, dec(1)];
+sella('#aS', V('sA', 'mitad'), -6); golpe('sA', V('sA', 'mitad'), 1.05); flash(V('sA', 'mitad'), .3);
+pop('#aC', V('sA', 'banco central'), 30);
+// B · celular
+barre('sB', 'der');
+lineas('#bT', R('sB', .05), .4);
+tl.fromTo('#bC', { y: 400, rotate: 16, autoAlpha: 0 }, { y: 0, rotate: 6, autoAlpha: 1, duration: .6, ease: E }, V('sB', 'celular') - .1);
+sube('#bQ', V('sB', 'en agosto'), 50); C_.qrv = [V('sB', '117'), V('sB', 'qr', true), 117, 0, ent];
+tl.fromTo('#bOk', { scale: .5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .3, ease: 'back.out(2)' }, V('sB', '67')); sx('pop', V('sB', '67'));
+sube('#bT2', V('sB', '779'), 50); C_.trv = [V('sB', '779'), V('sB', 'transferencias', true), 779, 0, ent];
+pop('#b18', V('sB', '18'), 40); golpe('sB', V('sB', '18'), 1.04);
+// C · el giro
+barre('sC', 'arr'); flash(S.sC.A, .35);
+pop('#cT', R('sC', .05), 20);
+pop('#c1', V('sC', 'menos veces'), 40);
+pop('#c2', V('sC', 'retiro'), 40); golpe('sC', V('sC', 'lo mismo'), 1.04);
+sube('#cX', V('sC', 'cada vez'), 50); C_.cxv = [V('sC', 'cuatro veces'), V('sC', 'pesos', true), 118300, 29900, miles];
+sella('#cS', V('sC', 'la fila'), -5); golpe('sC', V('sC', 'la fila'), 1.06);
+// D · quién mató
+barre('sD', 'izq'); deriva('#bgD', 'sD');
+lineas('#dT', R('sD', .05), .2);
+sube('#d1', V('sD', 'tope'), 50);
+tl.fromTo('#d3 .billete', { y: -200, rotate: -20, autoAlpha: 0 }, { y: 0, rotate: 0, autoAlpha: 1, duration: .4, ease: 'back.out(1.8)', stagger: .15 }, V('sD', 'tres billetes')); sx('chas', V('sD', 'tres billetes'));
+pop('#d4', V('sD', 'te cobran'), 30);
+sube('#d5', V('sD', 'sucursales') - .4, 50); golpe('sD', V('sD', 'sucursales'), 1.04);
+// E · Mercado Pago
+barre('sE', 'der');
+pop('#eT', R('sE', .05), 20);
+sube('#e1', V('sE', 'movio'), 50); C_.e1v = [V('sE', '101'), V('sE', 'pagos', true), 101000, 0, miles];
+sube('#e2', V('sE', 'guarda'), 50); C_.e2v = [V('sE', '23'), V('sE', 'usuarios', true), 23000, 0, miles];
+sube('#e3', V('sE', 'prestados'), 50); C_.e3v = [V('sE', 'prestados'), V('sE', 'prestados') + 1.6, 16000, 0, miles];
+golpe('sE', V('sE', 'prestados') + 1.6, 1.04);
+// F · Suecia
+barre('sF', 'arr');
+pop('#fT', R('sF', .05), 20); sube('#fL', V('sF', 'solo'), 20);
+tl.fromTo('#fC i', { scale: 0 }, { scale: 1, duration: .2, stagger: .006 }, V('sF', 'solo'));
+tl.to('#fC i:nth-child(-n+5)', { background: '#ffd23f', duration: .1, stagger: .08 }, V('sF', 'cinco')); sx('pop', V('sF', 'cinco'));
+pop('#fN', V('sF', 'ultima compra'), 40);
+sella('#fS', V('sF', 'casi la mitad'), -4); golpe('sF', V('sF', 'casi la mitad'), 1.05);
+pop('#f1', V('sF', 'internet'), 30); pop('#f2', V('sF', 'guerra'), 30);
+// Z · cierre + loop
+barre('sZ', 'aba');
+lineas('#z1', R('sZ', .05), .12);
+lineas('#z2', V('sZ', 'es el paso'), .12); golpe('sZ', V('sZ', 'paso')); flash(V('sZ', 'paso'), .25);
+lineas('#z3', V('sZ', 'y el que'), .15);
+sube('#perfil', V('sZ', 'tu plata', true) + .1, 200);
+const BT = pos('#btn'); const TBT = V('sZ', 'tu plata', true) + .8;
+toque(BT[0], BT[1], TBT); sx('click', TBT);
+tl.set('#btn', { background: '#e9e4dc', color: '#111' }, TBT + .05);
+const LOOP = DUR - .75;
+tl.to(['#z1', '#z2', '#z3', '#perfil', '#crd'], { autoAlpha: 0, y: -60, duration: .3, ease: E2 }, LOOP - .15);
+tl.fromTo('#loop', { opacity: 0 }, { opacity: 1, duration: .4, ease: 'power2.out' }, LOOP); sx('whoosh', LOOP - .1);
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const NUM = Object.keys(C_).map((id) => [document.getElementById(id), ...C_[id]]);
+const reloj = (seg) => String(Math.floor(seg / 60)).padStart(2, '0') + ':' + String(Math.floor(seg % 60)).padStart(2, '0');
+// el reloj corre "20 minutos" comprimidos en el tiempo del video
+const corre = (t, [a, b]) => reloj(1200 * ease((t - a) / (b - a)) * 0 + 1200 * clamp((t - a) / (b - a)));
+const plano = (h) => h.replace(/<[^>]+>/g, '');
+const corta = (h, n) => { let out = '', k = 0, dentro = false; for (const ch of h) { if (ch === '<') dentro = true; if (dentro) { out += ch; if (ch === '>') dentro = false; continue; } if (k >= n) break; out += ch; k++; } return out; };
+window.render = (t) => {
+  tl.seek(t, false);
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / (t1 - t0)));
+  for (const id in TX) {
+    let html = ''; const L = TX[id];
+    L.forEach(([a, b, h]) => { if (t < a) return; const n = plano(h).length; const u = clamp((t - a) / Math.max(.2, b - a)); html += (html ? '\n' : '') + corta(h, Math.ceil(n * u)); });
+    const el = document.getElementById(id); el.innerHTML = html + (el.dataset.cursor === 'no' ? '' : (Math.floor(t * 2.5) % 2 ? '<span class="cur"></span>' : '<span class="cur" style="opacity:0"></span>'));
+  }
+  if ($('#btnt')) $('#btnt').textContent = t >= TBT + .05 ? 'Siguiendo' : 'Seguir';
+  EXTRA(t);
+};
+for (const id in C_) { const [t0, t1] = C_[id]; const n = Math.min(24, Math.round((t1 - t0) * 14)); for (let i = 0; i < n; i++) sx('tic', t0 + i * (t1 - t0) / n); }
+for (const id in TX) for (const [a, b] of TX[id]) for (let t = a; t < b; t += .075) sx('tecla', t);
+window.render(0); window.listo = true;
+})();
+
+</script>
+</body></html>
