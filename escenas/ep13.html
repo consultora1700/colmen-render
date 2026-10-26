@@ -113,42 +113,79 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 .burb small{display:block;font:800 20px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
 .rec{position:absolute;right:140px;font:800 20px 'Inter Tight';letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
 
-.gente{display:flex;gap:14px}
-.gente svg{width:70px;height:110px}
-.cel{position:absolute;width:420px;height:860px;border-radius:70px;background:#0a0a0b;padding:14px;box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 50px 100px rgba(0,0,0,.6)}
-.cel .scr{width:100%;height:100%;border-radius:58px;background:#f4f6f5;overflow:hidden;position:relative;color:#111}
-.billete{position:absolute;width:230px;height:104px;border-radius:12px;background:linear-gradient(135deg,#9fe3d6,#d9f3ee);border:3px solid #6cc4b4;box-shadow:0 14px 30px rgba(0,0,0,.4);display:grid;place-items:center;font:900 34px 'Inter Tight';color:#0f5a4d}
-.cien{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;width:540px}
+/* cajero automático genérico (sin marca) */
+.atm{position:absolute;width:380px;height:520px;border-radius:34px 34px 14px 14px;background:linear-gradient(180deg,#d9dde2,#9aa1a9);box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.6)}
+.atm .cab{height:62px;border-radius:34px 34px 0 0;background:#1d3b6e;color:#fff;font:900 30px/62px 'Inter Tight';letter-spacing:.18em;text-align:center}
+.atm .pan{position:absolute;left:34px;right:34px;top:92px;height:200px;border-radius:14px;background:#0c1f3d;border:6px solid #2a2f36;color:#d8f3ff;font:800 28px/1.25 'Inter Tight';padding:22px;text-align:center;display:grid;place-items:center}
+.atm .pan b{display:block;font:900 46px 'Inter Tight';color:#fff;margin-top:6px}
+.atm .tec{position:absolute;left:70px;top:316px;display:grid;grid-template-columns:repeat(3,52px);gap:10px}
+.atm .tec i{height:40px;border-radius:8px;background:#e9edf1;box-shadow:inset 0 -3px 0 #aab1b9}
+.atm .ran{position:absolute;right:40px;top:322px;width:70px;height:12px;border-radius:6px;background:#2a2f36}
+.atm .boca{position:absolute;left:60px;right:60px;top:470px;height:18px;border-radius:9px;background:#22262b;overflow:visible}
+.billete{position:absolute;width:210px;height:96px;border-radius:12px;background:linear-gradient(135deg,#9fe3d6,#d9f3ee);border:3px solid #6cc4b4;box-shadow:0 14px 30px rgba(0,0,0,.4);display:grid;place-items:center;font:900 34px 'Inter Tight';color:#0f5a4d}
+.pers{display:flex;gap:16px}
+.pers svg{width:76px;height:118px}
+.reloj1h{display:flex;align-items:center;gap:18px;font:900 46px 'Inter Tight'}
+.col{position:absolute;bottom:0;width:300px;border-radius:24px 24px 0 0;transform-origin:50% 100%}
+.colv{position:absolute;width:300px;text-align:center;font:900 96px/1 'Inter Tight';letter-spacing:-.04em}
+.coll{position:absolute;width:300px;text-align:center;font:800 32px 'Inter Tight';color:var(--mute)}
+/* celular con app de pago */
+.cel{position:absolute;width:350px;height:700px;border-radius:60px;background:#0a0a0b;padding:12px;box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 50px 100px rgba(0,0,0,.6)}
+.cel .scr{width:100%;height:100%;border-radius:50px;background:#f4f6f5;overflow:hidden;position:relative;color:#111}
+.cel .isla{position:absolute;left:50%;top:14px;width:100px;height:30px;margin-left:-50px;border-radius:15px;background:#000;z-index:3}
+.cel .app{padding:64px 26px 0}
+.cel .h{font:800 22px 'Inter Tight';color:#666}
+.cel .com{font:900 30px/1.1 'Inter Tight';margin-top:6px}
+.cel .monto{font:900 58px 'Inter Tight';letter-spacing:-.03em;margin-top:10px}
+.cel .qrb{position:relative;width:230px;height:230px;margin:18px auto 0;border-radius:18px;background:#fff;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.12);overflow:hidden}
+.cel .scan{position:absolute;left:0;right:0;height:5px;background:var(--verde);box-shadow:0 0 18px var(--verde)}
+.cel .ok{position:absolute;inset:0;background:#f4f6f5;display:grid;place-items:center;align-content:center;gap:16px;text-align:center}
+.cel .ok i{width:130px;height:130px;border-radius:50%;background:var(--verde);display:grid;place-items:center;font:900 76px/1 'Inter Tight';color:#fff;font-style:normal}
+.cel .ok b{font:900 34px/1.15 'Inter Tight'}
+.r18{display:grid;grid-template-columns:repeat(10,34px);gap:8px}
+.r18 i{width:34px;height:52px;border-radius:9px;border:4px solid var(--cian);display:block}
+.r18 i.b{width:52px;border-color:#6cc4b4;background:#9fe3d6;border-radius:6px;height:34px;align-self:center}
+.big2 .n{font:800 26px 'Inter Tight';letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.big2 .p{font:900 var(--fs,150px)/.95 'Inter Tight';letter-spacing:-.06em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.banco{display:grid;grid-template-columns:repeat(8,1fr);gap:14px;width:850px}
+.banco svg{width:100%;height:auto}
+.cien{display:grid;grid-template-columns:repeat(10,1fr);gap:9px;width:560px}
 .cien i{display:block;aspect-ratio:1;border-radius:50%;background:#2a2f2c}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute"><defs>
  <symbol id="pers" viewBox="0 0 70 110"><circle cx="35" cy="22" r="18" fill="currentColor"/><path d="M6 108c0-34 12-50 29-50s29 16 29 50z" fill="currentColor"/></symbol>
+ <symbol id="bank" viewBox="0 0 100 90"><path d="M50 4 96 28H4z" fill="currentColor"/><rect x="12" y="34" width="12" height="38" fill="currentColor"/><rect x="34" y="34" width="12" height="38" fill="currentColor"/><rect x="54" y="34" width="12" height="38" fill="currentColor"/><rect x="76" y="34" width="12" height="38" fill="currentColor"/><rect x="4" y="76" width="92" height="12" fill="currentColor"/></symbol>
 </defs></svg>
 
 <!-- 1 · gancho -->
 <div class="sc" id="s1" style="visibility:visible"><div class="cam">
-  <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.3)">
+  <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.22) blur(3px)">
   <div class="tit" id="t1">
     <span class="m d" style="font-size:80px"><span>Cada cajero atiende</span></span>
     <span class="m d" style="font-size:80px"><span>menos de <span class="hl" style="background:var(--rojo)">4 personas</span></span></span>
     <span class="m d" style="font-size:80px"><span>por hora</span></span>
   </div>
-  <div class="abs gente" id="t1g" style="left:90px;top:860px"><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff;opacity:.35"><use href="#pers"/></svg></div>
-  <div class="sello" id="t1s" style="left:300px;top:1100px;font-size:80px">NO FALTA PLATA</div>
-  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informe de Pagos Minoristas (jul-2026): 2.459 extracciones por cajero al mes ≈ 82 por día.</div>
+  <div class="atm" id="t1a" style="left:560px;top:780px"><div class="cab">CAJERO 24 H</div><div class="pan">Retire su dinero<b>Sin fila</b></div><div class="tec"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ran"></div><div class="boca"></div></div>
+  <div class="abs reloj1h" id="t1r" style="left:90px;top:800px"><span style="font-size:60px">⏱</span>En 1 hora:</div>
+  <div class="abs pers" id="t1g" style="left:90px;top:900px"><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff"><use href="#pers"/></svg><svg style="color:#fff;opacity:.3"><use href="#pers"/></svg></div>
+  <div class="sello" id="t1s" style="left:110px;top:1080px;font-size:74px">NO FALTA PLATA</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informe de Pagos Minoristas (jul-2026): 2.459 extracciones por cajero al mes ≈ 82 por día. Cajero: ilustración.</div>
 </div></div>
 
 <!-- A · la caída -->
 <div class="sc" id="sA"><div class="cam">
   <div class="abs fondo"></div>
   <div class="tit" id="aT"><span class="m d" style="font-size:66px;color:var(--mute)"><span>Extracciones en cajeros</span></span><span class="m d" style="font-size:66px"><span>por mes</span></span></div>
-  <div class="barras" id="aB" style="top:680px">
-    <div class="f"><span>Julio 2024</span><div class="bb" style="height:130px"><i id="a1" style="background:#6b7280"></i><b style="line-height:130px;font-size:60px">94,9 M</b></div></div>
-    <div class="f"><span>Julio 2026</span><div class="bb" style="height:130px"><i id="a2" style="background:var(--rojo)"></i><b style="line-height:130px;font-size:60px"><em id="a2v" style="font-style:normal">94,9</em> M</b></div></div>
+  <div class="abs" id="aG" style="left:140px;top:760px;width:760px;height:460px">
+    <div class="col" id="a1" style="left:0;height:400px;background:#6b7280"></div>
+    <div class="col" id="a2" style="left:400px;height:173px;background:var(--rojo)"></div>
+    <div class="colv" id="a1n" style="left:0;bottom:415px;white-space:nowrap">94,9 M</div>
+    <div class="colv" id="a2n" style="left:400px;bottom:188px;white-space:nowrap;color:var(--rojo)"><span id="a2v">0</span> M</div>
+    <div class="coll" style="left:0;bottom:-50px">Julio 2024</div>
+    <div class="coll" style="left:400px;bottom:-50px">Julio 2026</div>
   </div>
-  <div class="sello" id="aS" style="left:480px;top:1040px;font-size:120px">−57 %</div>
-  <div class="chip" id="aC" style="left:90px;top:1270px;background:#fff;color:#111;border-color:#fff">Fuente: Banco Central (BCRA)</div>
+  <div class="sello" id="aS" style="left:520px;top:700px;font-size:100px">−57 %</div>
   <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informes de Pagos Minoristas ago-2024 y ago-2026 (dato de julio). 17.062 → 16.662 cajeros.</div>
 </div></div>
 
@@ -156,42 +193,42 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <div class="sc" id="sB"><div class="cam">
   <div class="abs fondo"></div>
   <div class="tit" id="bT"><span class="m d" style="font-size:76px"><span>¿Adónde se fue?</span></span><span class="m d" style="font-size:76px"><span>Al <span class="hl ok">celular</span></span></span></div>
-  <div class="cel" id="bC" style="left:560px;top:700px;transform:rotate(6deg)"><div class="scr">
-    <div style="margin:110px 40px 0;font:800 28px 'Inter Tight';color:#666">Pagar con QR</div>
-    <svg viewBox="0 0 21 21" style="display:block;width:300px;margin:30px auto 0" shape-rendering="crispEdges" id="qr"></svg>
-    <div id="bOk" style="margin:40px 40px 0;height:90px;border-radius:24px;background:var(--verde);color:#fff;font:900 36px/90px 'Inter Tight';text-align:center">Pagado ✓</div>
+  <div class="cel" id="bC" style="left:590px;top:680px"><div class="scr"><div class="isla"></div>
+    <div class="app"><div class="h">Pagar con QR</div><div class="com">Kiosco La Esquina</div><div class="monto">$ 8.400</div>
+      <div class="qrb"><svg viewBox="0 0 21 21" style="display:block;width:100%" shape-rendering="crispEdges" id="qr"></svg><div class="scan" id="bScan"></div></div></div>
+    <div class="ok" id="bOk"><i>✓</i><b>¡Listo!<br>Pagaste $ 8.400</b></div>
   </div></div>
-  <div class="abs" id="bQ" style="left:90px;top:720px;width:460px"><div class="big" style="font-size:120px;color:var(--verde)"><span id="qrv">0</span> M</div><div class="lab" style="font-size:30px;color:#fff">pagos con QR en agosto</div><div class="tag" style="background:var(--verde);color:#04210f;margin-top:12px">+67 % en un año</div></div>
-  <div class="abs" id="bT2" style="left:90px;top:1010px;width:460px"><div class="big" style="font-size:120px;color:var(--cian)"><span id="trv">0</span> M</div><div class="lab" style="font-size:30px;color:#fff">transferencias en un mes</div></div>
-  <div class="cd" id="b18" style="top:1250px;width:850px;display:flex;align-items:center;gap:26px;padding:20px 28px;z-index:3"><div class="big" style="font-size:90px;color:var(--oro)">18 a 1</div><div style="font:800 28px/1.15 'Inter Tight'">pagos electrónicos por cada extracción (2025)</div></div>
-  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA: Pagos Minoristas ago-2026; Inclusión Financiera abr-2026 (en 2024 eran 10 a 1).</div>
+  <div class="abs big2" id="bQ" style="left:90px;top:700px"><div class="p" style="color:var(--verde);font-size:140px"><span id="qrv">0</span> M</div><div class="n" style="color:#fff">pagos con QR en agosto</div><div class="tag" style="background:var(--verde);color:#04210f;margin-top:10px">+67 % en un año</div></div>
+  <div class="abs big2" id="bT2" style="left:90px;top:960px"><div class="p" style="color:var(--cian);font-size:140px"><span id="trv">0</span> M</div><div class="n" style="color:#fff">transferencias en un mes</div></div>
+  <div class="abs" id="b18" style="left:90px;top:1190px;width:470px"><div class="r18" id="r18"></div><div style="font:800 28px/1.15 'Inter Tight';margin-top:12px">18 pagos con celular o tarjeta por cada vez que se saca plata</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA: Pagos Minoristas ago-2026; Inclusión Financiera abr-2026 (2025: 18 a 1; 2024: 10 a 1). App: ilustración.</div>
 </div></div>
 
 <!-- C · el giro: no murió el efectivo, murió la fila -->
 <div class="sc" id="sC"><div class="cam">
   <div class="abs fondo" style="background:#0d0b05"></div>
-  <div class="abs" id="cT" style="left:90px;top:480px"><span class="anal" style="display:inline-block;padding:10px 20px;border-radius:14px;background:var(--oro);color:#1a1405;font:900 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase">Lo raro</span></div>
-  <div class="mos" id="cM" style="top:570px">
-    <div id="c1"><b>2,7 → 1,7</b><span>veces por mes que cada adulto va al cajero</span><small>2024 → 2025</small></div>
-    <div id="c2" style="border-color:var(--oro)"><b style="color:var(--oro)">≈ igual</b><span>la plata total que se retira</span><small>BCRA: “prácticamente sin cambios”</small></div>
+  <div class="abs" id="cT" style="left:90px;top:480px"><span class="tag" style="background:var(--oro);color:#1a1405;font-size:32px">Lo raro</span></div>
+  <div class="abs" id="c1" style="left:90px;top:560px;width:850px">
+    <div class="lab" style="font-size:30px">Veces por mes que cada adulto va al cajero</div>
+    <div style="display:flex;align-items:center;gap:26px;margin-top:10px"><span style="font:900 40px 'Inter Tight';width:110px;color:var(--mute)">2024</span><div class="pers" id="c1a"><svg style="color:#9aa1a9"><use href="#pers"/></svg><svg style="color:#9aa1a9"><use href="#pers"/></svg><svg style="color:#9aa1a9;opacity:.6;clip-path:inset(0 30% 0 0)"><use href="#pers"/></svg></div><span style="font:900 64px 'Inter Tight'">2,7</span></div>
+    <div style="display:flex;align-items:center;gap:26px;margin-top:6px"><span style="font:900 40px 'Inter Tight';width:110px;color:var(--oro)">2025</span><div class="pers" id="c1b"><svg style="color:var(--oro)"><use href="#pers"/></svg><svg style="color:var(--oro);opacity:.6;clip-path:inset(0 30% 0 0)"><use href="#pers"/></svg></div><span style="font:900 64px 'Inter Tight';color:var(--oro)">1,7</span></div>
   </div>
-  <div class="abs" id="cX" style="left:90px;top:900px;width:850px">
-    <div class="lab" style="font-size:30px">Promedio por extracción</div>
-    <div style="display:flex;align-items:baseline;gap:24px;margin-top:6px"><span style="font:900 64px 'Inter Tight';color:var(--mute);text-decoration:line-through">$29.900</span><span class="big" style="font-size:110px;color:#fff">$<span id="cxv">29.900</span></span></div>
-    <div class="tag" style="background:#fff;color:#111;margin-top:10px">×4 en dos años (en pesos)</div>
-  </div>
-  <div class="sello" id="cS" style="left:150px;top:1220px;font-size:82px">MURIÓ LA FILA</div>
+  <div class="chip" id="c2" style="left:90px;top:900px;font-size:34px;background:var(--oro);color:#1a1405;border-color:var(--oro)">La plata total que se saca: casi igual</div>
+  <div class="abs big2" id="cX" style="left:90px;top:1000px"><div class="n">Promedio por extracción · julio 2024 → julio 2026</div><div style="display:flex;align-items:baseline;gap:24px"><span style="font:900 60px 'Inter Tight';color:var(--mute);text-decoration:line-through">$29.900</span><span class="p" style="font-size:130px;color:#fff">$<span id="cxv">29.900</span></span></div></div>
+  <div class="abs pers" id="cF" style="left:90px;top:1000px;gap:10px"></div>
+  <div class="sello" id="cS" style="left:300px;top:1170px;font-size:74px">MURIÓ LA FILA</div>
   <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA, Informe de Inclusión Financiera (abr-2026) y Pagos Minoristas (jul-2024 vs jul-2026, montos nominales).</div>
 </div></div>
 
 <!-- D · quién mató al cajero -->
 <div class="sc" id="sD"><div class="cam">
-  <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" id="bgD" style="filter:grayscale(1) brightness(.16)">
+  <div class="abs fondo"></div>
   <div class="tit" id="dT"><span class="m d" style="font-size:74px"><span>¿Quién mató</span></span><span class="m d" style="font-size:74px"><span>al <span class="hl">cajero</span>?</span></span></div>
-  <div class="cd" id="d1" style="top:720px"><div class="k">Cajero de otro banco · tope habitual</div><div class="v">$60.000 por día</div></div>
-  <div class="abs" id="d3" style="left:120px;top:910px;width:800px;height:140px"><div class="billete" style="left:0;top:0">$20.000</div><div class="billete" style="left:250px;top:0">$20.000</div><div class="billete" style="left:500px;top:0">$20.000</div></div>
-  <div class="chip" id="d4" style="left:90px;top:1080px;font-size:34px">Muchos bancos cobran por sacar ahí</div>
-  <div class="cd" id="d5" style="top:1190px;display:flex;align-items:center;gap:26px;border-color:var(--rojo)"><div class="big" style="font-size:100px;color:var(--rojo)">−6,3 %</div><div style="font:800 30px/1.15 'Inter Tight'">sucursales bancarias<br>en un año (2025)</div></div>
+  <div class="chip" id="d0" style="left:90px;top:680px;font-size:34px">También los bancos</div>
+  <div class="atm" id="d1" style="left:560px;top:620px;transform:scale(.85);transform-origin:50% 0"><div class="cab">OTRO BANCO</div><div class="pan">Límite diario<b>$60.000</b></div><div class="tec"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ran"></div><div class="boca"></div></div>
+  <div class="abs" id="d3" style="left:90px;top:790px;width:450px;height:330px"><div class="billete" style="left:0;top:0">$20.000</div><div class="billete" style="left:30px;top:110px">$20.000</div><div class="billete" style="left:60px;top:220px">$20.000</div></div>
+  <div class="chip" id="d4" style="left:90px;top:1110px;font-size:30px;background:#fff;color:#111;border-color:#fff">Muchos cobran por sacar en cajero ajeno</div>
+  <div class="abs" id="d5" style="left:90px;top:1190px;width:850px"><div class="banco" id="bancos"></div><div style="font:800 30px 'Inter Tight';margin-top:10px"><span style="color:var(--rojo)">−6,3 %</span> sucursales bancarias en un año (2025)</div></div>
   <div class="abs src" style="left:90px;top:1420px;width:860px">BCRA Com. A 8092 (mínimo $60.000 en otras redes); topes y cargos varían por banco. Inclusión Financiera abr-2026.</div>
 </div></div>
 
@@ -199,9 +236,9 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <div class="sc" id="sE"><div class="cam">
   <div class="abs fondo"></div>
   <div class="abs" id="eT" style="left:90px;top:480px"><span class="tag" style="background:#fff;color:#111">Mercado Pago · 3 meses · toda Latinoamérica</span></div>
-  <div class="cd" id="e1" style="top:570px;border-color:var(--cian)"><div class="k">Pagos procesados</div><div class="big" style="font-size:130px;color:var(--cian);margin-top:6px">US$ <span id="e1v">0</span> M</div></div>
-  <div class="cd" id="e2" style="top:840px"><div class="k">Plata de usuarios que administra</div><div class="big" style="font-size:110px;margin-top:6px">US$ <span id="e2v">0</span> M</div></div>
-  <div class="cd" id="e3" style="top:1080px;border-color:var(--verde)"><div class="k">Créditos prestados</div><div class="big" style="font-size:110px;color:var(--verde);margin-top:6px">+US$ <span id="e3v">0</span> M</div></div>
+  <div class="abs big2" id="e1" style="left:90px;top:570px;--fs:118px"><div class="n">Movió en pagos</div><div class="p" style="color:var(--cian)">US$ <span id="e1v">0</span> M</div></div>
+  <div class="abs big2" id="e2" style="--fs:118px;left:90px;top:800px"><div class="n">Guarda de sus usuarios</div><div class="p" style="color:#fff">US$ <span id="e2v">0</span> M</div></div>
+  <div class="abs big2" id="e3" style="--fs:118px;left:90px;top:1030px"><div class="n">Tiene prestados más de</div><div class="p" style="color:var(--verde)">US$ <span id="e3v">0</span> M</div></div>
   <div class="abs src" style="left:90px;top:1420px;width:860px">MercadoLibre, resultados 2T 2026 (8-K ante la SEC): volumen de pagos, activos bajo gestión y cartera de créditos.</div>
 </div></div>
 
@@ -211,10 +248,10 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
   <div class="abs" id="fT" style="left:90px;top:480px"><span class="tag" style="background:#fecc00;color:#00336a">Suecia · 2025</span></div>
   <div class="abs lab" id="fL" style="left:90px;top:560px;font-size:34px;color:#fff">De cada 100, pagaron en efectivo su última compra:</div>
   <div class="abs cien" id="fC" style="left:90px;top:640px"></div>
-  <div class="abs" id="fN" style="left:670px;top:660px;width:280px"><div class="big" style="font-size:200px;color:var(--oro)">5</div><div style="font:900 40px/1.05 'Inter Tight'">hace 15 años,<br>eran 40</div></div>
-  <div class="sello" id="fS" style="left:260px;top:1210px;font-size:50px;padding:8px 22px">PERO TIENEN MIEDO</div>
-  <div class="chip" id="f1" style="left:90px;top:1330px;font-size:32px">Si se corta internet</div>
-  <div class="chip" id="f2" style="left:470px;top:1330px;font-size:32px">Si hay una guerra</div>
+  <div class="abs" id="fN" style="left:690px;top:650px;width:260px"><div class="big" style="font-size:230px;color:var(--oro)">5</div><div style="font:900 38px/1.05 'Inter Tight'">hace 15 años,<br>eran 40</div></div>
+  <div class="sello" id="fS" style="left:90px;top:1250px;font-size:46px;padding:8px 22px;white-space:normal;width:600px;line-height:1.05">CASI LA MITAD VE MAL QUE DESAPAREZCA</div>
+  <div class="chip" id="f1" style="left:700px;top:1250px;font-size:30px">Si se corta internet</div>
+  <div class="chip" id="f2" style="left:700px;top:1330px;font-size:30px">Si hay una guerra</div>
   <div class="abs src" style="left:90px;top:1420px;width:860px">Riksbank, Payments Report 2026: casi la mitad ve negativo que desaparezca el efectivo.</div>
 </div></div>
 
@@ -229,9 +266,9 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
     <div><div class="n" style="font-size:40px">Franco Valencia</div><div class="r" style="font-size:24px">@francovalencia.ok</div></div>
     <div class="btn" id="btn" style="height:76px;line-height:76px;font-size:32px"><span id="btnt">Seguir</span></div>
   </div>
-  <div class="abs src" id="crd" style="left:90px;top:1390px;width:880px;font-size:16px;line-height:1.35">Foto: Ezarate (CC BY-SA 4.0) vía Wikimedia Commons. Datos: BCRA, MercadoLibre (SEC), Riksbank.</div>
+  <div class="abs src" id="crd" style="left:90px;top:1390px;width:880px;font-size:16px;line-height:1.35">Foto: Ezarate (CC BY-SA 4.0) vía Wikimedia Commons. Cajero y app: ilustraciones. Datos: BCRA, MercadoLibre (SEC), Riksbank.</div>
   <div class="abs" id="loop" style="inset:0;opacity:0">
-    <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.3)">
+    <div class="abs fondo"></div><img src="img/cajero.jpg" class="bgfoto" style="object-position:62% 50%;filter:grayscale(.3) brightness(.22) blur(3px)">
     <div class="tit"><span class="m d" style="font-size:80px"><span>Cada cajero atiende</span></span><span class="m d" style="font-size:80px"><span>menos de <span class="hl" style="background:var(--rojo)">4 personas</span></span></span><span class="m d" style="font-size:80px"><span>por hora</span></span></div>
   </div>
 </div></div>
@@ -293,61 +330,72 @@ const tipea = (id, t0, t1, html) => (TX[id] = TX[id] || []).push([t0, t1, html])
 
 
 const miles = (v) => Math.round(v).toLocaleString('es-AR'); const dec = (n) => (v) => v.toFixed(n).replace('.', ',');
-const ancho = (sel, t, pct, d = .7) => sx('pop', t) && tl.fromTo(sel, { width: '0%' }, { width: pct + '%', duration: d, ease: E }, t);
-// QR de mentira (patrón fijo) para el celular
+// QR de mentira (patrón fijo)
 { let q = ''; for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) { const ojo = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7; const borde = (a, b) => ojo(a, b) && (x === a || x === a + 6 || y === b || y === b + 6 || (x > a + 1 && x < a + 5 && y > b + 1 && y < b + 5)); const on = ojo(0, 0) || ojo(14, 0) || ojo(0, 14) ? borde(0, 0) || borde(14, 0) || borde(0, 14) : hash(x * 31 + y * 7) > .5; if (on) q += `<rect x="${x}" y="${y}" width="1" height="1"/>`; } $('#qr').innerHTML = q; }
 for (let i = 0; i < 100; i++) $('#fC').insertAdjacentHTML('beforeend', '<i></i>');
+for (let i = 0; i < 18; i++) $('#r18').insertAdjacentHTML('beforeend', '<i></i>'); $('#r18').insertAdjacentHTML('beforeend', '<i class="b"></i>');
+for (let i = 0; i < 16; i++) $('#bancos').insertAdjacentHTML('beforeend', '<svg viewBox="0 0 100 90" style="color:#5b616a"><use href="#bank"/></svg>');
+for (let i = 0; i < 9; i++) $('#cF').insertAdjacentHTML('beforeend', '<svg style="color:#3a3f45;width:60px;height:94px"><use href="#pers"/></svg>');
 let EXTRA = () => {};
 
-// 1 · gancho
+// 1 · gancho: cajero solo, contador de gente
 deriva('#s1 .bgfoto', 's1');
-tl.fromTo('#t1g svg', { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .3, ease: 'back.out(2)', stagger: .12 }, V('s1', 'menos'));
-sx('pop', V('s1', 'menos'));
+tl.fromTo('#t1a', { x: 300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, .2); sx('whoosh', .15);
+pop('#t1r', V('s1', 'menos'), 20);
+tl.fromTo('#t1g svg', { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .25, ease: 'back.out(2)', stagger: .15 }, V('s1', 'menos') + .1); [0, 1, 2, 3].forEach((i) => sx('pop', V('s1', 'menos') + .1 + i * .15));
 sella('#t1s', V('s1', 'falte'), -5); golpe('s1', V('s1', 'falte'), 1.06); flash(V('s1', 'falte'), .4);
-// A · caída
+// A · la caída: columnas
 barre('sA', 'izq');
 lineas('#aT', R('sA', .05));
-sube('#aB', V('sA', 'en julio'), 40);
-ancho('#a1', V('sA', '95'), 100, .8);
-ancho('#a2', V('sA', '41'), 41 / 94.9 * 100, .9); C_.a2v = [V('sA', '41'), V('sA', 'millones', true) + .4, 41, 94.9, dec(1)];
-sella('#aS', V('sA', 'mitad'), -6); golpe('sA', V('sA', 'mitad'), 1.05); flash(V('sA', 'mitad'), .3);
-pop('#aC', V('sA', 'banco central'), 30);
-// B · celular
+tl.fromTo('#a1', { scaleY: 0 }, { scaleY: 1, duration: .7, ease: E }, V('sA', '95') - .1); pop('#a1n', V('sA', '95'), 30);
+tl.fromTo(['#a2', '#a2n'], { autoAlpha: 0 }, { autoAlpha: 1, duration: .01 }, V('sA', '41') - .05);
+tl.fromTo('#a2', { scaleY: 0 }, { scaleY: 1, duration: .45, ease: E }, V('sA', '41')); C_.a2v = [V('sA', '41'), V('sA', '41', true), 41, 0, ent]; sx('pop', V('sA', '41'));
+sella('#aS', V('sA', 'mitad'), -6); golpe('sA', V('sA', 'mitad'), 1.06); flash(V('sA', 'mitad'), .3);
+// B · celular: escaneo y pago
 barre('sB', 'der');
 lineas('#bT', R('sB', .05), .4);
-tl.fromTo('#bC', { y: 400, rotate: 16, autoAlpha: 0 }, { y: 0, rotate: 6, autoAlpha: 1, duration: .6, ease: E }, V('sB', 'celular') - .1);
-sube('#bQ', V('sB', 'en agosto'), 50); C_.qrv = [V('sB', '117'), V('sB', 'qr', true), 117, 0, ent];
-tl.fromTo('#bOk', { scale: .5, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: .3, ease: 'back.out(2)' }, V('sB', '67')); sx('pop', V('sB', '67'));
-sube('#bT2', V('sB', '779'), 50); C_.trv = [V('sB', '779'), V('sB', 'transferencias', true), 779, 0, ent];
-pop('#b18', V('sB', '18'), 40); golpe('sB', V('sB', '18'), 1.04);
+tl.fromTo('#bC', { y: 500, rotate: 12, autoAlpha: 0 }, { y: 0, rotate: 4, autoAlpha: 1, duration: .6, ease: E }, V('sB', 'celular') - .1); sx('whoosh', V('sB', 'celular') - .15);
+tl.fromTo('#bScan', { top: 0 }, { top: 196, duration: .55, ease: 'sine.inOut', repeat: 2, yoyo: true }, V('sB', 'celular') + .4);
+tl.fromTo('#bOk', { autoAlpha: 0 }, { autoAlpha: 1, duration: .15 }, V('sB', '117')); tl.fromTo('#bOk i', { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(3)' }, V('sB', '117')); sx('pop', V('sB', '117'));
+sube('#bQ', V('sB', '117') - .15, 50); C_.qrv = [V('sB', '117'), V('sB', '117', true), 117, 0, ent];
+sube('#bT2', V('sB', '779') - .15, 50); C_.trv = [V('sB', '779'), V('sB', '779', true), 779, 0, ent];
+sube('#b18', V('sB', 'por cada'), 40);
+tl.fromTo('#r18 i', { scale: 0 }, { scale: 1, duration: .15, stagger: .04, ease: 'back.out(3)' }, V('sB', '18')); golpe('sB', V('sB', '18'), 1.04); sx('chas', V('sB', '18'));
 // C · el giro
 barre('sC', 'arr'); flash(S.sC.A, .35);
 pop('#cT', R('sC', .05), 20);
-pop('#c1', V('sC', 'menos veces'), 40);
+sube('#c1', V('sC', 'menos veces') - .2, 40);
 pop('#c2', V('sC', 'retiro'), 40); golpe('sC', V('sC', 'lo mismo'), 1.04);
-sube('#cX', V('sC', 'cada vez'), 50); C_.cxv = [V('sC', 'cuatro veces'), V('sC', 'pesos', true), 118300, 29900, miles];
-sella('#cS', V('sC', 'la fila'), -5); golpe('sC', V('sC', 'la fila'), 1.06);
-// D · quién mató
-barre('sD', 'izq'); deriva('#bgD', 'sD');
+tl.to(['#c1', '#c2'], { autoAlpha: .25, duration: .3 }, V('sC', 'cada vez') - .1);
+sube('#cX', V('sC', 'cada vez') - .3, 50); C_.cxv = [V('sC', 'cuatro veces'), V('sC', 'cuatro veces', true), 118300, 29900, miles];
+tl.to('#cX', { autoAlpha: 0, duration: .25 }, V('sC', 'no dejamos') - .1);
+tl.fromTo('#cF svg', { x: 80, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .2, stagger: .05 }, V('sC', 'no dejamos'));
+tl.to('#cF svg', { y: -40, autoAlpha: 0, duration: .25, stagger: .05 }, V('sC', 'la fila') - .2);
+sella('#cS', V('sC', 'la fila'), -5); golpe('sC', V('sC', 'la fila'), 1.06); flash(V('sC', 'la fila'), .3);
+// D · quién mató al cajero
+barre('sD', 'izq');
 lineas('#dT', R('sD', .05), .2);
-sube('#d1', V('sD', 'tope'), 50);
-tl.fromTo('#d3 .billete', { y: -200, rotate: -20, autoAlpha: 0 }, { y: 0, rotate: 0, autoAlpha: 1, duration: .4, ease: 'back.out(1.8)', stagger: .15 }, V('sD', 'tres billetes')); sx('chas', V('sD', 'tres billetes'));
+pop('#d0', V('sD', 'tambien'), 30);
+tl.fromTo('#d1', { x: 300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E }, V('sD', 'cajero de otro')); sx('whoosh', V('sD', 'cajero de otro'));
+tl.fromTo('#d3 .billete', { x: 420, y: -60, rotate: -14, autoAlpha: 0 }, { x: 0, y: 0, rotate: -3, autoAlpha: 1, duration: .4, ease: 'back.out(1.6)', stagger: .25 }, V('sD', 'tres')); [0, 1, 2].forEach((i) => sx('chas', V('sD', 'tres') + i * .25));
 pop('#d4', V('sD', 'te cobran'), 30);
-sube('#d5', V('sD', 'sucursales') - .4, 50); golpe('sD', V('sD', 'sucursales'), 1.04);
+sube('#d5', V('sD', 'y en un'), 40);
+tl.fromTo('#bancos svg', { scale: 0 }, { scale: 1, duration: .15, stagger: .03 }, V('sD', 'y en un'));
+tl.to('#bancos svg:last-child', { color: '#ef3340', y: 30, rotate: 25, autoAlpha: 0, duration: .5, ease: 'power2.in' }, V('sD', 'sucursales')); golpe('sD', V('sD', 'sucursales'), 1.05); sx('golpe', V('sD', 'sucursales'));
 // E · Mercado Pago
 barre('sE', 'der');
 pop('#eT', R('sE', .05), 20);
-sube('#e1', V('sE', 'movio'), 50); C_.e1v = [V('sE', '101'), V('sE', 'pagos', true), 101000, 0, miles];
-sube('#e2', V('sE', 'guarda'), 50); C_.e2v = [V('sE', '23'), V('sE', 'usuarios', true), 23000, 0, miles];
-sube('#e3', V('sE', 'prestados'), 50); C_.e3v = [V('sE', 'prestados'), V('sE', 'prestados') + 1.6, 16000, 0, miles];
-golpe('sE', V('sE', 'prestados') + 1.6, 1.04);
+entra('#e1', V('sE', '101') - .2); C_.e1v = [V('sE', '101'), V('sE', '101', true), 101000, 0, miles];
+entra('#e2', V('sE', '23') - .2); C_.e2v = [V('sE', '23'), V('sE', '23', true), 23000, 0, miles];
+entra('#e3', V('sE', '16') - .2); C_.e3v = [V('sE', '16'), V('sE', '16', true), 16000, 0, miles];
+golpe('sE', V('sE', '16', true), 1.04);
 // F · Suecia
 barre('sF', 'arr');
 pop('#fT', R('sF', .05), 20); sube('#fL', V('sF', 'solo'), 20);
-tl.fromTo('#fC i', { scale: 0 }, { scale: 1, duration: .2, stagger: .006 }, V('sF', 'solo'));
+tl.fromTo('#fC i', { scale: 0 }, { scale: 1, duration: .2, stagger: .005 }, V('sF', 'solo'));
 tl.to('#fC i:nth-child(-n+5)', { background: '#ffd23f', duration: .1, stagger: .08 }, V('sF', 'cinco')); sx('pop', V('sF', 'cinco'));
-pop('#fN', V('sF', 'ultima compra'), 40);
-sella('#fS', V('sF', 'casi la mitad'), -4); golpe('sF', V('sF', 'casi la mitad'), 1.05);
+pop('#fN', V('sF', 'cinco') + .3, 40);
+sella('#fS', V('sF', 'casi la mitad'), -3); golpe('sF', V('sF', 'casi la mitad'), 1.05);
 pop('#f1', V('sF', 'internet'), 30); pop('#f2', V('sF', 'guerra'), 30);
 // Z · cierre + loop
 barre('sZ', 'aba');
@@ -409,7 +457,8 @@ const TROZOS = []; { let cur = [];
 const TZ = TROZOS.map((c, i) => [W(c[0][0]) - 0.05, i + 1 < TROZOS.length ? Math.min(W(TROZOS[i + 1][0][0]) - 0.05, W(c[c.length - 1][1]) + 0.6) : W(c[c.length - 1][1]) + 0.5, c]);
 let SUBK = -1;
 const subtitulos = (t) => {
-  if (t > DUR - 1.2) { SUB.innerHTML = ''; return; }
+  const PF = document.getElementById('perfil');
+  if (t > DUR - 1.2 || (PF && +getComputedStyle(PF).opacity > 0.05 && getComputedStyle(PF).visibility !== 'hidden' && PF.closest('.sc').style.visibility !== 'hidden' && getComputedStyle(PF.closest('.sc')).visibility === 'visible')) { SUB.innerHTML = ''; return; }
   const k = TZ.findIndex(([a, b]) => t >= a && t < b);
   if (k < 0) { SUB.innerHTML = ''; return; }
   const [a, , c] = TZ[k];
@@ -427,7 +476,7 @@ const corta = (h, n) => { let out = '', k = 0, dentro = false; for (const ch of 
 window.render = (t) => {
   tl.seek(t, false);
   gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
-  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / (t1 - t0)));
+  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / Math.min(0.45, Math.max(0.05, t1 - t0))));  // el número llega al valor dicho en <0,5 s: lo que se ve = lo que se dice
   for (const id in TX) {
     let html = ''; const L = TX[id];
     L.forEach(([a, b, h]) => { if (t < a) return; const n = plano(h).length; const u = clamp((t - a) / Math.max(.2, b - a)); html += (html ? '\n' : '') + corta(h, Math.ceil(n * u)); });
@@ -436,7 +485,7 @@ window.render = (t) => {
   if ($('#btnt')) $('#btnt').textContent = t >= TBT + .05 ? 'Siguiendo' : 'Seguir';
   EXTRA(t); subtitulos(t);
 };
-for (const id in C_) { const [t0, t1] = C_[id]; const n = Math.min(24, Math.round((t1 - t0) * 14)); for (let i = 0; i < n; i++) sx('tic', t0 + i * (t1 - t0) / n); }
+for (const id in C_) { const [t0, t1] = C_[id]; const d = Math.min(0.45, Math.max(0.05, t1 - t0)); for (let i = 0; i < 7; i++) sx('tic', t0 + i * d / 7); }
 for (const id in TX) for (const [a, b] of TX[id]) for (let t = a; t < b; t += .075) sx('tecla', t);
 window.render(0); window.listo = true;
 })();
