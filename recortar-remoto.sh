@@ -9,11 +9,12 @@ REPO=consultora1700/colmen-render
 AQUI=$(cd "$(dirname "$0")" && pwd)
 TOKEN=$(cat /root/.config/colmen-render/token)
 SALIDA=$(realpath -m "$1"); shift
+FOTOS=(); for f in "$@"; do FOTOS+=("$(realpath "$f")"); done
 api() { curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
 
 cd "$AQUI"
 rm -rf recortes/in; mkdir -p recortes/in
-for f in "$@"; do cp "$f" recortes/in/; done
+for f in "${FOTOS[@]}"; do cp "$f" recortes/in/; done
 printf '{ "fotos": %s, "pedido": "%s" }\n' "$#" "$(date -u +%FT%TZ)" > recortes/pedido.json
 git add -A recortes
 git -c user.name="Colmen render" -c user.email="consultora1700@users.noreply.github.com" commit -q -m "recortar: $# fotos"
