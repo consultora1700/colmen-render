@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image, ImageFilter, ImageDraw, ImageFont
 
 W, H = 1080, 1920
-X0, Y0, ANCHO = 62, 250, 360           # logo en el cuadro ancla (21 s)
+X0, Y0, ANCHO = 62, 320, 360           # logo en el cuadro ancla (21 s)
 SUB = ['gestión gastronómica', 'inteligente']
 
 def _f(im): return np.asarray(im, dtype=np.float32) / 255.0

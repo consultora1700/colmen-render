@@ -1,7 +1,7 @@
 import subprocess, numpy as np
 FPS = 30
 T_ANCLA = 21.0      # cuadro donde está diseñado el cartel
-T_ENCIENDE = 19.2   # primer parpadeo
+T_ENCIENDE = 18.8   # primer parpadeo
 W, H = 1080, 1920
 
 def leer(path, w=W, h=H, gris=False):
