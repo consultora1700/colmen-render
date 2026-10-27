@@ -90,6 +90,11 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
 .tile .tl{font:800 38px 'Inter Tight';margin-top:16px}
 .tachado{position:absolute;height:8px;background:var(--rojo);transform-origin:0 50%;border-radius:4px}
 #capa{position:absolute;inset:0;z-index:60;pointer-events:none}
+.cara{position:absolute;border-radius:50%;overflow:hidden;z-index:6;background:radial-gradient(circle at 50% 35%,#46535a,#1a2226 75%);box-shadow:0 0 0 6px #fff,0 22px 44px rgba(0,0,0,.65)}
+.cara img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 40%}
+.cara.jn{box-shadow:0 0 0 6px var(--verde),0 0 60px rgba(37,211,102,.55),0 22px 44px rgba(0,0,0,.65)}
+.cara.mi{position:relative;display:inline-block;vertical-align:-14px;width:66px;height:66px;margin-right:18px;box-shadow:0 0 0 4px #fff,0 10px 20px rgba(0,0,0,.5)}
+.cnom{position:absolute;font:800 26px 'JetBrains Mono';letter-spacing:.06em;text-transform:uppercase;text-align:center;white-space:nowrap}
 #fin{position:absolute;inset:0;visibility:hidden;background:radial-gradient(80% 80% at 30% 40%,#0f1c17 0,#050708 70%)}
 #sub{position:absolute;left:160px;right:160px;bottom:56px;z-index:80;text-align:center;font:800 50px/1.12 'Inter Tight';letter-spacing:-.01em;color:#fff;-webkit-text-stroke:9px #000;paint-order:stroke fill;text-shadow:0 4px 14px rgba(0,0,0,.7)}
 #banda{position:absolute;left:0;right:0;bottom:0;height:220px;z-index:75;background:linear-gradient(180deg,transparent,rgba(0,0,0,.6));pointer-events:none}
@@ -107,16 +112,16 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
 <div class="cel" id="c1" data-c="0,0">
   <div class="tag">EXP·01 <b>/ brasil · balotaje 2026</b></div>
   <div class="abs" id="c1cal" style="left:430px;top:190px;width:1060px;height:640px">
-    <div class="cal e" id="c1a" style="left:0;top:0"><div class="m">OCT</div><div class="d">04</div><div class="l">1ª vuelta</div></div>
+    <div class="cara e" id="k1f" style="left:240px;top:-60px;width:150px;height:150px"><img src="img/caras/c-flavio.png"></div><div class="cal e" id="c1a" style="left:0;top:0"><div class="m">OCT</div><div class="d">04</div><div class="l">1ª vuelta</div></div>
     <div class="abs e" id="c1ar" style="left:340px;top:110px;width:380px;text-align:center">
       <div style="font:900 64px 'Inter Tight';letter-spacing:-.03em">21 días</div>
       <div style="height:8px;background:var(--rojo);margin-top:16px;border-radius:4px;position:relative"><i style="position:absolute;right:-6px;top:-14px;border-left:30px solid var(--rojo);border-top:18px solid transparent;border-bottom:18px solid transparent"></i></div>
     </div>
-    <div class="cal e" id="c1b" style="left:740px;top:0"><div class="m">OCT</div><div class="d">25</div><div class="l">balotaje</div></div>
+    <div class="cara e" id="k1l" style="left:980px;top:-60px;width:150px;height:150px"><img src="img/caras/c-lula.png"></div><div class="cal e" id="c1b" style="left:740px;top:0"><div class="m">OCT</div><div class="d">25</div><div class="l">balotaje</div></div>
     <div class="abs e" id="c1l1" style="left:0;top:400px;font:800 44px 'Inter Tight';color:var(--mute)">04/10 · <span style="color:#fff">Lula llegaba segundo</span></div>
     <div class="abs e" id="c1l2" style="left:0;top:476px;font:800 44px 'Inter Tight';color:var(--mute);white-space:nowrap">25/10 · <span style="color:#fff">gana por</span> <span class="num" id="n1m" style="font:900 96px 'Inter Tight';letter-spacing:-.04em;color:#fff;vertical-align:-14px">0</span> <span style="color:#fff">votos</span></div>
   </div>
-  <div class="tel e" id="c1tel" style="left:1300px;top:110px;width:440px;height:750px">
+  <div class="cara jn e" id="k1j" style="left:1190px;top:600px;width:170px;height:170px;z-index:9"><img src="img/caras/c-janones.png"></div><div class="tel e" id="c1tel" style="left:1300px;top:110px;width:440px;height:750px">
     <div class="notch"></div>
     <div class="bar"><div class="av" id="avA"></div><div><div class="nombre">Exército do Lula</div><div class="tipo">Canal de WhatsApp</div></div></div>
     <div class="abs" style="left:30px;right:30px;top:190px">
@@ -130,7 +135,7 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
       </div>
     </div>
   </div>
-  <div class="src">Fuentes: TSE (totalización final, 04/10 y 25/10/2026) · contador público del canal, según Poder360 y BBC.</div>
+  <div class="src">Fuentes: TSE (totalización final, 04/10 y 25/10/2026) · contador público del canal, según Poder360 y BBC. Fotos: Wikimedia Commons (Lula: R. Stuckert/PR, CC BY 2.0 · Flávio: Agência Senado · Janones: Lula Oficial, CC BY-SA 4.0).</div>
 </div>
 
 <!-- ===== C2 · resultados ===== -->
@@ -139,14 +144,14 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
   <div class="h1 e" id="c2t" style="left:110px;top:140px">Los números <em>oficiales</em></div>
   <div class="pan e" id="c2a" style="left:110px;top:270px;width:820px;height:500px">
     <div class="kk">1ª vuelta · 04/10</div>
-    <div class="fila e" id="c2a1"><div class="cab"><span class="nm">Flávio Bolsonaro <span class="pill w e" id="c2a1p">1º</span></span><span class="vl e" id="c2a1v">47,03%</span></div><div class="pista"><i id="c2a1f" style="width:78.4%"></i><span class="m50" style="left:83.3%"></span></div></div>
-    <div class="fila e" id="c2a2"><div class="cab"><span class="nm">Lula</span><span class="vl e" id="c2a2v">45,16%</span></div><div class="pista"><i class="g" id="c2a2f" style="width:75.3%"></i><span class="m50" style="left:83.3%"></span></div></div>
+    <div class="fila e" id="c2a1"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-flavio.png"></span>Flávio Bolsonaro <span class="pill w e" id="c2a1p">1º</span></span><span class="vl e" id="c2a1v">47,03%</span></div><div class="pista"><i id="c2a1f" style="width:78.4%"></i><span class="m50" style="left:83.3%"></span></div></div>
+    <div class="fila e" id="c2a2"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-lula.png"></span>Lula</span><span class="vl e" id="c2a2v">45,16%</span></div><div class="pista"><i class="g" id="c2a2f" style="width:75.3%"></i><span class="m50" style="left:83.3%"></span></div></div>
     <div class="mono" style="font-size:22px;color:var(--dim);margin-top:26px">- - - 50%</div>
   </div>
   <div class="pan e" id="c2b" style="left:990px;top:270px;width:820px;height:500px">
     <div class="kk">Balotaje · 25/10</div>
-    <div class="fila e" id="c2b1"><div class="cab"><span class="nm">Lula <span class="pill w e" id="c2b1p">GANA</span></span><span class="vl e" id="c2b1v">51,79%</span></div><div class="pista"><i id="c2b1f" style="width:86.3%"></i><span class="m50" style="left:83.3%"></span></div></div>
-    <div class="fila e" id="c2b2"><div class="cab"><span class="nm">Flávio Bolsonaro</span><span class="vl e" id="c2b2v">48,21%</span></div><div class="pista"><i class="g" id="c2b2f" style="width:80.4%"></i><span class="m50" style="left:83.3%"></span></div></div>
+    <div class="fila e" id="c2b1"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-lula.png"></span>Lula <span class="pill w e" id="c2b1p">GANA</span></span><span class="vl e" id="c2b1v">51,79%</span></div><div class="pista"><i id="c2b1f" style="width:86.3%"></i><span class="m50" style="left:83.3%"></span></div></div>
+    <div class="fila e" id="c2b2"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-flavio.png"></span>Flávio Bolsonaro</span><span class="vl e" id="c2b2v">48,21%</span></div><div class="pista"><i class="g" id="c2b2f" style="width:80.4%"></i><span class="m50" style="left:83.3%"></span></div></div>
     <div class="mono" style="font-size:22px;color:var(--dim);margin-top:26px">- - - 50%</div>
   </div>
   <div class="sello e" id="c2s" style="left:1300px;top:150px;transform:rotate(-5deg)">Se dio vuelta</div>
@@ -159,8 +164,8 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
   <div class="h1 e" id="c3t" style="left:110px;top:140px">Entre una vuelta <em>y otra</em></div>
   <div class="pan e" id="c3a" style="left:110px;top:240px;width:940px;height:405px">
     <div class="kk">votos que sumó cada uno</div>
-    <div class="fila e" id="c3a1"><div class="cab"><span class="nm">Lula</span><span class="vl" id="c3a1v">+10.376.694</span></div><div class="pista"><i id="c3a1f" style="width:94.3%"></i></div></div>
-    <div class="fila e" id="c3a2"><div class="cab"><span class="nm">Flávio</span><span class="vl" id="c3a2v">+3.721.538</span></div><div class="pista"><i class="g" id="c3a2f" style="width:33.8%"></i></div></div>
+    <div class="fila e" id="c3a1"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-lula.png"></span>Lula</span><span class="vl" id="c3a1v">+10.376.694</span></div><div class="pista"><i id="c3a1f" style="width:94.3%"></i></div></div>
+    <div class="fila e" id="c3a2"><div class="cab"><span class="nm"><span class="cara mi"><img src="img/caras/c-flavio.png"></span>Flávio</span><span class="vl" id="c3a2v">+3.721.538</span></div><div class="pista"><i class="g" id="c3a2f" style="width:33.8%"></i></div></div>
   </div>
   <div class="pan e" id="c3b" style="left:1110px;top:240px;width:700px;height:405px">
     <div class="kk">fueron a votar</div>
@@ -184,6 +189,7 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
       <span class="chip e" id="c4c4" style="border-color:var(--verde);color:var(--verde);background:rgba(37,211,102,.1);box-shadow:0 0 40px rgba(37,211,102,.35)">una pieza nueva</span>
     </div>
   </div>
+  <div class="abs e" id="k4ring" style="left:770px;top:150px;width:380px;height:380px;border-radius:50%;border:6px dashed rgba(37,211,102,.6);display:grid;place-items:center;font:900 170px 'Inter Tight';color:rgba(37,211,102,.5)">?</div><div class="cara jn e" id="k4j" style="left:770px;top:150px;width:380px;height:380px"><img src="img/caras/c-janones.png"></div>
   <div class="abs e" id="c4n" style="left:0;right:0;top:600px;text-align:center">
     <div class="kk" style="color:var(--verde)">nombre y apellido</div>
     <div style="position:relative;display:inline-block;margin-top:16px">
@@ -198,11 +204,9 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
   <div class="tag">EXP·05 <b>/ el sujeto</b></div>
   <div class="pan e" id="c5f" style="left:110px;top:150px;width:480px;height:660px;padding:0;overflow:hidden">
     <div class="kk" style="position:absolute;left:30px;top:26px;color:var(--verde)">sujeto 01</div>
-    <svg viewBox="0 0 480 440" style="position:absolute;left:0;top:70px;width:480px;height:440px"><defs><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b383d"/><stop offset="1" stop-color="#141c1f"/></linearGradient></defs>
-      <circle cx="240" cy="170" r="92" fill="url(#gs)"/><path d="M60 440 C70 320 150 285 240 285 C330 285 410 320 420 440 Z" fill="url(#gs)"/>
-      <g stroke="rgba(37,211,102,.5)" stroke-width="3" fill="none"><path d="M40 40 h40 M40 40 v40"/><path d="M440 40 h-40 M440 40 v40"/><path d="M40 420 h40 M40 420 v-40"/><path d="M440 420 h-40 M440 420 v-40"/></g>
-      <text x="240" y="186" text-anchor="middle" font-family="JetBrains Mono" font-size="22" font-weight="700" fill="rgba(238,243,241,.45)" letter-spacing="3">SIN FOTO</text></svg>
+    <div id="k5f" style="position:absolute;left:30px;top:76px;width:420px;height:430px;overflow:hidden;border-radius:6px;background:#1a2226;box-shadow:0 0 0 3px rgba(238,243,241,.85)"><img src="img/caras/c-janones.png" id="k5img" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.06) saturate(.85)"><div style="position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(37,211,102,.06) 0 2px,transparent 2px 6px)"></div><svg viewBox="0 0 420 430" style="position:absolute;inset:0;width:420px;height:430px"><g stroke="#25d366" stroke-width="4" fill="none"><path d="M16 16 h40 M16 16 v40"/><path d="M404 16 h-40 M404 16 v40"/><path d="M16 414 h40 M16 414 v-40"/><path d="M404 414 h-40 M404 414 v-40"/></g></svg><div id="k5scan" style="position:absolute;left:0;right:0;top:0;height:6px;background:#25d366;box-shadow:0 0 24px #25d366"></div></div>
     <div style="position:absolute;left:30px;right:30px;top:530px"><div style="font:900 50px/1 'Inter Tight';letter-spacing:-.03em">André Janones</div><div style="font:600 28px 'Inter Tight';color:var(--mute);margin-top:10px">42 años · abogado</div></div>
+    <div class="mono" style="position:absolute;left:30px;top:622px;font-size:18px;color:var(--dim)">Foto: Lula Oficial · CC BY-SA 4.0 · Wikimedia</div>
   </div>
   <div class="sello am e" id="c5s" style="left:150px;top:560px;transform:rotate(-7deg);font-size:38px">Acuerdo · sin juicio</div>
   <div class="abs" id="c5r" style="left:660px;top:140px;width:1150px">
@@ -229,6 +233,7 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
     <div class="cab" style="display:flex;justify-content:space-between;align-items:baseline;width:33%"><span class="nm" style="font:800 42px 'Inter Tight'">2026</span><span class="num" style="font:900 56px 'Inter Tight'">78.780</span></div>
     <div class="pista" style="height:58px"><i class="g" id="c6f2" style="width:33%;background:var(--rojo)"></i></div></div>
   <div class="abs e" id="c6p" style="left:1440px;top:420px;font:900 170px/1 'Inter Tight';letter-spacing:-.05em;color:var(--rojo)">−67%</div>
+  <div class="cara jn e" id="k6j" style="left:1570px;top:640px;width:190px;height:190px"><img src="img/caras/c-janones.png"></div>
   <div class="abs e" id="c6g" style="left:110px;top:680px;font:800 54px 'Inter Tight';letter-spacing:-.02em">El «general digital» no arrastraba votos propios.</div>
   <div class="abs e" id="c6h" style="left:110px;top:760px;font:900 54px 'Inter Tight';letter-spacing:-.02em;color:var(--verde)">Arrastraba otra cosa →</div>
   <div class="src">Fuentes: TSE (2026, diputado federal por Minas Gerais: 78.780) · BBC News Brasil citando al TSE (2022: 238.967).</div>
@@ -294,8 +299,12 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
   </div>
   <div class="pan e" id="c9l" style="left:1170px;top:140px;width:640px;height:690px">
     <span class="pill r" id="c9vivo">● EN VIVO</span>
-    <div style="font:800 40px/1.15 'Inter Tight';margin-top:26px">22/10 · transmisión con Lula</div>
-    <div class="num" id="n9" style="font:900 124px/1 'Inter Tight';letter-spacing:-.05em;margin-top:70px;color:var(--verde)">0</div>
+    <div style="font:800 40px/1.15 'Inter Tight';margin-top:22px">22/10 · transmisión con Lula</div>
+    <div style="position:relative;height:150px;margin-top:22px">
+      <div class="cara e" id="k9l" style="left:10px;top:10px;width:120px;height:120px"><img src="img/caras/c-lula.png"></div>
+      <div class="cara jn e" id="k9j" style="left:160px;top:10px;width:120px;height:120px"><img src="img/caras/c-janones.png"></div>
+      <div class="abs e" id="k9t" style="left:310px;top:40px;font:800 30px/1.2 'Inter Tight';color:var(--mute)">Lula<br>+ Janones</div></div>
+    <div class="num" id="n9" style="font:900 124px/1 'Inter Tight';letter-spacing:-.05em;margin-top:16px;color:var(--verde)">0</div>
     <div style="font:800 40px/1.15 'Inter Tight';margin-top:18px">dispositivos conectados<br><span style="color:var(--mute)">al mismo tiempo</span></div>
   </div>
   <div class="src">Fuentes: BBC, O Globo, Poder360 y Congresso em Foco (misiones diarias) · Poder360 (pico de la transmisión del 22/10: 1.183.488 dispositivos).</div>
@@ -345,8 +354,8 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
 <div class="cel" id="c12" data-c="3,2">
   <div class="tag">EXP·12 <b>/ la técnica</b></div>
   <div class="h1 e" id="c12t" style="left:110px;top:140px;font-size:64px">La derecha también tenía <em>su ejército</em></div>
-  <div class="chat e" id="c12a" style="left:110px;top:270px;width:640px;height:290px">
-    <div class="bar" style="height:130px"><div class="av gr" id="avC"></div><div><div class="nombre" style="font-size:44px">Tropa do Flávio</div><div class="tipo" style="font-size:28px">Canal de WhatsApp</div></div></div>
+  <div class="chat e" id="c12a" style="left:110px;top:270px;width:640px;height:300px">
+    <div class="bar" style="height:150px"><div class="cara" id="k12f" style="position:relative;flex:none;width:120px;height:120px"><img src="img/caras/c-flavio.png"></div><div><div class="nombre" style="font-size:44px">Tropa do Flávio</div><div class="tipo" style="font-size:28px">Canal de WhatsApp</div></div></div>
     <div style="padding:26px 30px;font:900 64px 'Inter Tight';letter-spacing:-.03em">~2 M <span style="font:700 36px 'Inter Tight';color:var(--mute)">seguidores</span></div>
   </div>
   <div class="pan e" id="c12b" style="left:810px;top:270px;width:1000px;height:290px;padding:26px 40px">
@@ -376,6 +385,11 @@ body{font-family:'Inter Tight',sans-serif;color:var(--tx);-webkit-font-smoothing
     <div class="abs" style="left:560px;top:0;width:1000px;height:76px;border:3px dashed rgba(255,255,255,.4);border-radius:12px;display:grid;place-items:center;font:900 38px 'JetBrains Mono';color:var(--amb);letter-spacing:.08em">SIN DATOS · NADIE LO MIDE</div></div>
   <div class="abs e" id="c13n" style="left:110px;top:680px;font:900 56px 'Inter Tight';letter-spacing:-.02em">Seguir un canal <span style="color:var(--rojo)">no es</span> votar.</div>
   <div class="abs e" id="c13q" style="left:110px;top:760px;font:900 56px 'Inter Tight';letter-spacing:-.02em;color:var(--amb)">¿A cuántos les cambió el voto?</div>
+  <div class="abs" id="k13" style="left:1250px;top:660px;width:560px;height:200px">
+    <div class="cara e" id="k13l" style="left:10px;top:10px;width:120px;height:120px"><img src="img/caras/c-lula.png"></div>
+    <div class="cara jn e" id="k13j" style="left:210px;top:10px;width:120px;height:120px"><img src="img/caras/c-janones.png"></div>
+    <div class="cara e" id="k13f" style="left:410px;top:10px;width:120px;height:120px"><img src="img/caras/c-flavio.png"></div>
+    <div class="cnom e" id="k13n" style="left:0;right:0;top:150px;display:flex;justify-content:space-between;padding:0 4px"><span style="width:140px">Lula</span><span style="width:140px;color:var(--verde)">Janones</span><span style="width:140px">Flávio</span></div></div>
   <div class="src">Fuentes: TSE (diferencia: 4.430.191 votos) · BBC, CNN Brasil (canal, 26/10). Cálculo propio. No implica causalidad.</div>
 </div>
 
@@ -488,7 +502,7 @@ const A = (k, x = 0) => S[k].A + x;
 
 // ---- íconos ----
 const MEGA = '<svg viewBox="0 0 24 24"><path d="M3 10v4a1 1 0 0 0 1 1h2l5 4V5L6 9H4a1 1 0 0 0-1 1z" fill="#04130a"/><path d="M15 8.5a4.5 4.5 0 0 1 0 7M17.5 6a8 8 0 0 1 0 12" stroke="#04130a" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
-['avA', 'avB', 'avC'].forEach((id) => { document.getElementById(id).innerHTML = MEGA; });
+['avA', 'avB'].forEach((id) => { document.getElementById(id).innerHTML = MEGA; });
 const ic = (id, s) => { document.getElementById(id).innerHTML = `<svg viewBox="0 0 64 64" fill="none" stroke="#eef3f1" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">${s}</svg>`; };
 ic('icTV', '<rect x="8" y="16" width="48" height="32" rx="4"/><path d="M24 56h16M26 8l6 8 6-8"/>');
 ic('icDI', '<path d="M10 12h36v40H14a4 4 0 0 1-4-4z"/><path d="M46 22h8v26a4 4 0 0 1-8 0"/><path d="M17 20h22M17 28h22M17 36h14M17 44h18"/>');
@@ -522,6 +536,8 @@ const sella = (sel, t) => { sx('boom', t); sx('chas', t); tl.fromTo(sel, { scale
 const barra = (sel, t, d = .8) => { sx('whoosh', t); tl.fromTo(sel, { scaleX: 0 }, { scaleX: 1, duration: d, ease: E }, t); };
 const quita = (sel, t, d = .35) => tl.to(sel, { autoAlpha: 0, duration: d }, t);
 const atenua = (sel, t, o = .35) => tl.to(sel, { autoAlpha: o, duration: .4 }, t);
+const cara = (sel, t, snd = true) => { if (snd) sx('pop', t); tl.fromTo(sel, { scale: 0, autoAlpha: 0, rotation: -10 }, { scale: 1, autoAlpha: 1, rotation: 0, duration: .6, ease: 'back.out(2.2)' }, t); };
+const mini = (sel, t) => tl.fromTo(sel, { scale: 0 }, { scale: 1, duration: .5, ease: 'back.out(2.6)' }, t);
 const flash = (t, o = .35) => tl.fromTo('#flash', { opacity: o }, { opacity: 0, duration: .3, immediateRender: false }, t);
 const C_ = {}; const cuenta = (id, t0, d, a, b, f = (v) => Math.round(v).toLocaleString('es-AR'), tics = true) => { C_[id] = [t0, d, a, b, f, tics]; };
 const TX = []; const tipea = (id, t0, t1, h) => TX.push([document.getElementById(id), t0, t1, h]);
@@ -544,30 +560,30 @@ const llega = (k, id) => viaje(id, A(k) - .55);
 
 // ===== p1 · gancho =====
 sube('#c1a', 0, 40, false); sube('#c1l1', V('p1', 'lula perdía') - .1, 24);
-sube('#c1ar', V('p1', '21') - .25, 0); sube('#c1b', V('p1', 'días después') - .1);
+cara('#k1f', .3); sube('#c1ar', V('p1', '21') - .25, 0); sube('#c1b', V('p1', 'días después') - .1); cara('#k1l', V('p1', 'días después') + .2);
 sube('#c1l2', V('p1', 'la ganó') - .15, 24); cuenta('n1m', V('p1', '4 400') - .7, .62, 0, 4430191);
 tl.to('#c1cal', { x: -330, duration: .9, ease: E2 }, V('p1', 'y en el medio') - .15);
 sx('whoosh', V('p1', 'un canal') - .4); tl.fromTo('#c1tel', { x: 300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .8, ease: E }, V('p1', 'un canal') - .4);
 const fmtSeg = (v) => v < 1e6 ? Math.round(v).toLocaleString('es-AR') : (v / 1e6).toFixed(1).replace('.', ',') + ' M';
-cuenta('n1seg', V('p1', '50') - .68, .6, 0, 50000, fmtSeg);
+cara('#k1j', V('p1', 'un canal') + .1); cuenta('n1seg', V('p1', '50') - .68, .6, 0, 50000, fmtSeg);
 C_['n1seg2'] = [V('p1', 'personas terminó') + .05, 1.0, 50000, 10900000, fmtSeg, true, 'n1seg'];
 funde('#c1casi', V('p1', '11') - .05);
 enfoca('c1', 100, 0, 1.12, V('p1', 'esto es') - .1, 1.4);
 // ===== p2 · resultados =====
 llega('p2', 'c2');
 sube('#c2t', A('p2') + .15);
-sube('#c2a', V('p2', 'en la primera') - .1); funde('#c2a1', V('p2', 'ganó flavio')); barra('#c2a1f', V('p2', 'ganó flavio') + .1);
+sube('#c2a', V('p2', 'en la primera') - .1); funde('#c2a1', V('p2', 'ganó flavio')); mini('#c2a1 .mi', V('p2', 'ganó flavio')); barra('#c2a1f', V('p2', 'ganó flavio') + .1);
 funde('#c2a1v', V('p2', '47') - .08); funde('#c2a1p', V('p2', '47', true) + .15);
-funde('#c2a2', V('p2', 'contra') - .35); barra('#c2a2f', V('p2', 'contra') - .3); funde('#c2a2v', V('p2', '45') - .08);
+funde('#c2a2', V('p2', 'contra') - .35); mini('#c2a2 .mi', V('p2', 'contra') - .35); barra('#c2a2f', V('p2', 'contra') - .3); funde('#c2a2v', V('p2', '45') - .08);
 sube('#c2b', V('p2', 'en el balotage') - .1); sella('#c2s', V('p2', 'todo se dio'));
-funde('#c2b1', V('p2', 'lula 51') - .1); barra('#c2b1f', V('p2', 'lula 51')); funde('#c2b1v', V('p2', '51') - .08);
-funde('#c2b2', V('p2', 'flavio 48') - .1); barra('#c2b2f', V('p2', 'flavio 48')); funde('#c2b2v', V('p2', '48') - .08);
+funde('#c2b1', V('p2', 'lula 51') - .1); mini('#c2b1 .mi', V('p2', 'lula 51') - .1); barra('#c2b1f', V('p2', 'lula 51')); funde('#c2b1v', V('p2', '51') - .08);
+funde('#c2b2', V('p2', 'flavio 48') - .1); mini('#c2b2 .mi', V('p2', 'flavio 48') - .1); barra('#c2b2f', V('p2', 'flavio 48')); funde('#c2b2v', V('p2', '48') - .08);
 entra('#c2b1p', V('p2', '48', true) + .3);
 // ===== p3 · entre vueltas =====
 llega('p3', 'c3');
 sube('#c3t', A('p3') + .1); sube('#c3a', V('p3', 'lula sumó') - .3);
-funde('#c3a1', V('p3', 'lula sumó') - .1); barra('#c3a1f', V('p3', 'sumó'));
-funde('#c3a2', V('p3', 'flavio menos') - .1); barra('#c3a2f', V('p3', 'flavio menos'));
+funde('#c3a1', V('p3', 'lula sumó') - .1); mini('#c3a1 .mi', V('p3', 'lula sumó') - .1); barra('#c3a1f', V('p3', 'sumó'));
+funde('#c3a2', V('p3', 'flavio menos') - .1); mini('#c3a2 .mi', V('p3', 'flavio menos') - .1); barra('#c3a2f', V('p3', 'flavio menos'));
 sube('#c3b', V('p3', 'y fueron') - .1); funde('#c3bv', V('p3', '3 millones') - .1); funde('#c3bab', V('p3', 'personas más'));
 sella('#c3s', V('p3', 'primera vez')); sube('#c3s2', V('p3', 'sale segundo') - .2, 24);
 // ===== p4 · cómo se explica =====
@@ -575,13 +591,17 @@ llega('p4', 'c4');
 sube('#c4q', V('p4', 'cómo') - .15); funde('#c4k', V('p4', 'muchas razones') - .1);
 entra('#c4c1', V('p4', 'alianzas')); entra('#c4c2', V('p4', 'debates')); entra('#c4c3', V('p4', 'economía'));
 atenua('#c4c1,#c4c2,#c4c3', V('p4', 'pero hay'), .35); entra('#c4c4', V('p4', 'una pieza'));
-tl.to('#c4q', { autoAlpha: .4, duration: .4 }, V('p4', 'y tiene nombre'));
+quita('#c4q,#c4k,#c4c1,#c4c2,#c4c3,#c4c4', V('p4', 'y tiene nombre') - .1);
+entra('#k4ring', V('p4', 'y tiene nombre') + .15); tl.to('#k4ring', { rotation: 90, duration: 1.8, ease: 'none' }, V('p4', 'y tiene nombre') + .15);
+quita('#k4ring', V('p4', 'andré') - .05, .15); sx('boom', V('p4', 'andré')); tl.fromTo('#k4j', { scale: 2.2, autoAlpha: 0, rotation: 8 }, { scale: 1, autoAlpha: 1, rotation: 0, duration: .55, ease: 'back.out(1.8)' }, V('p4', 'andré') - .05);
 sube('#c4n', V('p4', 'que nadie') - .1, 30);
 sx('chas', V('p4', 'andré')); tl.fromTo('#c4x', { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 100%)', duration: .55, ease: 'power3.inOut' }, V('p4', 'andré') - .05);
 flash(V('p4', 'andré') + .1, .18);
 // ===== p5 · ficha =====
 llega('p5', 'c5');
 sube('#c5f', A('p5') + .05);
+tl.fromTo('#k5img', { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power2.inOut' }, A('p5') + .3);
+tl.fromTo('#k5scan', { y: 0, autoAlpha: 1 }, { y: 424, duration: 1.1, ease: 'power2.inOut' }, A('p5') + .3); quita('#k5scan', A('p5') + 1.4, .2); sx('tecla', A('p5') + .4); sx('tecla', A('p5') + .8);
 ['c5r1:diputado federal', 'c5r2:en 2022', 'c5r3:y se volvió', 'c5d:y tiene su', 'c5r4:la policía', 'c5r5:firmó', 'c5r6:y pagó'].forEach((x) => { const [id, f] = x.split(':'); sube('#' + id, V('p5', f) - .12, 24); sx('tecla', V('p5', f)); });
 sella('#c5s', V('p5', 'evitar el'));
 // ===== p6 · dato raro =====
@@ -590,7 +610,7 @@ sube('#c6t', A('p6') + .1); sube('#c6a', V('p6', 'mientras') - .1, 24);
 funde('#c6r1', V('p6', 'como diputado') - .1); barra('#c6f1', V('p6', 'como diputado'));
 funde('#c6r2', V('p6', 'sacó') - .1); barra('#c6f2', V('p6', 'sacó'));
 tl.fromTo('#c6p', { autoAlpha: 0, x: -30 }, { autoAlpha: 1, x: 0, duration: .4, ease: E }, V('p6', '67') - .1);
-sube('#c6g', V('p6', 'el general') - .1, 24); sube('#c6h', V('p6', 'arrastraba otra') - .1, 24);
+sube('#c6g', V('p6', 'el general') - .1, 24); cara('#k6j', V('p6', 'el general') + .3); sube('#c6h', V('p6', 'arrastraba otra') - .1, 24);
 // ===== p7-p8 · crecimiento =====
 llega('p7', 'c7');
 sube('#c7t', A('p7') + .1);
@@ -642,7 +662,7 @@ llega('p10', 'c9');
 sube('#c9p', A('p10') + .05);
 const M9 = [['compartir', 'Compartí este video con todos tus contactos'], ['subir', 'Subí el hashtag en X. ¡Ahora!'], ['buscar', 'Buscá en Google estas palabras sobre el rival'], ['reenviar', 'Reenviá esta invitación: el texto ya está escrito']];
 M9.forEach(([f, txt], i) => { const t = V('p10', f); entra('#c9m' + (i + 1), t - .15); tipea('c9t' + (i + 1), t, t + Math.min(1.1, txt.length * .03), txt); });
-sube('#c9l', V('p10', 'y el 22') - .2);
+sube('#c9l', V('p10', 'y el 22') - .2); cara('#k9j', V('p10', 'un vivo')); cara('#k9l', V('p10', 'con lula')); funde('#k9t', V('p10', 'con lula') + .3);
 tl.fromTo('#c9vivo', { opacity: 1 }, { opacity: .45, duration: .5, repeat: 9, yoyo: true }, V('p10', 'y el 22'));
 cuenta('n9', V('p10', 'un millón') - .78, .7, 0, 1183488, (v) => v < 1 ? '—' : Math.round(v).toLocaleString('es-AR'));
 // ===== p11 · justicia =====
@@ -657,7 +677,7 @@ sube('#c11c', V('p12', 'una investigación') - .1); sube('#c11m', V('p12', 'con 
 sube('#c11j', V('p12', 'el tribunal') - .1); sube('#c11j2', V('p12', 'pero dejó') - .1, 16, false);
 // ===== p13 · la derecha =====
 llega('p13', 'c12');
-sube('#c12t', A('p13') + .1); sube('#c12a', V('p13', 'su ejército') - .1);
+sube('#c12t', A('p13') + .1); sube('#c12a', V('p13', 'su ejército') - .1); mini('#k12f', V('p13', 'su ejército') + .1);
 sube('#c12b', V('p13', 'y los diputados') - .1);
 funde('#c12b1', V('p13', 'entre todos') - .1); barra('#c12f1', V('p13', 'entre todos'));
 funde('#c12b2', V('p13', 'casi el triple') - .1); barra('#c12f2', V('p13', 'casi el triple')); entra('#c12x', V('p13', 'y sus aliados'));
@@ -668,7 +688,7 @@ sube('#c13t', A('p14') + .1); sella('#c13s', V('p14', 'nadie lo puede'));
 funde('#c13r1', V('p14', 'el canal tenía') - .1); barra('#c13f1', V('p14', 'el canal tenía'), 1);
 funde('#c13r2', V('p14', 'la diferencia') - .1); barra('#c13f2', V('p14', 'la diferencia'));
 funde('#c13x', V('p14', 'final') + .1);
-sube('#c13n', V('p14', 'pero seguir') - .1, 20);
+sube('#c13n', V('p14', 'pero seguir') - .1, 20); ['#k13l', '#k13j', '#k13f'].forEach((s, i) => cara(s, V('p14', 'pero seguir') + .2 + i * .18, i === 1)); funde('#k13n', V('p14', 'pero seguir') + .9);
 sube('#c13r3', V('p14', 'y lo que nadie') - .1, 20); sube('#c13q', V('p14', 'a cuántos') - .1, 20);
 // ===== p15 · la forma =====
 llega('p15', 'c14');
@@ -724,7 +744,7 @@ const dibuja8 = (t) => { const g = cv8; g.clearRect(0, 0, 1000, 500); if (t < T9
   g.fillStyle = '#25d366'; g.beginPath(); g.arc(EM[0], EM[1], 66, 0, 7); g.fill();
   g.fillStyle = '#04130a'; g.beginPath(); g.moveTo(118, 245); g.lineTo(134, 245); g.lineTo(162, 222); g.lineTo(162, 298); g.lineTo(134, 275); g.lineTo(118, 275); g.closePath(); g.fill();
   g.strokeStyle = '#04130a'; g.lineWidth = 6; g.beginPath(); g.arc(166, 260, 18, -.9, .9); g.stroke(); g.beginPath(); g.arc(166, 260, 32, -.9, .9); g.stroke(); };
-const head = $('#c7head');
+const head = $('#c7head'); const CARAS = [...document.querySelectorAll('.cara img')];
 window.render = (t) => {
   tl.seek(t, false);
   respira = 1 + .012 * (1 - Math.cos(t * .35)) / 2; aplicar();
@@ -735,6 +755,7 @@ window.render = (t) => {
   pA.style.strokeDashoffset = LA * (1 - prog.a); pB.style.strokeDashoffset = LB * (1 - prog.b);
   if (prog.b > 0 && prog.b < 1) { const q = pB.getPointAtLength(LB * prog.b); head.setAttribute('cx', q.x); head.setAttribute('cy', q.y); head.style.opacity = 1; } else head.style.opacity = 0;
   if (t > A('p9') - 1.5 && t < A('p10') + 1) dibuja8(t);
+  CARAS.forEach((im, i) => { im.style.transform = `translate(${(Math.sin(t * .5 + i * 1.7) * 5).toFixed(2)}px,${(Math.cos(t * .42 + i) * 4).toFixed(2)}px) scale(${(1.07 + .02 * Math.sin(t * .3 + i)).toFixed(4)})`; });
   $('#hudr').style.opacity = Math.floor(t * 1.2) % 2 ? .25 : 1;
   subtitulos(t);
 };
