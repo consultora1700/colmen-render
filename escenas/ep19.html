@@ -385,7 +385,7 @@ pop('#gC3', V('sG', 'parecido'), 20);
 // F · persona sola, después crédito por habitante
 barre('sF', 'arr');
 tl.fromTo(['#fS1', '#fS2'], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: .4, ease: E, stagger: .5 }, R('sF', .1));
-pop('#fK', V('sF', 'mas de 30') - .1, 30); cuenta('fKv', V('sF', 'mas de 30'), 30, 20); golpe('sF', V('sF', 'mas de 30'), 1.06); sx('boom', V('sF', 'mas de 30')); flash(V('sF', 'mas de 30'), .3);
+const T30 = V('sF', 'mas de 30 anos', true) + .05; pop('#fK', T30 - .15, 30); cuenta('fKv', T30, 30, 20); golpe('sF', T30, 1.06); sx('boom', T30); flash(T30, .3);
 tl.to('#fSolo', { autoAlpha: 0, duration: .3 }, V('sF', 'y por habitante') - .15); sx('whoosh', V('sF', 'y por habitante') - .15);
 lineas('#fT', V('sF', 'y por habitante'), .1);
 pop('#fC1', V('sF', '112'), 20); tl.fromTo('#fC1', { scaleY: 0 }, { scaleY: 1, duration: .3 }, V('sF', '112'));
