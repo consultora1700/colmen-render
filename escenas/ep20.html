@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>EP.20 Flávio desaparece</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{display:none!important;position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+
+:root{--lula:#e4002b;--flavio:#2f7bf0;--oro:#ffd23f;--verde:#22c55e;--rojo:#ef3340;--bg:#08090b}
+.fondo{inset:0;background:var(--bg)}
+.bgfoto{position:absolute;left:-200px;top:0;width:1480px;height:1920px;object-fit:cover;filter:grayscale(.6) brightness(.2) blur(2px)}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 5px);pointer-events:none}
+.chip{position:absolute;padding:14px 26px;border-radius:44px;background:#11161c;border:2px solid #24303a;font:800 32px 'Inter Tight';white-space:nowrap;color:#fff}
+.tag{display:inline-block;padding:8px 18px;border-radius:12px;font:800 26px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase}
+.sello{position:absolute;padding:10px 30px;border:8px solid var(--rojo);border-radius:18px;color:var(--rojo);font:900 72px 'Inter Tight';letter-spacing:.02em;background:rgba(255,255,255,.97);white-space:nowrap;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.sello.ok{border-color:#16a34a;color:#0a7a2a}
+.tit{position:absolute;left:90px;top:480px;width:870px}
+.big{font:900 150px/0.9 'Inter Tight';letter-spacing:-.06em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lab{font:800 34px/1.15 'Inter Tight';color:var(--mute)}
+.src{font-size:19px;line-height:1.3}
+.mono{font-family:'JetBrains Mono',monospace}
+.cut{position:absolute;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))}
+.cd{position:absolute;left:90px;width:850px;border-radius:30px;background:#14161a;border:2px solid #262a31;padding:26px 30px}
+.cd .k{font:800 22px 'Inter Tight';letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+.cd .v{font:900 54px/1.05 'Inter Tight';letter-spacing:-.03em;margin-top:8px}
+.barras{position:absolute;left:90px;width:850px}
+.barras .f{display:grid;grid-template-columns:230px 1fr;align-items:center;gap:20px;margin-top:20px}
+.barras .f span{font:800 32px/1.1 'Inter Tight'}
+.barras .bb{position:relative;height:84px;border-radius:20px;background:#1f1d22}
+.barras .bb i{position:absolute;left:0;top:0;bottom:0;border-radius:20px}
+.barras .bb b{position:absolute;left:22px;top:0;line-height:84px;font:900 44px 'Inter Tight';white-space:nowrap;color:#fff}
+.mos{position:absolute;left:90px;width:850px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.mos>div{border-radius:30px;padding:26px 26px 24px;background:#14161a;border:2px solid #262a31}
+.mos b{display:block;font:900 72px/1 'Inter Tight';letter-spacing:-.04em;white-space:nowrap}
+.mos span{display:block;font:800 29px/1.15 'Inter Tight';margin-top:12px}
+.mos small{display:block;font:600 19px/1.25 'Inter Tight';color:var(--mute);margin-top:10px}
+.burb{position:absolute;max-width:700px;padding:24px 30px;border-radius:34px;font:700 36px/1.25 'Inter Tight'}
+.burb small{display:block;font:800 20px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+.rec{position:absolute;right:140px;font:800 20px 'Inter Tight';letter-spacing:.14em;color:var(--mute);text-transform:uppercase}
+
+.cita{position:absolute;left:90px;width:850px;border-radius:30px;padding:28px 32px;background:#f4f4f2;color:#111;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.cita .q{font:900 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.cita .w{font:800 22px 'Inter Tight';letter-spacing:.12em;text-transform:uppercase;color:#777;margin-top:14px}
+.reloj{font:800 150px/1 'JetBrains Mono';letter-spacing:-.06em}
+.pas{position:absolute;width:390px;height:520px;border-radius:26px;padding:34px 30px;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.pas .k{font:800 22px 'Inter Tight';letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.pas .v{font:900 46px/1.05 'Inter Tight';margin-top:14px}
+.pas .esc{position:absolute;left:50%;top:58%;width:120px;height:120px;margin:-60px 0 0 -60px;border:6px solid currentColor;border-radius:50%;opacity:.5}
+.ruta{position:absolute;left:90px;top:600px;width:880px;height:200px}
+.ruta .pt{position:absolute;top:70px;width:34px;height:34px;border-radius:50%}
+.ruta .nm{position:absolute;top:122px;font:800 34px 'Inter Tight'}
+.ruta .ln{position:absolute;left:30px;top:84px;height:6px;width:800px;background:repeating-linear-gradient(90deg,#fff 0 22px,transparent 22px 40px);transform-origin:0 50%}
+.vigia{font:800 26px 'JetBrains Mono';letter-spacing:.06em;color:var(--rojo)}
+</style></head>
+<body>
+
+<!-- 1 · gancho -->
+<div class="sc" id="s1" style="visibility:visible"><div class="cam">
+  <div class="abs fondo"></div><img src="img/flavio-mic.jpg" class="bgfoto" style="object-position:40% 30%;filter:grayscale(.5) brightness(.26)">
+  <div class="abs vigia" id="t1v" style="left:90px;top:470px">● EN CURSO · 27/10/2026</div>
+  <div class="cita" id="t1c" style="top:540px"><div class="q">“Nunca pensé en salir del país.”</div><div class="w">Flávio Bolsonaro · lunes 26/10</div></div>
+  <div class="abs" id="t1r" style="left:90px;top:850px"><div class="reloj" style="color:var(--oro)">&lt; 24 h</div><div class="lab" style="font-size:36px;color:#fff;margin-top:8px">después…</div></div>
+  <div class="sello" id="t1s" style="left:170px;top:1140px;font-size:88px">¿DÓNDE ESTÁ?</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Video en Instagram, 26/10/2026 (Reuters, CartaCapital). Traducción propia. Foto: Agência Senado (archivo).</div>
+</div></div>
+
+<!-- A · el contexto -->
+<div class="sc" id="sA"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="aT" style="left:90px;top:480px"><span class="tag" style="background:#fff;color:#111">Domingo 25/10 · 2º turno</span></div>
+  <div class="cd" id="a1" style="top:560px;border-color:var(--lula)"><div class="k">Elección presidencial de Brasil</div><div class="v">Flávio <span style="color:#ff8a9a">perdió</span> con Lula</div></div>
+  <div class="cd" id="a2" style="top:790px;border-color:var(--oro)"><div class="k">Lunes 26/10 · Alexandre de Moraes, juez de la Corte</div><div class="v">Entregar los pasaportes en <span style="color:var(--oro)">24 horas</span></div></div>
+  <div class="chip" id="a3" style="left:90px;top:1050px;font-size:38px">Investigación por lavado de dinero</div>
+  <div class="chip" id="a4" style="left:90px;top:1150px;font-size:38px;background:#fff;color:#111;border-color:#fff">Él lo niega</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">STF, 26/10/2026, causa con su abogado Willer Tomaz (Reuters, CartaCapital, Metrópoles).</div>
+</div></div>
+
+<!-- B · vence el plazo -->
+<div class="sc" id="sB"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="bT" style="left:90px;top:480px"><span class="tag" style="background:var(--oro);color:#1a1405">Martes 27/10</span></div>
+  <div class="abs reloj" id="bR" style="left:90px;top:560px;color:#fff">11:00</div>
+  <div class="abs lab" id="bL" style="left:90px;top:730px;font-size:40px;color:#fff">Vence el plazo. <span style="color:#ff8a9a">No los entrega.</span></div>
+  <div class="pas" id="bP1" style="left:90px;top:840px;background:#0d3b2e;color:#e9e4b8"><div class="k">República Federativa do Brasil</div><div class="v">Pasaporte</div><div class="esc"></div></div>
+  <div class="pas" id="bP2" style="left:560px;top:840px;background:#3a1218;color:#f0d9a8"><div class="k">República Federativa do Brasil</div><div class="v">Diplomático</div><div class="esc"></div></div>
+  <div class="sello" id="bS" style="left:220px;top:1060px;font-size:96px">ANULADOS</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Policía Federal, 27/10/2026 (Reuters, CartaCapital). Anularlos no le impide usarlos para entrar a otro país.</div>
+</div></div>
+
+<!-- C · la búsqueda -->
+<div class="sc" id="sC"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="tit" id="cT"><span class="m d" style="font-size:80px"><span>La búsqueda</span></span></div>
+  <div class="ruta" id="cRu">
+    <div class="pt" style="left:10px;background:var(--oro)"></div><div class="nm" style="left:0">Iguazú 🇦🇷</div>
+    <div class="ln" id="cLn"></div>
+    <div class="pt" style="left:820px;background:#fff"></div><div class="nm" style="left:700px">Miami</div>
+  </div>
+  <div class="cd" id="c1" style="top:830px"><div class="k">Avión privado · salida prevista</div><div class="v" style="font-size:48px">02:00 de la mañana</div></div>
+  <div class="sello" id="cS" style="left:160px;top:1020px;font-size:84px">NUNCA DESPEGÓ</div>
+  <div class="cd" id="c2" style="top:1190px;border-color:#74acdf"><div class="k">Argentina</div><div class="v" style="font-size:44px">“No hay registro de que haya entrado”</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Migraciones / vocero presidencial (Bloomberg, Folhapress); piloto del vuelo a Folha; Infobae. 26–27/10/2026.</div>
+</div></div>
+
+<!-- D · lo que dicen y lo que no -->
+<div class="sc" id="sD"><div class="cam">
+  <div class="abs fondo"></div><img src="img/flavio.jpg" class="bgfoto" id="bgD" style="filter:grayscale(1) brightness(.22)">
+  <div class="cd" id="d1" style="top:480px"><div class="k">Policía Federal de Brasil</div><div class="v" style="font-size:44px">Sin registro de salida por un control oficial</div></div>
+  <div class="cd" id="d2" style="top:720px;border-color:var(--flavio)"><div class="k">Un aliado + una fuente del gobierno de EE.UU. (a Reuters)</div><div class="v" style="font-size:46px">Va camino a <span style="color:var(--oro)">Florida</span>, con su familia</div></div>
+  <div class="chip" id="d3" style="left:90px;top:980px;font-size:40px">…y pediría asilo</div>
+  <div class="sello" id="dS" style="left:150px;top:1120px;font-size:92px">SIN CONFIRMAR</div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Reuters (vía Forbes Brasil), Metrópoles, Band, 27/10/2026. EE.UU. no respondió. Su equipo lo negó a la mañana.</div>
+</div></div>
+
+<!-- E · ¿les suena? -->
+<div class="sc" id="sE"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="tit" id="eT"><span class="m d" style="font-size:84px"><span><span class="hl am">¿Le suena?</span></span></span></div>
+  <img class="cut" id="eJ" src="img/jair-rec.png" style="left:560px;top:640px;width:520px;filter:grayscale(1) contrast(1.1) drop-shadow(0 30px 60px rgba(0,0,0,.6))">
+  <div class="abs" id="e1" style="left:90px;top:640px;width:520px"><div class="tag" style="background:#fff;color:#111">2022 · perdió Jair</div><div class="lab" style="font-size:40px;color:#fff;margin-top:18px;line-height:1.15">Se fue a <span style="color:var(--oro)">Florida</span><br>2 días antes de<br>entregar el mando</div></div>
+  <div class="cd" id="e2" style="top:1000px;width:560px;padding:20px 26px;z-index:3;border-color:var(--rojo)"><div class="k">Hoy</div><div class="v" style="font-size:46px"><span style="color:#ff8a9a"><span id="e2v">0</span> años</span> de condena</div></div>
+  <div class="cd" id="e3" style="top:1190px;z-index:3"><div class="k">23/10 · su hermano Eduardo</div><div class="v" style="font-size:40px">Si perdía, tenía que irse del país</div></div>
+  <div class="abs src" style="left:90px;top:1420px;width:860px">Jair viajó a Orlando el 30/12/2022; STF, condena por intento de golpe (hoy domiciliaria). Eduardo: podcast Louder with Crowder.</div>
+</div></div>
+
+<!-- Z · cierre + loop -->
+<div class="sc" id="sZ"><div class="cam">
+  <div class="abs fondo"></div>
+  <div class="abs" id="z0" style="left:90px;top:480px;width:860px;display:grid;gap:14px">
+    <div class="chip" style="position:static;font-size:30px">Diputados del PT: detención + alerta roja de Interpol</div>
+    <div class="chip" style="position:static;font-size:30px">Tiene pasaporte italiano (2023)</div>
+    <div class="chip" style="position:static;font-size:30px">Fueros de senador hasta el 1/2/2027</div>
+  </div>
+  <div class="abs" id="z2" style="left:90px;top:800px;width:880px"><span class="m d" style="font-size:70px"><span>La pregunta ya no es</span></span><span class="m d" style="font-size:70px"><span>dónde está.</span></span></div>
+  <div class="abs" id="z3" style="left:90px;top:960px;width:880px;visibility:hidden"><span class="m d" style="font-size:70px"><span><span class="hl" style="background:var(--rojo)">Es si vuelve.</span></span></span></div>
+  <div class="perfil" id="perfil" style="top:1100px;left:240px;width:700px;padding:26px;gap:20px">
+    <div class="av" style="width:120px;height:120px"><div style="background-image:url(img/avatar.png)"></div></div>
+    <div><div class="n" style="font-size:40px">Franco Valencia</div><div class="r" style="font-size:24px">@francovalencia.ok</div></div>
+    <div class="btn" id="btn" style="height:76px;line-height:76px;font-size:32px"><span id="btnt">Seguir</span></div>
+  </div>
+  <div class="abs src" id="crd" style="left:90px;top:1390px;width:880px;font-size:16px;line-height:1.35">Noticia en curso al 27/10/2026. Fotos: Agência Senado, Senado Federal y TV Brasil vía Wikimedia Commons.</div>
+  <div class="abs" id="loop" style="inset:0;opacity:0">
+    <div class="abs fondo"></div><img src="img/flavio-mic.jpg" class="bgfoto" style="object-position:40% 30%;filter:grayscale(.5) brightness(.26)">
+    <div class="abs vigia" style="left:90px;top:470px">● EN CURSO · 27/10/2026</div>
+    <div class="cita" style="top:540px"><div class="q">“Nunca pensé en salir del país.”</div><div class="w">Flávio Bolsonaro · lunes 26/10</div></div>
+  </div>
+</div></div>
+
+<div id="dedo"></div><div id="onda"></div>
+<div id="flash" style="position:absolute;inset:0;z-index:56;background:#fff;opacity:0;pointer-events:none"></div>
+<div id="vin"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+
+<script>
+(async () => {
+await document.fonts.ready;
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+const T = {"seg": [{"k": "s1", "A": 0.0, "va": 0, "n": 6.252}, {"k": "sA", "A": 6.252, "va": 6.415, "n": 10.32}, {"k": "sB", "A": 16.572, "va": 17.305, "n": 7.17}, {"k": "sC", "A": 23.742, "va": 25.495666999999997, "n": 10.849}, {"k": "sD", "A": 34.591, "va": 37.085, "n": 11.99}, {"k": "sE", "A": 46.581, "va": 50.14, "n": 12.992}, {"k": "sZ", "A": 59.573, "va": 64.744917, "n": 13.194}], "voz": [[0, 4.95, 0.12], [4.972, 6.415, 4.64], [6.415, 6.67, 6.372], [6.911, 13.39, 6.823], [13.575, 15.31, 12.88], [15.609, 17.305, 14.73], [17.305, 21.57, 16.692], [21.78, 24.73, 20.76], [25.496, 26.91, 23.862], [27.12, 32.69, 25.338], [33.127, 34.31, 30.693], [34.549, 37.085, 31.986], [37.085, 40.25, 34.711], [40.76, 44.85, 37.879], [44.933, 45.99, 41.673], [46.12, 47.53, 42.752], [47.938, 49.65, 44.325], [50.14, 50.89, 46.701], [51.26, 52.35, 47.673], [52.417, 57.99, 48.725], [58.32, 64.03, 54.082], [64.745, 69.09, 59.693], [69.675, 70.99, 63.934], [71.344, 73.41, 65.421], [73.875, 75.49, 67.59], [76.06, 76.96, 69.349]], "dur": 72.767, "vel": 1.1}; const PAL = [[0.0, 0.34, "El"], [0.34, 0.56, "lunes"], [0.56, 0.86, "dijo,"], [1.2, 1.36, "nunca"], [1.36, 1.86, "pens\u00e9"], [1.86, 2.04, "en"], [2.04, 2.2, "salir"], [2.2, 2.36, "del"], [2.36, 2.86, "pa\u00eds."], [3.18, 3.4, "Menos"], [3.4, 3.52, "de"], [3.52, 3.86, "24"], [3.86, 4.14, "horas"], [4.14, 4.7, "despu\u00e9s,"], [5.16, 5.34, "nadie"], [5.34, 5.56, "sabe"], [5.56, 5.82, "d\u00f3nde"], [5.82, 6.42, "est\u00e1."], [7.04, 7.24, "Flavio"], [7.24, 7.6, "Bolsonaro"], [7.6, 7.9, "perdi\u00f3"], [7.9, 8.08, "con"], [8.08, 8.26, "Lula"], [8.26, 8.4, "el"], [8.4, 8.96, "domingo."], [9.28, 9.38, "El"], [9.38, 9.74, "lunes,"], [9.88, 10.0, "un"], [10.0, 10.14, "juez"], [10.14, 10.26, "de"], [10.26, 10.42, "la"], [10.42, 10.62, "corte"], [10.62, 10.78, "le"], [10.78, 10.98, "orden\u00f3"], [10.98, 11.32, "entregar"], [11.32, 11.5, "los"], [11.5, 11.96, "pasaportes"], [11.96, 12.12, "en"], [12.12, 12.74, "24"], [12.74, 13.14, "horas."], [13.62, 13.76, "Lo"], [13.76, 14.1, "investigan"], [14.1, 14.28, "por"], [14.28, 14.58, "lavado"], [14.58, 14.78, "de"], [14.78, 15.06, "dinero."], [15.66, 15.94, "\u00c9l"], [15.94, 16.2, "lo"], [16.2, 17.24, "niega."], [17.56, 18.08, "Martes,"], [18.26, 18.48, "11"], [18.48, 18.6, "de"], [18.6, 18.78, "la"], [18.78, 19.14, "ma\u00f1ana."], [19.54, 19.7, "Vence"], [19.7, 19.88, "el"], [19.88, 20.32, "plazo."], [20.56, 20.68, "No"], [20.68, 20.9, "los"], [20.9, 21.32, "entrega."], [21.82, 22.0, "La"], [22.0, 22.28, "Polic\u00eda"], [22.28, 22.62, "Federal"], [22.62, 22.92, "los"], [22.92, 23.2, "anula."], [23.52, 23.78, "Tambi\u00e9n"], [23.78, 24.0, "el"], [24.0, 24.48, "diplom\u00e1tico."], [25.54, 25.7, "Y"], [25.7, 25.88, "empieza"], [25.88, 26.04, "la"], [26.04, 26.66, "b\u00fasqueda."], [27.16, 27.38, "En"], [27.38, 27.88, "Iguaz\u00fa,"], [28.14, 28.22, "del"], [28.22, 28.32, "lado"], [28.32, 28.84, "argentino,"], [28.84, 29.36, "un"], [29.36, 29.56, "avi\u00f3n"], [29.56, 29.92, "privado"], [29.92, 30.16, "ten\u00eda"], [30.16, 30.32, "que"], [30.32, 30.56, "salir"], [30.56, 30.7, "a"], [30.7, 30.88, "las"], [30.88, 31.0, "dos"], [31.0, 31.1, "de"], [31.1, 31.28, "la"], [31.28, 31.48, "ma\u00f1ana"], [31.48, 31.8, "rumbo"], [31.8, 31.94, "a"], [31.94, 32.44, "Miami."], [33.22, 33.44, "Nunca"], [33.44, 34.06, "despeg\u00f3."], [34.68, 34.76, "Y"], [34.76, 34.9, "la"], [34.9, 35.16, "Argentina"], [35.16, 35.4, "dice"], [35.4, 35.54, "que"], [35.54, 35.72, "\u00e9l"], [35.72, 35.98, "nunca"], [35.98, 37.0, "entr\u00f3."], [37.5, 37.66, "Brasil"], [37.66, 38.08, "tampoco"], [38.08, 38.44, "registra"], [38.44, 38.56, "que"], [38.56, 38.74, "haya"], [38.74, 39.02, "salido"], [39.02, 39.2, "por"], [39.2, 39.42, "un"], [39.42, 39.56, "control"], [39.56, 40.0, "oficial."], [40.8, 40.92, "Pero"], [40.92, 41.14, "un"], [41.14, 41.44, "aliado"], [41.44, 41.58, "y"], [41.58, 41.76, "una"], [41.76, 41.98, "fuente"], [41.98, 42.12, "del"], [42.12, 42.46, "gobierno"], [42.46, 42.7, "de"], [42.7, 42.92, "Estados"], [42.92, 43.28, "Unidos"], [43.28, 43.52, "dicen"], [43.52, 43.7, "que"], [43.7, 43.86, "va"], [43.86, 44.14, "camino"], [44.14, 44.3, "a"], [44.3, 44.6, "Florida,"], [45.08, 45.22, "con"], [45.22, 45.34, "su"], [45.34, 45.74, "familia,"], [46.16, 46.42, "y"], [46.42, 46.56, "que"], [46.56, 46.88, "pedir\u00eda"], [46.88, 47.28, "asilo."], [48.1, 48.24, "Nada"], [48.24, 48.4, "de"], [48.4, 48.46, "eso"], [48.46, 48.64, "est\u00e1"], [48.64, 49.4, "confirmado."], [50.18, 50.34, "\u00bfLe"], [50.34, 50.64, "suena?"], [51.3, 51.54, "En"], [51.54, 52.1, "2022,"], [52.54, 52.6, "su"], [52.6, 52.8, "padre"], [52.8, 53.14, "perdi\u00f3"], [53.14, 53.26, "y"], [53.26, 53.38, "se"], [53.38, 53.46, "fue"], [53.46, 53.58, "a"], [53.58, 53.84, "Florida"], [53.84, 54.06, "dos"], [54.06, 54.26, "d\u00edas"], [54.26, 54.5, "antes"], [54.5, 54.68, "de"], [54.68, 54.92, "entregar"], [54.92, 55.06, "el"], [55.06, 55.84, "mando."], [56.08, 56.22, "Hoy"], [56.22, 56.4, "est\u00e1"], [56.4, 56.76, "condenado"], [56.76, 56.9, "a"], [56.9, 57.3, "27"], [57.3, 57.74, "a\u00f1os."], [58.36, 58.8, "Y"], [58.8, 58.96, "dos"], [58.96, 59.12, "d\u00edas"], [59.12, 59.42, "antes"], [59.42, 59.58, "de"], [59.58, 59.7, "esta"], [59.7, 60.2, "elecci\u00f3n,"], [60.44, 60.48, "su"], [60.48, 60.78, "hermano"], [60.78, 61.02, "Eduardo"], [61.02, 61.26, "hab\u00eda"], [61.26, 61.46, "dicho"], [61.46, 61.64, "que"], [61.64, 61.84, "si"], [61.84, 62.48, "perd\u00eda,"], [62.9, 63.0, "ten\u00eda"], [63.0, 63.16, "que"], [63.16, 63.38, "irse"], [63.38, 63.46, "del"], [63.46, 63.78, "pa\u00eds."], [64.86, 65.12, "Ahora,"], [65.3, 65.56, "diputados"], [65.56, 65.72, "del"], [65.72, 66.02, "partido"], [66.02, 66.22, "de"], [66.22, 66.38, "Lula"], [66.38, 66.64, "piden"], [66.64, 66.84, "su"], [66.84, 67.34, "detenci\u00f3n"], [67.34, 67.6, "y"], [67.6, 67.74, "una"], [67.74, 68.1, "alerta"], [68.1, 68.32, "roja"], [68.32, 68.46, "de"], [68.46, 68.84, "Interpol."], [69.72, 69.84, "\u00c9l"], [69.84, 69.98, "tiene"], [69.98, 70.4, "pasaporte"], [70.4, 70.74, "italiano."], [71.42, 71.56, "Y"], [71.56, 71.74, "fueros"], [71.74, 71.88, "de"], [71.88, 72.22, "senador"], [72.22, 72.42, "hasta"], [72.42, 73.16, "febrero."], [73.92, 74.08, "La"], [74.08, 74.3, "pregunta"], [74.3, 74.48, "ya"], [74.48, 74.6, "no"], [74.6, 74.68, "es"], [74.68, 74.9, "d\u00f3nde"], [74.9, 75.24, "est\u00e1."], [76.1, 76.26, "Es"], [76.26, 76.4, "si"], [76.4, 76.76, "vuelve."]]; const SUBS = [[0.0, 0.34, "El"], [0.34, 0.56, "lunes"], [0.56, 0.86, "dijo,"], [1.2, 1.36, "nunca"], [1.36, 1.86, "pens\u00e9"], [1.86, 2.04, "en"], [2.04, 2.2, "salir"], [2.2, 2.36, "del"], [2.36, 2.86, "pa\u00eds."], [3.18, 3.4, "Menos"], [3.4, 3.52, "de"], [3.52, 3.86, "24"], [3.86, 4.14, "horas"], [4.14, 4.7, "despu\u00e9s,"], [5.16, 5.34, "nadie"], [5.34, 5.56, "sabe"], [5.56, 5.82, "d\u00f3nde"], [5.82, 6.42, "est\u00e1."], [7.04, 7.24, "Flavio"], [7.24, 7.6, "Bolsonaro"], [7.6, 7.9, "perdi\u00f3"], [7.9, 8.08, "con"], [8.08, 8.26, "Lula"], [8.26, 8.4, "el"], [8.4, 8.96, "domingo."], [9.28, 9.38, "El"], [9.38, 9.74, "lunes,"], [9.88, 10.0, "un"], [10.0, 10.14, "juez"], [10.14, 10.26, "de"], [10.26, 10.42, "la"], [10.42, 10.62, "corte"], [10.62, 10.78, "le"], [10.78, 10.98, "orden\u00f3"], [10.98, 11.32, "entregar"], [11.32, 11.5, "los"], [11.5, 11.96, "pasaportes"], [11.96, 12.12, "en"], [12.12, 12.74, "24"], [12.74, 13.14, "horas."], [13.62, 13.76, "Lo"], [13.76, 14.1, "investigan"], [14.1, 14.28, "por"], [14.28, 14.58, "lavado"], [14.58, 14.78, "de"], [14.78, 15.06, "dinero."], [15.66, 15.94, "\u00c9l"], [15.94, 16.2, "lo"], [16.2, 17.24, "niega."], [17.56, 18.08, "Martes,"], [18.26, 18.48, "11"], [18.48, 18.6, "de"], [18.6, 18.78, "la"], [18.78, 19.14, "ma\u00f1ana."], [19.54, 19.7, "Vence"], [19.7, 19.88, "el"], [19.88, 20.32, "plazo."], [20.56, 20.68, "No"], [20.68, 20.9, "los"], [20.9, 21.32, "entrega."], [21.82, 22.0, "La"], [22.0, 22.28, "Polic\u00eda"], [22.28, 22.62, "Federal"], [22.62, 22.92, "los"], [22.92, 23.2, "anula."], [23.52, 23.78, "Tambi\u00e9n"], [23.78, 24.0, "el"], [24.0, 24.48, "diplom\u00e1tico."], [25.54, 25.7, "Y"], [25.7, 25.88, "empieza"], [25.88, 26.04, "la"], [26.04, 26.66, "b\u00fasqueda."], [27.16, 27.38, "En"], [27.38, 27.88, "Iguaz\u00fa,"], [28.14, 28.22, "del"], [28.22, 28.32, "lado"], [28.32, 28.84, "argentino,"], [28.84, 29.36, "un"], [29.36, 29.56, "avi\u00f3n"], [29.56, 29.92, "privado"], [29.92, 30.16, "ten\u00eda"], [30.16, 30.32, "que"], [30.32, 30.56, "salir"], [30.56, 30.7, "a"], [30.7, 30.88, "las"], [30.88, 31.0, "dos"], [31.0, 31.1, "de"], [31.1, 31.28, "la"], [31.28, 31.48, "ma\u00f1ana"], [31.48, 31.8, "rumbo"], [31.8, 31.94, "a"], [31.94, 32.44, "Miami."], [33.22, 33.44, "Nunca"], [33.44, 34.06, "despeg\u00f3."], [34.68, 34.76, "Y"], [34.76, 34.9, "la"], [34.9, 35.16, "Argentina"], [35.16, 35.4, "dice"], [35.4, 35.54, "que"], [35.54, 35.72, "\u00e9l"], [35.72, 35.98, "nunca"], [35.98, 37.0, "entr\u00f3."], [37.5, 37.66, "Brasil"], [37.66, 38.08, "tampoco"], [38.08, 38.44, "registra"], [38.44, 38.56, "que"], [38.56, 38.74, "haya"], [38.74, 39.02, "salido"], [39.02, 39.2, "por"], [39.2, 39.42, "un"], [39.42, 39.56, "control"], [39.56, 40.0, "oficial."], [40.8, 40.92, "Pero"], [40.92, 41.14, "un"], [41.14, 41.44, "aliado"], [41.44, 41.58, "y"], [41.58, 41.76, "una"], [41.76, 41.98, "fuente"], [41.98, 42.12, "del"], [42.12, 42.46, "gobierno"], [42.46, 42.7, "de"], [42.7, 42.92, "Estados"], [42.92, 43.28, "Unidos"], [43.28, 43.52, "dicen"], [43.52, 43.7, "que"], [43.7, 43.86, "va"], [43.86, 44.14, "camino"], [44.14, 44.3, "a"], [44.3, 44.6, "Florida,"], [45.08, 45.22, "con"], [45.22, 45.34, "su"], [45.34, 45.74, "familia,"], [46.16, 46.42, "y"], [46.42, 46.56, "que"], [46.56, 46.88, "pedir\u00eda"], [46.88, 47.28, "asilo."], [48.1, 48.24, "Nada"], [48.24, 48.4, "de"], [48.4, 48.46, "eso"], [48.46, 48.64, "est\u00e1"], [48.64, 49.4, "confirmado."], [50.18, 50.34, "\u00bfLe"], [50.34, 50.64, "suena?"], [51.3, 51.54, "En"], [51.54, 52.1, "2022,"], [52.54, 52.6, "su"], [52.6, 52.8, "padre"], [52.8, 53.14, "perdi\u00f3"], [53.14, 53.26, "y"], [53.26, 53.38, "se"], [53.38, 53.46, "fue"], [53.46, 53.58, "a"], [53.58, 53.84, "Florida"], [53.84, 54.06, "dos"], [54.06, 54.26, "d\u00edas"], [54.26, 54.5, "antes"], [54.5, 54.68, "de"], [54.68, 54.92, "entregar"], [54.92, 55.06, "el"], [55.06, 55.84, "mando."], [56.08, 56.22, "Hoy"], [56.22, 56.4, "est\u00e1"], [56.4, 56.76, "condenado"], [56.76, 56.9, "a"], [56.9, 57.3, "27"], [57.3, 57.74, "a\u00f1os."], [58.36, 58.8, "Y"], [58.8, 58.96, "dos"], [58.96, 59.12, "d\u00edas"], [59.12, 59.42, "antes"], [59.42, 59.58, "de"], [59.58, 59.7, "esta"], [59.7, 60.2, "elecci\u00f3n,"], [60.44, 60.48, "su"], [60.48, 60.78, "hermano"], [60.78, 61.02, "Eduardo"], [61.02, 61.26, "hab\u00eda"], [61.26, 61.46, "dicho"], [61.46, 61.64, "que"], [61.64, 61.84, "si"], [61.84, 62.48, "perd\u00eda,"], [62.9, 63.0, "ten\u00eda"], [63.0, 63.16, "que"], [63.16, 63.38, "irse"], [63.38, 63.46, "del"], [63.46, 63.78, "pa\u00eds."], [64.86, 65.12, "Ahora,"], [65.3, 65.56, "diputados"], [65.56, 65.72, "del"], [65.72, 66.02, "partido"], [66.02, 66.22, "de"], [66.22, 66.38, "Lula"], [66.38, 66.64, "piden"], [66.64, 66.84, "su"], [66.84, 67.34, "detenci\u00f3n"], [67.34, 67.6, "y"], [67.6, 67.74, "una"], [67.74, 68.1, "alerta"], [68.1, 68.32, "roja"], [68.32, 68.46, "de"], [68.46, 68.84, "Interpol."], [69.72, 69.84, "\u00c9l"], [69.84, 69.98, "tiene"], [69.98, 70.4, "pasaporte"], [70.4, 70.74, "italiano."], [71.42, 71.56, "Y"], [71.56, 71.74, "fueros"], [71.74, 71.88, "de"], [71.88, 72.22, "senador"], [72.22, 72.42, "hasta"], [72.42, 73.16, "febrero."], [73.92, 74.08, "La"], [74.08, 74.3, "pregunta"], [74.3, 74.48, "ya"], [74.48, 74.6, "no"], [74.6, 74.68, "es"], [74.68, 74.9, "d\u00f3nde"], [74.9, 75.24, "est\u00e1."], [76.1, 76.26, "Es"], [76.26, 76.4, "si"], [76.4, 76.76, "vuelve."]];
+const DUR = T.dur; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s);
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
+const R = (k, x = 0) => S[k].A + x;
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
+// P(escena, 'frase'): segundo de la voz en que se dice esa frase dentro de la escena → V(...) la pasa al tiempo del video
+const nz = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const PW = PAL.map((w) => nz(w[2])); window.FALTAN = [];
+const P = (k, frase, fin = false) => {
+  const q = frase.split(/\s+/).map(nz).filter(Boolean), desde = S[k].va - 0.2;
+  for (let j = 0; j < PW.length; j++) { if (PAL[j][0] < desde) continue; if (q.every((w, i) => PW[j + i] && PW[j + i].startsWith(w))) return fin ? PAL[j + q.length - 1][1] : PAL[j][0]; }
+  window.FALTAN.push(k + ': ' + frase); return S[k].va + 0.5;
+};
+const V = (k, frase, fin) => W(P(k, frase, fin));
+const VIS = T.seg.filter((s) => document.getElementById(s.k));
+
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+const SFX = []; window.SFX = SFX; const sx = (n, t) => SFX.push([n, +(+t).toFixed(3)]);
+VIS.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < VIS.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, VIS[i + 1].A + 0.5); });
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.1, d = 0.6) => sx('click', t) && tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+const pop = (sel, t, y = 50) => sx('pop', t) && tl.fromTo(sel, { y, scale: .85, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)' }, t);
+const sube = (sel, t, y = 120) => sx('whoosh', t - .1) && tl.fromTo(sel, { y, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E }, t);
+const entra = (sel, t, x = -220) => sx('whoosh', t - .1) && tl.fromTo(sel, { x, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E }, t);
+const sella = (sel, t, r = -7) => sx('boom', t) && sx('chas', t) && tl.fromTo(sel, { scale: 2.6, rotate: r - 10, autoAlpha: 0 }, { scale: 1, rotate: r, autoAlpha: 1, duration: .35, ease: 'back.out(2.2)' }, t);
+const flash = (t, o = .5) => tl.fromTo('#flash', { opacity: o }, { opacity: 0, duration: .3, immediateRender: false }, t);
+const golpe = (k, t, s = 1.05) => sx('golpe', t) && tl.fromTo(`#${k} .cam`, { scale: s }, { scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, t);
+// barre: mismas unidades en los 4 lados del inset; si no, GSAP no interpola y salta al final (cuadros negros)
+const barre = (k, dir) => { sx('whoosh', S[k].A - .05); const desde = { izq: 'inset(0% 0% 0% 100%)', der: 'inset(0% 100% 0% 0%)', arr: 'inset(100% 0% 0% 0%)', aba: 'inset(0% 0% 100% 0%)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .45, ease: E2 }, S[k].A); };
+const deriva = (img, k) => tl.fromTo(img, { scale: 1.15 }, { scale: 1, duration: S[k].n + 20, ease: 'none' }, S[k].A);
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+const pos = (sel, fx = .5) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+const C_ = {}; const ent = (v) => Math.round(v);
+// texto que se escribe solo: TX[id] = [[t0, t1, html], ...] (cada línea se tipea entre t0 y t1)
+const TX = {};
+const tipea = (id, t0, t1, html) => (TX[id] = TX[id] || []).push([t0, t1, html]);
+
+
+let EXTRA = () => {};
+
+// 1 · gancho
+deriva('#s1 .bgfoto', 's1');
+tl.fromTo('#t1v', { autoAlpha: 0 }, { autoAlpha: 1, duration: .2, repeat: 5, yoyo: true }, 0);
+pop('#t1c', V('s1', 'nunca pense'), 60);
+pop('#t1r', V('s1', 'menos de'), 40);
+sella('#t1s', V('s1', 'nadie sabe'), -5); golpe('s1', V('s1', 'nadie sabe'), 1.06); flash(V('s1', 'nadie sabe'), .4);
+// A · contexto
+barre('sA', 'izq');
+pop('#aT', R('sA', .05), 20);
+sube('#a1', V('sA', 'perdio'), 50);
+sube('#a2', V('sA', 'el lunes'), 50); golpe('sA', V('sA', 'pasaportes'), 1.04);
+pop('#a3', V('sA', 'lavado'), 30);
+pop('#a4', V('sA', 'lo niega'), 30);
+// B · plazo
+barre('sB', 'der'); flash(S.sB.A, .3);
+pop('#bT', R('sB', .05), 20);
+pop('#bR', V('sB', '11'), 40);
+sube('#bL', V('sB', 'vence'), 30);
+sube('#bP1', V('sB', 'la policia'), 120); sube('#bP2', V('sB', 'la policia') + .15, 120);
+sella('#bS', V('sB', 'anula'), -6); golpe('sB', V('sB', 'anula'), 1.07);
+tl.to('#bP2', { rotate: 4, duration: .3, ease: E }, V('sB', 'diplomatico')); sx('chas', V('sB', 'diplomatico'));
+// C · búsqueda
+barre('sC', 'arr');
+lineas('#cT', R('sC', .05));
+sube('#cRu', V('sC', 'en iguazu'), 40);
+tl.fromTo('#cLn', { scaleX: 0 }, { scaleX: .55, duration: 1.2, ease: 'power1.inOut' }, V('sC', 'un avion')); sx('whoosh', V('sC', 'un avion'));
+sube('#c1', V('sC', 'las dos'), 50);
+tl.to('#cLn', { opacity: .25, duration: .2 }, V('sC', 'nunca despego'));
+sella('#cS', V('sC', 'nunca despego'), -5); golpe('sC', V('sC', 'nunca despego'), 1.07);
+sube('#c2', V('sC', 'la argentina'), 50);
+// D · lo que dicen
+barre('sD', 'izq'); deriva('#bgD', 'sD');
+sube('#d1', V('sD', 'brasil tampoco'), 50);
+sube('#d2', V('sD', 'pero un aliado'), 50);
+pop('#d3', V('sD', 'asilo'), 30);
+sella('#dS', V('sD', 'nada de eso'), -5); golpe('sD', V('sD', 'confirmado'), 1.06); flash(V('sD', 'nada de eso'), .3);
+// E · ¿le suena?
+barre('sE', 'der');
+lineas('#eT', R('sE', .05));
+tl.fromTo('#eJ', { x: 300, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .5, ease: E }, V('sE', 'su padre')); sx('whoosh', V('sE', 'su padre'));
+sube('#e1', V('sE', 'en 2022'), 40);
+sube('#e2', V('sE', 'hoy esta'), 50); C_.e2v = [V('sE', 'hoy esta'), V('sE', 'anos', true), 27, 0, ent];
+sube('#e3', V('sE', 'su hermano'), 50); golpe('sE', V('sE', 'irse del pais'), 1.05);
+// Z · cierre + loop
+barre('sZ', 'aba');
+tl.fromTo('#z0 .chip:nth-child(1)', { x: -60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: E }, V('sZ', 'diputados')); sx('whoosh', V('sZ', 'diputados'));
+tl.fromTo('#z0 .chip:nth-child(2)', { x: -60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: E }, V('sZ', 'pasaporte')); sx('whoosh', V('sZ', 'pasaporte'));
+tl.fromTo('#z0 .chip:nth-child(3)', { x: -60, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .35, ease: E }, V('sZ', 'fueros')); sx('whoosh', V('sZ', 'fueros'));
+lineas('#z2', V('sZ', 'la pregunta'), .3); tl.set('#z3', { visibility: 'visible' }, V('sZ', 'es si vuelve')); tl.fromTo('#z3 .m > span', { yPercent: 115 }, { yPercent: 0, duration: .6, ease: E }, V('sZ', 'es si vuelve')); tl.fromTo('#sZ .cam', { scale: 1.05 }, { scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, V('sZ', 'si vuelve'));  // sin sfx: tapaban 'Es si' flash(V('sZ', 'si vuelve'), .25);
+sube('#perfil', V('sZ', 'si vuelve', true) + .3, 200);
+const BT = pos('#btn'); const TBT = V('sZ', 'si vuelve', true) + 1.0;
+toque(BT[0], BT[1], TBT); sx('click', TBT);
+tl.set('#btn', { background: '#e9e4dc', color: '#111' }, TBT + .05);
+const LOOP = DUR - .75;
+tl.to(['#z0', '#z2', '#z3', '#perfil', '#crd'], { autoAlpha: 0, y: -60, duration: .3, ease: E2 }, LOOP - .15);
+tl.fromTo('#loop', { opacity: 0 }, { opacity: 1, duration: .4, ease: 'power2.out' }, LOOP); sx('whoosh', LOOP - .1);
+
+// ===== mejoras comunes (27/10): encuadre grande, escenas sin arranque vacío, subtítulos =====
+// 1 · si lo primero de una escena entra tarde (espera una palabra), adelantarlo al arranque de la escena
+for (const s of VIS) {
+  const tw = tl.getChildren(true, true, false).filter((x) => x.targets && x.targets().some((el) => el.closest && el.closest('.sc') && el.closest('.sc').id === s.k && !el.classList.contains('bgfoto') && el.id !== 'loop') && x.startTime() > s.A + 0.02 && x.startTime() < s.B);
+  if (!tw.length) continue;
+  const t0 = Math.min(...tw.map((x) => x.startTime()));
+  if (t0 > s.A + 0.6) {
+    const nuevo = s.A + 0.2;
+    tw.filter((x) => Math.abs(x.startTime() - t0) < 0.05).forEach((x) => x.startTime(nuevo));
+    SFX.forEach((e) => { if (Math.abs(e[1] - t0) < 0.15) e[1] = +(nuevo + (e[1] - t0)).toFixed(3); });
+  }
+}
+// 2 · auto-encuadre: el contenido de cada escena se agranda y se centra en la zona segura (x 90–940, y 480–1250)
+const FUERA = '.fondo,.bgfoto,.src,.scan,.reja,#loop,.foto-fondo';
+for (const s of VIS) {
+  const sc = document.getElementById(s.k), cam = sc.querySelector('.cam'); if (!cam) continue;
+  const fit = document.createElement('div'); fit.style.cssText = 'position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0';
+  [...cam.children].forEach((ch) => { if (!ch.matches(FUERA)) fit.appendChild(ch); });
+  cam.appendChild(fit);
+  tl.seek(Math.max(s.A, s.B - 0.05), false); sc.style.visibility = 'visible';
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  fit.querySelectorAll(':scope > *').forEach((el) => {
+    if (el.matches('img.cut')) return;
+    const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity < 0.05 || cs.display === 'none') return;
+    const r = el.getBoundingClientRect(); if (r.width < 2 || r.height < 2) return;
+    x0 = Math.min(x0, Math.max(0, r.left)); y0 = Math.min(y0, r.top); x1 = Math.max(x1, Math.min(1080, r.right)); y1 = Math.max(y1, r.bottom);
+  });
+  if (x1 > x0 && y1 > y0) {
+    const w = x1 - x0, h = y1 - y0;
+    const k = Math.max(0.82, Math.min(1.32, 850 / w, 770 / h));
+    const tx = 90 - x0 * k, ty = 480 + Math.max(0, (770 - h * k) * 0.42) - y0 * k;
+    fit.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${k.toFixed(3)})`;
+  }
+  sc.style.visibility = '';
+}
+tl.seek(0, false);
+// 3 · subtítulos palabra por palabra (texto corregido en armar.py), arriba de las fuentes
+const SUB = document.createElement('div'); SUB.id = 'subtit';
+SUB.style.cssText = "position:absolute;left:90px;width:850px;top:1270px;z-index:57;text-align:center;font:900 60px/1.08 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:10px #000;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.7)";
+document.body.appendChild(SUB);
+const TROZOS = []; { let cur = [];
+  const corte = (w) => /[.,;:?!…]$/.test(w[2]);
+  SUBS.forEach((w, i) => { cur.push(w); const largo = cur.map((x) => x[2]).join(' ').length; if (corte(w) || cur.length >= 4 || largo > 20 || i === SUBS.length - 1) { TROZOS.push(cur); cur = []; } });
+}
+const TZ = TROZOS.map((c, i) => [W(c[0][0]) - 0.05, i + 1 < TROZOS.length ? Math.min(W(TROZOS[i + 1][0][0]) - 0.05, W(c[c.length - 1][1]) + 0.6) : W(c[c.length - 1][1]) + 0.5, c]);
+let SUBK = -1;
+const subtitulos = (t) => {
+  const PF = document.getElementById('perfil');
+  if (t > DUR - 1.2 || (PF && +getComputedStyle(PF).opacity > 0.05 && getComputedStyle(PF).visibility !== 'hidden' && PF.closest('.sc').style.visibility !== 'hidden' && getComputedStyle(PF.closest('.sc')).visibility === 'visible')) { SUB.innerHTML = ''; return; }
+  const k = TZ.findIndex(([a, b]) => t >= a && t < b);
+  if (k < 0) { SUB.innerHTML = ''; return; }
+  const [a, , c] = TZ[k];
+  SUB.innerHTML = c.map((w) => `<span style="color:${t >= W(w[0]) - 0.03 ? '#ffd23f' : '#fff'}">${w[2].replace(/[<>]/g, '')}</span>`).join(' ');
+  const u = clamp((t - a) / 0.12); SUB.style.transform = `scale(${(0.86 + 0.14 * ease(u)).toFixed(3)})`;
+};
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const NUM = Object.keys(C_).map((id) => [document.getElementById(id), ...C_[id]]);
+const reloj = (seg) => String(Math.floor(seg / 60)).padStart(2, '0') + ':' + String(Math.floor(seg % 60)).padStart(2, '0');
+// el reloj corre "20 minutos" comprimidos en el tiempo del video
+const corre = (t, [a, b]) => reloj(1200 * ease((t - a) / (b - a)) * 0 + 1200 * clamp((t - a) / (b - a)));
+const plano = (h) => h.replace(/<[^>]+>/g, '');
+const corta = (h, n) => { let out = '', k = 0, dentro = false; for (const ch of h) { if (ch === '<') dentro = true; if (dentro) { out += ch; if (ch === '>') dentro = false; continue; } if (k >= n) break; out += ch; k++; } return out; };
+window.render = (t) => {
+  tl.seek(t, false);
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / Math.min(0.45, Math.max(0.05, t1 - t0))));  // el número llega al valor dicho en <0,5 s: lo que se ve = lo que se dice
+  for (const id in TX) {
+    let html = ''; const L = TX[id];
+    L.forEach(([a, b, h]) => { if (t < a) return; const n = plano(h).length; const u = clamp((t - a) / Math.max(.2, b - a)); html += (html ? '\n' : '') + corta(h, Math.ceil(n * u)); });
+    const el = document.getElementById(id); el.innerHTML = html + (el.dataset.cursor === 'no' ? '' : (Math.floor(t * 2.5) % 2 ? '<span class="cur"></span>' : '<span class="cur" style="opacity:0"></span>'));
+  }
+  if ($('#btnt')) $('#btnt').textContent = t >= TBT + .05 ? 'Siguiendo' : 'Seguir';
+  EXTRA(t); subtitulos(t);
+};
+for (const id in C_) { const [t0, t1] = C_[id]; const d = Math.min(0.45, Math.max(0.05, t1 - t0)); for (let i = 0; i < 7; i++) sx('tic', t0 + i * d / 7); }
+for (const id in TX) for (const [a, b] of TX[id]) for (let t = a; t < b; t += .075) sx('tecla', t);
+window.render(0); window.listo = true;
+})();
+
+</script>
+</body></html>
