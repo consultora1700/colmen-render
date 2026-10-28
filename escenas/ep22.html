@@ -189,7 +189,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
   <div class="sello ok" id="bS" style="left:560px;top:600px;font-size:66px">−7,6%</div>
   <div class="tick" id="bTk" style="left:220px;top:860px">
     <h4>GASTOS EN BRASIL</h4>
-    <pre id="bTx" data-cursor="no"></pre>
+    <pre id="bTx"><span id="bL1" style="display:block">R$ 1.000</span><span id="bL2" style="display:block">Antes   $406.400</span><span id="bL3" style="display:block">Hoy     $375.300</span></pre>
     <div class="tot" id="bTot"><span>AHORRO</span><span style="color:var(--verde)">$31.000</span></div>
   </div>
   <div class="abs src" style="top:1420px;width:860px">Dólar tarjeta $2.028 (BNA $1.560 + 30% de percepción, 27/10). Mismo dólar tarjeta antes y después, para aislar el efecto del real. Cálculo propio.</div>
@@ -240,8 +240,8 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 <!-- E · la cuenta Costa -->
 <div class="sc" id="sE"><div class="cam">
   <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 40%,rgba(59,165,255,.25),transparent)"></div>
-  <div class="foto" id="eF" style="left:90px;top:520px;width:860px;height:330px"><img src="img/mdp.jpg"><div class="et">Mar del Plata · enero</div></div>
-  <div class="tick" id="eTk" style="left:170px;top:880px;width:740px">
+  <div class="foto" id="eF" style="left:90px;top:500px;width:860px;height:260px"><img src="img/mdp.jpg"><div class="et">Mar del Plata · enero</div></div>
+  <div class="tick" id="eTk" style="left:170px;top:780px;width:740px;padding:30px 40px 44px">
     <h4>LA COSTA · PAREJA · 7 DÍAS</h4>
     <pre id="eTx" data-cursor="no"></pre>
     <div class="tot" id="eTot"><span>TOTAL</span><span style="color:var(--costa)">$1.080.000</span></div>
@@ -257,9 +257,9 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
     <path d="M400 540 L460 540 L440 120 L420 120 Z" fill="#c9ced6"/><rect x="330" y="530" width="200" height="22" rx="10" fill="#c9ced6"/>
     <g id="fBeam"><rect x="40" y="108" width="780" height="20" rx="10" fill="#e9ecf1"/><circle cx="430" cy="118" r="26" fill="var(--oro)"/></g>
   </svg>
-  <div class="plato" id="fPB" style="background:var(--br)">$4,07 M<small>BRASIL</small></div>
-  <div class="plato" id="fPC" style="background:var(--costa)">$1,08 M<small>LA COSTA</small></div>
-  <div class="sello ok" id="fS" style="left:240px;top:700px;font-size:76px">GANA LA COSTA</div>
+  <div class="plato" id="fPB" style="background:var(--br);left:-5px;top:758px">$4,07 M<small>BRASIL</small></div>
+  <div class="plato" id="fPC" style="background:var(--costa);left:715px;top:758px">$1,08 M<small>LA COSTA</small></div>
+  <div class="sello ok" id="fS" style="left:200px;top:1040px;font-size:72px">GANA LA COSTA</div>
   <div class="abs foto-fondo" id="fSob" style="inset:0;z-index:5;opacity:0">
     <div class="abs fondo" style="background:#071019"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 50%,rgba(22,163,74,.25),transparent)"></div>
     <div class="lab" id="fS1" style="position:absolute;left:90px;top:540px;color:#fff;font-size:46px">Aunque todo Brasil bajara 7,6%…</div>
@@ -420,9 +420,8 @@ cuenta('bKv', V('sB', '375'), 375, 406);
 sella('#bS', V('sB', '375', true) + .1, -6);
 pop('#bTk', V('sB', 'mil reales') - .3, 40);
 const TB = V('sB', 'mil reales');
-tipea('bTx', TB, TB + .5, 'R$ 1.000');
-tipea('bTx', TB + .55, TB + 1.1, 'Antes   $406.400');
-tipea('bTx', TB + 1.15, TB + 1.7, 'Hoy     $375.300');
+// sin teclas: el sonido tapaba 'te ahorran' (control de mezcla v1)
+tl.fromTo(['#bL1', '#bL2', '#bL3'], { autoAlpha: 0, x: -30 }, { autoAlpha: 1, x: 0, duration: .3, ease: E, stagger: .55 }, TB);
 pop('#bTot', V('sB', '31') - .05, 20); golpe('sB', V('sB', 'pesos', true), 1.04);
 
 // C · demanda / dólares
