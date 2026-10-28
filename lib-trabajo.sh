@@ -15,7 +15,9 @@ FF=/root/reels-colmen/node_modules/ffmpeg-static/ffmpeg
 # lo poco que corre en el server con CPU (ffmpeg) va de a uno y con prioridad mínima: Colmen primero
 liviano() { flock /tmp/colmen-ffmpeg.lock nice -n 19 "$@"; }
 api() { curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
-_push() { GIT_CONFIG_GLOBAL=/dev/null git push -q "https://x-access-token:$TOKEN@github.com/$REPO.git" "$@" 2>&1 | { grep -v "^remote:" || true; } >&2; }
+# GitHub a veces rechaza un push cuando llegan dos casi juntos ("remote rejected … (failed)"): reintenta
+_push1() { GIT_CONFIG_GLOBAL=/dev/null git push -q "https://x-access-token:$TOKEN@github.com/$REPO.git" "$@" 2>&1 | { grep -v "^remote:" || true; } >&2; }
+_push() { local i; for i in 1 2 3 4; do _push1 "$@" && return 0; echo "push falló (intento $i), reintento…" >&2; sleep $((i * 4)); done; return 1; }
 
 trabajo_nuevo() {
   RAMA="trabajo/$1-$(date -u +%Y%m%d-%H%M%S)-$$"
