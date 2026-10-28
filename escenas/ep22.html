@@ -131,7 +131,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 .pausa{position:absolute;display:flex;align-items:center;gap:20px;padding:16px 30px 16px 18px;border-radius:60px;background:#fff;color:#111;font:900 38px 'Inter Tight';box-shadow:0 20px 50px rgba(0,0,0,.4)}
 .pausa i{width:64px;height:64px;border-radius:50%;background:var(--rojo);display:grid;place-items:center}
 .pausa i:before{content:'';width:22px;height:26px;border-left:8px solid #fff;border-right:8px solid #fff;box-sizing:border-box}
-.plato{position:absolute;width:330px;height:150px;border-radius:0 0 170px 170px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 54px/1 'Inter Tight';letter-spacing:-.03em;color:#fff;box-shadow:0 20px 40px rgba(0,0,0,.45)}
+.plato{position:absolute;width:330px;height:170px;border-radius:0 0 170px 170px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 72px/1 'Inter Tight';letter-spacing:-.03em;color:#fff;box-shadow:0 20px 40px rgba(0,0,0,.45)}
 .plato small{font:800 28px 'Inter Tight';letter-spacing:.06em;opacity:.9;margin-top:6px}
 .cita{position:absolute;left:90px;width:860px;padding:34px 40px;border-radius:30px;background:#fff;color:#111;font:800 46px/1.18 'Inter Tight';box-shadow:0 30px 60px rgba(0,0,0,.45)}
 .cita small{display:block;font:700 26px 'Inter Tight';color:#666;margin-top:14px}
@@ -149,7 +149,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
   <div class="abs fondo" style="background:linear-gradient(180deg,rgba(0,0,0,.55),transparent 30%,transparent 70%,rgba(0,0,0,.6))"></div>
   <div class="tit" id="t1" style="top:470px"><span class="m d" style="font-size:84px"><span>Ganó <span class="hl am">Lula</span></span></span><span class="m d" style="font-size:72px"><span>y se desplomó el real</span></span></div>
   <img class="cut" id="lula" src="img/lula.png" style="left:560px;top:640px;width:400px">
-  <div class="sello" id="s1s" style="left:110px;top:700px;font-size:84px">REAL −8%</div>
+  <div class="sello" id="s1s" style="left:100px;top:700px;font-size:70px">REAL −7,6%</div>
   <div class="stk" id="enc" style="top:860px;left:120px;width:820px">
     <div class="q" style="background:linear-gradient(135deg,#00a651,#0b7bd6);font-size:54px">¿Cuál te sale<br>más barato?</div>
     <div class="ops">
@@ -181,112 +181,116 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
   <div class="abs src" style="top:1420px;width:860px">Dólar comercial en reales: 4,99 el 23/10 (La Nación), 5,403 al cierre del 26/10 (Agência Brasil); pico intradía 5,60.</div>
 </div></div>
 
-<!-- B · el ticket: cada real en pesos -->
+<!-- B · cada real en pesos -->
 <div class="sc" id="sB"><div class="cam">
   <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 50%,rgba(255,210,63,.18),transparent)"></div>
+  <img class="billete foto-fondo" id="bb1" src="img/r100.jpg" style="left:640px;top:330px;width:320px;transform:rotate(12deg)">
   <div class="tit" id="bT"><span class="m d" style="font-size:58px"><span>1 real, con <span class="hl am">dólar tarjeta</span></span></span></div>
-  <div class="big2" id="bK" style="left:90px;top:580px;color:var(--oro)">$<span id="bKv">406</span><small>por cada real</small></div>
-  <div class="sello ok" id="bS" style="left:560px;top:600px;font-size:66px">−7,6%</div>
-  <div class="tick" id="bTk" style="left:220px;top:860px">
-    <h4>GASTOS EN BRASIL</h4>
-    <pre id="bTx"><span id="bL1" style="display:block">R$ 1.000</span><span id="bL2" style="display:block">Antes   $406.400</span><span id="bL3" style="display:block">Hoy     $375.300</span></pre>
-    <div class="tot" id="bTot"><span>AHORRO</span><span style="color:var(--verde)">$31.000</span></div>
-  </div>
-  <div class="abs src" style="top:1420px;width:860px">Dólar tarjeta $2.028 (BNA $1.560 + 30% de percepción, 27/10). Mismo dólar tarjeta antes y después, para aislar el efecto del real. Cálculo propio.</div>
+  <div class="big2" id="bK" style="left:90px;top:600px;font-size:220px;color:var(--oro)">$<span id="bKv">406</span><small>por cada real</small></div>
+  <div class="sello ok" id="bS" style="left:420px;top:960px;font-size:80px">−7,6%</div>
+  <div class="abs src" style="top:1420px;width:860px">Dólar tarjeta $2.028 (BNA $1.560 + 30% de percepción, 27/10) ÷ reales por dólar (4,99 → 5,403). Mismo dólar tarjeta antes y después. Cálculo propio.</div>
 </div></div>
 
-<!-- C · demanda +40% pero se venden en dólares -->
+<!-- C · el día: allá gastás casi la mitad -->
 <div class="sc" id="sC"><div class="cam">
-  <div class="abs fondo"></div>
-  <img class="bgfoto" src="img/avion.jpg" style="filter:grayscale(.3) brightness(.32)">
-  <div class="tit" id="cT"><span class="m d" style="font-size:58px"><span>Demanda en agencias</span></span></div>
-  <div class="big2" id="cK" style="left:90px;top:580px;color:var(--br)">+<span id="cKv">0</span>%</div>
-  <div class="chip" id="cC" style="left:90px;top:790px;font-size:32px">Búsquedas de paquetes: <b style="color:var(--oro)">+43%</b> en octubre</div>
-  <div class="mos" id="cM" style="top:900px">
-    <div id="cA"><b>US$</b><span>Avión</span><small>se cobra en dólares</small></div>
-    <div id="cH"><b>US$</b><span>Hotel</span><small>se cobra en dólares</small></div>
+  <div class="abs fondo"></div><div class="scan"></div>
+  <div class="tit" id="cT"><span class="m d" style="font-size:56px"><span>Un día de playa · pareja</span></span></div>
+  <div class="tick" id="cBr" style="left:90px;top:570px;width:860px;padding:24px 40px 40px;font-size:38px">
+    <h4 style="font-size:32px;color:#00873f;margin-bottom:10px;padding-bottom:10px">BRASIL · RÍO · por día</h4>
+    <pre><span id="cB1" style="display:block">4 almuerzos ×R$45   R$ 180</span><span id="cB2" style="display:block">2 sillas+sombrilla  R$  60</span></pre>
+    <div class="tot" style="font-size:44px"><span>PAREJA</span><span style="color:#00873f">$90.000</span></div>
   </div>
-  <div class="sello" id="cS" style="left:150px;top:1010px;font-size:66px">NO BAJAN SOLOS</div>
-  <div class="abs src" style="top:1420px;width:860px">Agencias: +40% de demanda (Clarín, 27/10). Turismocity: +43% de búsquedas oct. vs sep. Paquetes en dólares: Perfil.</div>
+  <div class="tick" id="cCo" style="left:90px;top:900px;width:860px;padding:24px 40px 40px;font-size:38px">
+    <h4 style="font-size:32px;color:#0b6fd0;margin-bottom:10px;padding-bottom:10px">MAR DEL PLATA · por día</h4>
+    <pre><span id="cC1" style="display:block">4 menús ×$23.300   $93.400</span><span id="cC2" style="display:block">Carpa              $80.000</span></pre>
+    <div class="tot" style="font-size:44px"><span>PAREJA</span><span style="color:#0b6fd0">$173.000</span></div>
+  </div>
+  <div class="sello ok" id="cS" style="left:250px;top:1190px;font-size:64px">CASI LA MITAD</div>
+  <div class="abs src" style="top:1420px;width:860px">Río: almuerzo económico R$ 45, silla y sombrilla R$ 20–40 por persona (A24, 27/10). MdP: menú $15–20 mil (Infobae, ene-26) × IPC 33,4% (INDEC); carpa $80.000/día (0223). Pareja: 2 comidas por persona; desayuno en el hotel.</div>
 </div></div>
 
-<!-- D · la cuenta Brasil -->
+<!-- D · el pasaje se come la diferencia -->
 <div class="sc" id="sD"><div class="cam">
-  <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 40%,rgba(0,166,81,.25),transparent)"></div>
-  <div class="tit" id="dT"><span class="m d" style="font-size:52px"><span>Pareja · 7 noches · enero</span></span></div>
-  <svg class="ruta" id="dR" style="left:90px;top:560px;width:860px;height:150px" viewBox="0 0 860 150">
-    <circle cx="40" cy="120" r="14" fill="var(--ar)"/><text x="40" y="88" fill="#fff" font-family="Inter Tight" font-weight="800" font-size="28" text-anchor="middle">Buenos Aires</text>
+  <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 40%,rgba(0,166,81,.2),transparent)"></div>
+  <div class="tit" id="dT"><span class="m d" style="font-size:58px"><span>Pero el <span class="hl">pasaje</span>…</span></span></div>
+  <svg class="ruta" id="dR" style="left:90px;top:570px;width:860px;height:150px" viewBox="0 0 860 150">
+    <circle cx="60" cy="120" r="14" fill="var(--ar)"/><text x="60" y="88" fill="#fff" font-family="Inter Tight" font-weight="800" font-size="28" text-anchor="middle">Buenos Aires</text>
     <circle cx="800" cy="120" r="14" fill="var(--br)"/><text x="800" y="88" fill="#fff" font-family="Inter Tight" font-weight="800" font-size="28" text-anchor="middle">Río</text>
-    <path id="dRl" d="M40 120 Q420 -60 800 120" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="14 14"/>
+    <circle cx="300" cy="140" r="12" fill="var(--costa)"/><text x="300" y="112" fill="#fff" font-family="Inter Tight" font-weight="800" font-size="26" text-anchor="middle">MdP</text>
+    <path id="dRl" d="M60 120 Q430 -60 800 120" fill="none" stroke="#fff" stroke-width="6" stroke-dasharray="14 14"/>
+    <path id="dRm" d="M60 120 Q180 160 300 140" fill="none" stroke="var(--costa)" stroke-width="6" stroke-dasharray="10 10"/>
     <g id="dAv"><path d="M-22 -6 L10 -6 L22 0 L10 6 L-22 6 Z M-6 -6 L4 -26 L12 -26 L8 -6 Z M-6 6 L4 26 L12 26 L8 6 Z M-22 -6 L-28 -16 L-20 -16 L-14 -6 Z" fill="var(--oro)"/></g>
   </svg>
-  <div class="foto" id="dF" style="left:90px;top:740px;width:860px;height:420px"><img src="img/rio.jpg"><div class="et">Río de Janeiro · el más barato</div><div class="pr" id="dP">US$ 2.174</div></div>
-  <div class="chip" id="dI" style="left:90px;top:1180px;font-size:30px">Avión + hotel 3–4★ + comida y transporte</div>
-  <div class="big2" id="dK" style="left:90px;top:560px;font-size:150px;color:var(--oro)">$<span id="dKv">0</span><small>con tarjeta · pareja</small></div>
+  <div class="foto" id="dF" style="left:90px;top:750px;width:415px;height:300px"><img src="img/rio.jpg"><div class="et">Avión + hotel 3★</div></div>
+  <div class="foto" id="dG" style="left:535px;top:750px;width:415px;height:300px"><img src="img/mdp.jpg"><div class="et">Micro + hotel 3★</div></div>
+  <div class="abs" id="dP1" style="left:90px;top:1070px;font:900 60px 'Inter Tight';color:var(--oro)">$1.051.306</div>
+  <div class="abs" id="dP2" style="left:535px;top:1070px;font:900 60px 'Inter Tight';color:var(--costa)">$690.400</div>
+  <div class="abs" id="dP0" style="left:90px;top:1145px;font:800 28px 'Inter Tight';color:var(--mute)">por persona · 7 noches · enero · desayuno</div>
   <div class="abs foto-fondo" id="dMas" style="inset:0;z-index:6;opacity:0">
-    <div class="abs fondo" style="background:rgba(7,16,25,.94)"></div>
-    <div class="abs" style="left:90px;top:520px;font:900 52px 'Inter Tight'">Paquetes Despegar <span style="color:var(--mute);font-size:34px">· 7 noches · por persona</span></div>
-    <div class="foto" id="dM1" style="left:90px;top:610px;width:410px;height:300px"><img src="img/floripa.jpg"><div class="et">Florianópolis</div></div>
-    <div class="foto" id="dM2" style="left:540px;top:610px;width:410px;height:300px"><img src="img/buzios.jpg"><div class="et">Búzios</div></div>
-    <div class="abs" id="dM1p" style="left:90px;top:930px;font:900 62px 'Inter Tight';color:var(--oro)">$1.304.392</div>
-    <div class="abs" id="dM2p" style="left:540px;top:930px;font:900 62px 'Inter Tight';color:var(--oro)">$1.406.392</div>
-    <div class="abs" id="dM0p" style="left:90px;top:1020px;font:800 34px 'Inter Tight';color:var(--mute)">Río, mismo paquete: $1.051.306 · sin comida</div>
-    <div class="pausa" id="dPa" style="left:250px;top:1110px"><i></i>Pausá y mirá</div>
-    <div class="abs src" style="top:1420px;width:860px;left:90px">Despegar, hotel 3★, vuelo directo, 17–24/1 (Búzios 15–22/2), precios del 14/10 (LM Neuquén). Río/Florianópolis todo incluido: relevamiento 10/10 (Elonce).</div>
+    <div class="abs fondo" style="background:#071019"></div>
+    <div class="abs" style="left:90px;top:520px;font:900 46px 'Inter Tight'">Avión + hotel 3★ <span style="color:var(--mute);font-size:32px">· 7 noches · por persona</span></div>
+    <div class="foto" id="dM0" style="left:90px;top:600px;width:270px;height:210px"><img src="img/rio.jpg"><div class="et" style="font-size:24px">Río</div></div>
+    <div class="foto" id="dM1" style="left:385px;top:600px;width:270px;height:210px"><img src="img/floripa.jpg"><div class="et" style="font-size:24px">Florianópolis</div></div>
+    <div class="foto" id="dM2" style="left:680px;top:600px;width:270px;height:210px"><img src="img/buzios.jpg"><div class="et" style="font-size:24px">Búzios</div></div>
+    <div class="abs" style="left:90px;top:830px;font:900 44px 'Inter Tight';color:var(--oro)">$1.051.306</div>
+    <div class="abs" style="left:385px;top:830px;font:900 44px 'Inter Tight';color:var(--oro)">$1.304.392</div>
+    <div class="abs" style="left:680px;top:830px;font:900 44px 'Inter Tight';color:var(--oro)">$1.406.392</div>
+    <div class="abs" style="left:90px;top:910px;font:900 40px 'Inter Tight'">Mar del Plata, micro + hotel 3★</div><div class="abs" style="left:90px;top:960px;font:900 44px 'Inter Tight';color:var(--costa)">$690.400</div>
+    <div class="pausa" id="dPa" style="left:280px;top:1050px"><i></i>Pausá y mirá</div>
+    <div class="abs src" style="top:1420px;width:860px;left:90px">Despegar, vuelo directo, hotel 3★, 17–24/1 (Búzios 15–22/2), precios del 14/10 (LM Neuquén). Mar del Plata: Sesevi, micro semicama + hotel 3★ VIP's con desayuno, verano 2027 (salida desde Paraná).</div>
   </div>
-  <div class="abs src" style="top:1420px;width:860px">Relevamiento 10/10 (Elonce, 21/10): 16–23/1, desde Buenos Aires, US$ 1.087 por persona. × dólar tarjeta $2.028.</div>
+  <div class="abs src" style="top:1420px;width:860px">Despegar 14/10 (LM Neuquén) y Sesevi verano 2027. Por persona, base doble, 7 noches.</div>
 </div></div>
 
-<!-- E · la cuenta Costa -->
+<!-- E · ¿y en micro a Brasil? -->
 <div class="sc" id="sE"><div class="cam">
-  <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 40%,rgba(59,165,255,.25),transparent)"></div>
-  <div class="foto" id="eF" style="left:90px;top:500px;width:860px;height:260px"><img src="img/mdp.jpg"><div class="et">Mar del Plata · enero</div></div>
-  <div class="tick" id="eTk" style="left:170px;top:780px;width:740px;padding:30px 40px 44px">
-    <h4>LA COSTA · PAREJA · 7 DÍAS</h4>
-    <pre id="eTx" data-cursor="no"></pre>
-    <div class="tot" id="eTot"><span>TOTAL</span><span style="color:var(--costa)">$1.080.000</span></div>
+  <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 45%,rgba(255,210,63,.15),transparent)"></div>
+  <div class="tit" id="eT"><span class="m d" style="font-size:60px"><span>¿Y en <span class="hl am">micro</span> a Brasil?</span></span></div>
+  <div class="mos" id="eM" style="top:640px">
+    <div id="eM1"><b style="color:var(--oro)">US$ 934</b><span>Micro + hotel 3★</span><small>Florianópolis, 7 noches, por persona</small></div>
+    <div id="eM2"><b>$1,30 M</b><span>Avión + hotel 3★</span><small>Florianópolis, Despegar</small></div>
   </div>
-  <div class="abs src" style="top:1420px;width:860px">0223 (13/10): depto lejos de la costa desde $420.000/semana, carpa ~$80.000/día. Tren desde $25.000 por tramo (iProfesional 22/10).</div>
+  <div class="chip" id="eC" style="left:90px;top:900px;font-size:32px">US$ 934 con tarjeta ≈ <b style="color:var(--oro)">$1,9 M</b></div>
+  <div class="sello" id="eS" style="left:180px;top:1000px;font-size:72px">NO ES MÁS BARATO</div>
+  <div class="abs src" style="top:1420px;width:860px">Kyro: micro semicama ida y vuelta + 7 noches, base doble, US$ 846 + US$ 88 por hotel 3★ (salida 31/1/27 desde San Juan). Con dólares propios: ≈ $1,46 M.</div>
 </div></div>
 
 <!-- F · revelado: balanza -->
 <div class="sc" id="sF"><div class="cam">
   <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 45%,rgba(59,165,255,.25),transparent)"></div>
-  <div class="tit" id="fT"><span class="m d" style="font-size:84px"><span>¿Acertaste?</span></span></div>
+  <div class="tit" id="fT"><span class="m d" style="font-size:80px"><span>¿Acertaste?</span></span><span class="m d" style="font-size:36px;color:var(--mute)"><span>pareja · 7 noches · hotel 3★ + comida + playa</span></span></div>
   <svg class="ruta" id="fBal" style="left:90px;top:600px;width:860px;height:560px" viewBox="0 0 860 560">
     <path d="M400 540 L460 540 L440 120 L420 120 Z" fill="#c9ced6"/><rect x="330" y="530" width="200" height="22" rx="10" fill="#c9ced6"/>
     <g id="fBeam"><rect x="40" y="108" width="780" height="20" rx="10" fill="#e9ecf1"/><circle cx="430" cy="118" r="26" fill="var(--oro)"/></g>
   </svg>
-  <div class="plato" id="fPB" style="background:var(--br);left:-5px;top:758px">$4,07 M<small>BRASIL</small></div>
-  <div class="plato" id="fPC" style="background:var(--costa);left:715px;top:758px">$1,08 M<small>LA COSTA</small></div>
-  <div class="sello ok" id="fS" style="left:200px;top:1040px;font-size:72px">GANA LA COSTA</div>
+  <div class="plato" id="fPB" style="background:var(--br);left:-5px;top:758px">$2,73 M<small>RÍO</small></div>
+  <div class="plato" id="fPC" style="background:var(--costa);left:715px;top:758px">$2,59 M<small>MAR DEL PLATA</small></div>
+  <div class="sello ok" id="fS" style="left:150px;top:1040px;font-size:62px">GANA LA COSTA · POR POCO</div>
   <div class="abs foto-fondo" id="fSob" style="inset:0;z-index:5;opacity:0">
-    <div class="abs fondo" style="background:#071019"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 50%,rgba(22,163,74,.25),transparent)"></div>
-    <div class="lab" id="fS1" style="position:absolute;left:90px;top:540px;color:#fff;font-size:46px">Aunque todo Brasil bajara 7,6%…</div>
-    <div class="lab" id="fS2" style="position:absolute;left:90px;top:620px;font-size:40px;color:var(--oro)">en la Costa te sobran</div>
-    <div class="big2" id="fK" style="left:90px;top:700px;font-size:200px;color:var(--verde)">$<span id="fKv">0</span><span style="font-size:.42em"> M</span></div>
-    <div class="stk" id="fRes" style="top:930px;left:110px;width:860px">
+    <div class="abs fondo" style="background:#071019"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 50%,rgba(59,165,255,.22),transparent)"></div>
+    <div class="lab" style="position:absolute;left:90px;top:540px;color:#fff;font-size:50px">Sin alquilar carpa ni sombrilla</div>
+    <div class="stk" id="fRes" style="top:640px;left:110px;width:860px">
       <div class="ops" style="padding:26px">
-        <div class="op" id="rB"><div class="fill" style="background:#00a651;opacity:.35"></div><div class="l">A</div><span>Brasil · $4,07 M</span></div>
-        <div class="op ok" id="rC"><div class="fill" style="background:#3ba5ff;opacity:.45"></div><div class="l">B</div><span>Costa · $1,08 M</span></div>
+        <div class="op" id="rB"><div class="fill" style="background:#00a651;opacity:.35"></div><div class="l">A</div><span>Río · $2,58 M</span></div>
+        <div class="op ok" id="rC"><div class="fill" style="background:#3ba5ff;opacity:.45"></div><div class="l">B</div><span>Costa · $2,03 M</span></div>
       </div>
     </div>
-    <div class="tagq" id="fDia" style="left:90px;top:560px">= <b>$427.000 por día</b> para comer</div>
+    <div class="big2" id="fK" style="left:90px;top:960px;font-size:150px;color:var(--verde)">−$<span id="fKv">0</span><span style="font-size:.42em"> mil</span><small>a favor de la Costa</small></div>
   </div>
-  <div class="abs src" style="top:1420px;width:860px">Brasil: Río US$ 2.174 la pareja × $2.028, con un descuento del 7,6% aplicado a TODO (cota máxima). Costa: depto + carpa 7 días + tren. Cálculo propio (calculo.py).</div>
+  <div class="abs src" style="top:1420px;width:860px">Cálculo propio (calculo.py), todo con dólar tarjeta $2.028. Florianópolis: $3,24 M. Si Despegar no incluyera la percepción del 30%, Río sube a $3,36 M.</div>
 </div></div>
 
-<!-- G · esto se mueve -->
+<!-- G · la caída te ahorra poco y se mueve -->
 <div class="sc" id="sG"><div class="cam">
   <div class="abs fondo"></div><div class="abs fondo" style="background:radial-gradient(60% 40% at 50% 45%,rgba(255,210,63,.18),transparent)"></div>
-  <div class="tit" id="gT"><span class="m d" style="font-size:64px"><span>Y esto <span class="hl am">se mueve</span></span></span></div>
-  <div class="mos" id="gM" style="top:600px">
+  <div class="lab" id="gL" style="position:absolute;left:90px;top:500px;color:#fff;font-size:44px">Lo que te ahorra la caída del real</div>
+  <div class="big2" id="gK" style="left:90px;top:570px;font-size:170px;color:var(--oro)">$<span id="gKv">0</span><small>en toda la semana (pareja, Río)</small></div>
+  <div class="mos" id="gM" style="top:860px">
     <div><b style="color:var(--rojo)">5,40</b><span>Lunes</span><small>reales por dólar</small></div>
     <div id="gM2" style="border-color:var(--verde)"><b style="color:var(--verde)">5,36</b><span>Martes ↺ rebote</span><small>apertura, +1% el real</small></div>
   </div>
-  <div class="cita" id="gQ" style="top:850px">“Lula hará un gobierno que buscará el superávit… todos los años”<small>Edinho Silva, presidente del PT (CNN Brasil, 27/10)</small></div>
-  <div class="tagq" id="gD" style="left:90px;top:1150px">Descuento: <b id="gDv">−7,6%</b> → se achica</div>
-  <div class="abs src" style="top:1420px;width:860px">Martes 27/10: el real recupera ~1% (Diario Financiero / FT). Cita: Infobae 27/10. No es consejo financiero.</div>
+  <div class="cita" id="gQ" style="top:1080px;font-size:40px">“Lula hará un gobierno que buscará el superávit”<small>Edinho Silva, presidente del PT (CNN Brasil, 27/10)</small></div>
+  <div class="abs src" style="top:1420px;width:860px">Comida y playa en reales: $2,79 M antes vs $2,73 M después (calculo.py). Rebote: Diario Financiero/FT. Cita: Infobae 27/10. No es consejo financiero.</div>
 </div></div>
 
 <!-- Z · cierre + loop -->
@@ -302,7 +306,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
     <div><div class="n" style="font-size:40px">Franco Valencia</div><div class="r" style="font-size:24px">@francovalencia.ok</div></div>
     <div class="btn" id="btn" style="height:76px;line-height:76px;font-size:32px"><span id="btnt">Seguir</span></div>
   </div>
-  <div class="abs src" id="crd" style="left:90px;top:1380px;width:880px;font-size:16px;line-height:1.35">Fuentes: La Nación, Agência Brasil, Diario Río Negro, Clarín, Perfil, Elonce, LM Neuquén/Despegar, 0223, iProfesional, Infobae, Diario Financiero. Fotos: Wikimedia Commons (Ricardo Stuckert/PR CC BY 2.0 y otros), Unsplash. Cálculo propio.</div>
+  <div class="abs src" id="crd" style="left:90px;top:1380px;width:880px;font-size:16px;line-height:1.35">Fuentes: La Nación, Agência Brasil, Diario Río Negro, A24, LM Neuquén/Despegar, Sesevi, Kyro, Infobae, INDEC, 0223, Diario Financiero. Fotos: Wikimedia Commons (Ricardo Stuckert/PR CC BY 2.0 y otros), Unsplash. Cálculo propio.</div>
   <div class="abs" id="loop" style="inset:0;opacity:0">
     <div class="abs fondo"></div>
     <div class="split" style="top:0;left:0"><img src="img/rio.jpg" style="filter:saturate(1.3) brightness(.62)"></div>
@@ -320,7 +324,7 @@ canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
 (async () => {
 await document.fonts.ready;
 await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
-const T = {"seg": [{"k": "s1", "A": 0.0, "va": 0, "n": 9.414}, {"k": "sA", "A": 9.414, "va": 10.099125, "n": 4.939}, {"k": "sB", "A": 14.353, "va": 15.128, "n": 7.795}, {"k": "sC", "A": 22.148, "va": 22.994374999999998, "n": 8.084}, {"k": "sD", "A": 30.232, "va": 31.425, "n": 11.611}, {"k": "sE", "A": 41.843, "va": 43.217583, "n": 4.44}, {"k": "sF", "A": 46.283, "va": 48.134333, "n": 9.637}, {"k": "sG", "A": 55.92, "va": 58.229833, "n": 7.179}, {"k": "sZ", "A": 63.099, "va": 65.665, "n": 6.716}], "voz": [[0, 4.83, 0.12], [4.861, 9.27, 4.539], [9.484, 9.894, 8.742], [10.099, 15.07, 9.534], [15.128, 19.936, 14.473], [20.082, 22.91, 18.977], [22.994, 31.425, 22.268], [31.425, 43.075, 30.352], [43.218, 47.64, 41.963], [48.134, 57.47, 46.403], [57.584, 57.943, 54.994], [58.23, 63.25, 56.04], [63.38, 65.665, 60.723], [65.665, 70.28, 63.219]], "dur": 69.815, "vel": 1.1}; const PAL = [[0.0, 0.58, "Gan\u00f3"], [0.58, 0.86, "Lula"], [0.86, 1.06, "y"], [1.06, 1.44, "se"], [1.44, 1.72, "desplom\u00f3"], [1.72, 1.94, "el"], [1.94, 2.16, "real."], [2.46, 2.76, "\u00bfAhora"], [2.76, 2.98, "te"], [2.98, 3.08, "sale"], [3.08, 3.24, "m\u00e1s"], [3.24, 3.56, "barato"], [3.56, 3.92, "Brasil"], [3.92, 4.1, "que"], [4.1, 4.26, "la"], [4.26, 4.58, "costa?"], [4.96, 5.28, "Eleg\u00ed"], [5.28, 5.6, "ya."], [5.9, 6.16, "Brasil"], [6.16, 6.4, "o"], [6.4, 6.5, "Mar"], [6.5, 6.66, "del"], [6.66, 7.06, "Plata."], [7.28, 7.66, "Comentalo"], [7.66, 7.8, "y"], [7.8, 7.92, "al"], [7.92, 8.08, "final"], [8.08, 8.3, "vemos"], [8.3, 8.48, "si"], [8.48, 9.02, "acertaste."], [10.2, 10.28, "El"], [10.28, 10.66, "viernes"], [10.66, 10.86, "un"], [10.86, 11.12, "d\u00f3lar"], [11.12, 11.58, "compraba"], [11.58, 11.96, "4"], [11.96, 12.54, ".99"], [12.54, 13.28, "reales,"], [13.4, 13.5, "el"], [13.5, 13.8, "lunes"], [13.8, 14.28, "5"], [14.28, 14.82, ".40."], [15.44, 15.68, "Con"], [15.68, 15.96, "d\u00f3lar"], [15.96, 16.5, "tarjeta"], [16.5, 16.74, "cada"], [16.74, 16.94, "real"], [16.94, 17.2, "pas\u00f3"], [17.2, 17.46, "de"], [17.46, 18.2, "406"], [18.2, 18.48, "pesos"], [18.48, 18.78, "a"], [18.78, 19.58, "375."], [20.2, 20.46, "Mil"], [20.46, 20.82, "reales"], [20.82, 20.92, "de"], [20.92, 21.2, "gastos"], [21.2, 21.36, "te"], [21.36, 21.64, "ahorran"], [21.64, 22.12, "31"], [22.12, 22.3, "mil"], [22.3, 22.66, "pesos."], [23.52, 23.74, "Por"], [23.74, 23.84, "eso"], [23.84, 24.02, "las"], [24.02, 24.3, "agencias"], [24.3, 24.58, "hablan"], [24.58, 24.72, "de"], [24.72, 24.88, "un"], [24.88, 25.34, "40"], [25.34, 25.68, "%"], [25.68, 25.92, "m\u00e1s"], [25.92, 26.06, "de"], [26.06, 26.74, "demanda."], [26.9, 26.96, "Pero"], [26.96, 27.36, "ojo,"], [27.62, 27.78, "el"], [27.78, 27.94, "avi\u00f3n"], [27.94, 28.06, "y"], [28.06, 28.22, "el"], [28.22, 28.38, "hotel"], [28.38, 28.68, "se"], [28.68, 28.94, "venden"], [28.94, 29.16, "en"], [29.16, 29.48, "d\u00f3lares,"], [29.72, 29.88, "no"], [29.88, 30.2, "bajan"], [30.2, 31.44, "solos."], [31.54, 31.64, "Una"], [31.64, 32.08, "pareja,"], [32.3, 32.38, "una"], [32.38, 32.66, "semana"], [32.66, 32.78, "de"], [32.78, 33.22, "enero."], [33.68, 33.84, "R\u00edo"], [33.84, 34.02, "el"], [34.02, 34.14, "m\u00e1s"], [34.14, 34.44, "barato"], [34.44, 34.64, "con"], [34.64, 35.0, "avi\u00f3n,"], [35.12, 35.34, "hotel"], [35.34, 35.5, "y"], [35.5, 35.82, "comida"], [35.82, 36.38, "4"], [36.38, 37.1, ".400"], [37.1, 37.34, ".000"], [37.34, 37.64, "pesos"], [37.64, 37.82, "con"], [37.82, 38.62, "tarjeta."], [39.0, 39.5, "Florian\u00f3polis"], [39.5, 39.7, "y"], [39.7, 40.02, "Bucios"], [40.02, 40.52, "m\u00e1s."], [40.78, 41.04, "Pausa"], [41.04, 41.18, "y"], [41.18, 41.28, "mira"], [41.28, 41.48, "los"], [41.48, 42.58, "precios."], [43.38, 43.44, "Mar"], [43.44, 43.62, "del"], [43.62, 44.0, "Plata."], [44.28, 44.78, "Departamento,"], [44.96, 45.22, "carpa"], [45.22, 45.44, "todos"], [45.44, 45.56, "los"], [45.56, 45.7, "d\u00edas"], [45.7, 45.96, "y"], [45.96, 46.14, "tren"], [46.14, 46.58, "1"], [46.58, 47.14, ".080"], [47.14, 47.39, ".000."], [48.24, 48.74, "\u00bfAcertaste?"], [49.26, 49.5, "Gana"], [49.5, 49.72, "la"], [49.72, 50.04, "costa"], [50.04, 50.3, "y"], [50.3, 50.74, "lejos."], [51.06, 51.32, "Aunque"], [51.32, 51.6, "todo"], [51.6, 51.9, "Brasil"], [51.9, 52.2, "bajara"], [52.2, 52.36, "con"], [52.36, 52.52, "el"], [52.52, 52.74, "real,"], [52.74, 53.18, "te"], [53.18, 53.48, "sobran"], [53.48, 53.84, "casi"], [53.84, 54.02, "3"], [54.02, 54.44, "millones."], [54.96, 55.16, "M\u00e1s"], [55.16, 55.36, "de"], [55.36, 55.86, "400"], [55.86, 56.2, "mil"], [56.2, 56.46, "pesos"], [56.46, 56.66, "por"], [56.66, 56.78, "d\u00eda"], [56.78, 56.98, "para"], [56.98, 57.22, "comer."], [58.28, 58.42, "Y"], [58.42, 58.52, "esto"], [58.52, 58.7, "se"], [58.7, 59.08, "mueve."], [59.28, 59.44, "El"], [59.44, 59.76, "martes"], [59.76, 60.0, "el"], [60.0, 60.12, "real"], [60.12, 60.42, "ya"], [60.42, 60.88, "rebot\u00f3"], [60.88, 61.24, "y"], [61.24, 61.38, "el"], [61.38, 61.66, "partido"], [61.66, 61.82, "de"], [61.82, 62.06, "Lula"], [62.06, 62.44, "prometi\u00f3"], [62.44, 63.0, "super\u00e1vit."], [63.44, 63.58, "Si"], [63.58, 63.72, "el"], [63.72, 63.94, "mercado"], [63.94, 64.18, "le"], [64.18, 64.34, "cree,"], [64.66, 64.76, "el"], [64.76, 65.0, "descuento"], [65.0, 65.14, "se"], [65.14, 65.68, "achica."], [66.28, 66.62, "Etiqueta"], [66.62, 66.8, "con"], [66.8, 66.88, "quien"], [66.88, 67.04, "te"], [67.04, 67.24, "vas"], [67.24, 67.58, "y"], [67.58, 67.98, "decime,"], [68.14, 68.34, "\u00bfcon"], [68.34, 68.56, "este"], [68.56, 68.82, "real,"], [69.22, 69.44, "Brasil"], [69.44, 69.72, "o"], [69.72, 69.84, "la"], [69.84, 70.2, "costa?"]]; const SUBS = [[0.0, 0.58, "Gan\u00f3"], [0.58, 0.86, "Lula"], [0.86, 1.06, "y"], [1.06, 1.44, "se"], [1.44, 1.72, "desplom\u00f3"], [1.72, 1.94, "el"], [1.94, 2.16, "real."], [2.46, 2.76, "\u00bfAhora"], [2.76, 2.98, "te"], [2.98, 3.08, "sale"], [3.08, 3.24, "m\u00e1s"], [3.24, 3.56, "barato"], [3.56, 3.92, "Brasil"], [3.92, 4.1, "que"], [4.1, 4.26, "la"], [4.26, 4.58, "Costa?"], [4.96, 5.28, "Eleg\u00ed"], [5.28, 5.6, "ya."], [5.9, 6.16, "Brasil"], [6.16, 6.4, "o"], [6.4, 6.5, "Mar"], [6.5, 6.66, "del"], [6.66, 7.06, "Plata."], [7.28, 7.66, "Comentalo"], [7.66, 7.8, "y"], [7.8, 7.92, "al"], [7.92, 8.08, "final"], [8.08, 8.3, "vemos"], [8.3, 8.48, "si"], [8.48, 9.02, "acertaste."], [10.2, 10.28, "El"], [10.28, 10.66, "viernes"], [10.66, 10.86, "un"], [10.86, 11.12, "d\u00f3lar"], [11.12, 11.58, "compraba"], [11.58, 12.54, "4,99"], [12.54, 13.28, "reales,"], [13.4, 13.5, "el"], [13.5, 13.8, "lunes"], [13.8, 14.82, "5,40."], [15.44, 15.68, "Con"], [15.68, 15.96, "d\u00f3lar"], [15.96, 16.5, "tarjeta"], [16.5, 16.74, "cada"], [16.74, 16.94, "real"], [16.94, 17.2, "pas\u00f3"], [17.2, 17.46, "de"], [17.46, 18.2, "406"], [18.2, 18.48, "pesos"], [18.48, 18.78, "a"], [18.78, 19.58, "375."], [20.2, 20.46, "Mil"], [20.46, 20.82, "reales"], [20.82, 20.92, "de"], [20.92, 21.2, "gastos"], [21.2, 21.36, "te"], [21.36, 21.64, "ahorran"], [21.64, 22.12, "31"], [22.12, 22.3, "mil"], [22.3, 22.66, "pesos."], [23.52, 23.74, "Por"], [23.74, 23.84, "eso"], [23.84, 24.02, "las"], [24.02, 24.3, "agencias"], [24.3, 24.58, "hablan"], [24.58, 24.72, "de"], [24.72, 24.88, "un"], [24.88, 25.68, "40%"], [25.68, 25.92, "m\u00e1s"], [25.92, 26.06, "de"], [26.06, 26.74, "demanda."], [26.9, 26.96, "Pero"], [26.96, 27.36, "ojo,"], [27.62, 27.78, "el"], [27.78, 27.94, "avi\u00f3n"], [27.94, 28.06, "y"], [28.06, 28.22, "el"], [28.22, 28.38, "hotel"], [28.38, 28.68, "se"], [28.68, 28.94, "venden"], [28.94, 29.16, "en"], [29.16, 29.48, "d\u00f3lares,"], [29.72, 29.88, "no"], [29.88, 30.2, "bajan"], [30.2, 31.44, "solos."], [31.54, 31.64, "Una"], [31.64, 32.08, "pareja,"], [32.3, 32.38, "una"], [32.38, 32.66, "semana"], [32.66, 32.78, "de"], [32.78, 33.22, "enero."], [33.68, 33.84, "R\u00edo"], [33.84, 34.02, "el"], [34.02, 34.14, "m\u00e1s"], [34.14, 34.44, "barato"], [34.44, 34.64, "con"], [34.64, 35.0, "avi\u00f3n,"], [35.12, 35.34, "hotel"], [35.34, 35.5, "y"], [35.5, 35.82, "comida"], [35.82, 37.34, "$4.400.000"], [37.34, 37.64, "pesos"], [37.64, 37.82, "con"], [37.82, 38.62, "tarjeta."], [39.0, 39.5, "Florian\u00f3polis"], [39.5, 39.7, "y"], [39.7, 40.02, "B\u00fazios"], [40.02, 40.52, "m\u00e1s."], [40.78, 40.947, "Paus\u00e1"], [40.947, 41.113, "y"], [41.113, 41.28, "mir\u00e1"], [41.28, 41.48, "los"], [41.48, 42.58, "precios."], [43.38, 43.44, "Mar"], [43.44, 43.62, "del"], [43.62, 44.0, "Plata."], [44.28, 44.78, "Departamento,"], [44.96, 45.22, "carpa"], [45.22, 45.44, "todos"], [45.44, 45.56, "los"], [45.56, 45.7, "d\u00edas"], [45.7, 45.96, "y"], [45.96, 46.14, "tren"], [46.14, 47.39, "$1.080.000."], [48.24, 48.74, "\u00bfAcertaste?"], [49.26, 49.5, "Gana"], [49.5, 49.72, "la"], [49.72, 50.04, "Costa"], [50.04, 50.3, "y"], [50.3, 50.74, "lejos."], [51.06, 51.32, "Aunque"], [51.32, 51.6, "todo"], [51.6, 51.9, "Brasil"], [51.9, 52.2, "bajara"], [52.2, 52.36, "con"], [52.36, 52.52, "el"], [52.52, 52.74, "real,"], [52.74, 53.18, "te"], [53.18, 53.48, "sobran"], [53.48, 53.84, "casi"], [53.84, 54.02, "3"], [54.02, 54.44, "millones."], [54.96, 55.16, "M\u00e1s"], [55.16, 55.36, "de"], [55.36, 55.86, "400"], [55.86, 56.2, "mil"], [56.2, 56.46, "pesos"], [56.46, 56.66, "por"], [56.66, 56.78, "d\u00eda"], [56.78, 56.98, "para"], [56.98, 57.22, "comer."], [58.28, 58.42, "Y"], [58.42, 58.52, "esto"], [58.52, 58.7, "se"], [58.7, 59.08, "mueve."], [59.28, 59.44, "El"], [59.44, 59.76, "martes"], [59.76, 60.0, "el"], [60.0, 60.12, "real"], [60.12, 60.42, "ya"], [60.42, 60.88, "rebot\u00f3"], [60.88, 61.24, "y"], [61.24, 61.38, "el"], [61.38, 61.66, "partido"], [61.66, 61.82, "de"], [61.82, 62.06, "Lula"], [62.06, 62.44, "prometi\u00f3"], [62.44, 63.0, "super\u00e1vit."], [63.44, 63.58, "Si"], [63.58, 63.72, "el"], [63.72, 63.94, "mercado"], [63.94, 64.18, "le"], [64.18, 64.34, "cree,"], [64.66, 64.76, "el"], [64.76, 65.0, "descuento"], [65.0, 65.14, "se"], [65.14, 65.68, "achica."], [66.28, 66.48, "Etiquet\u00e1"], [66.48, 66.68, "con"], [66.68, 66.88, "qui\u00e9n"], [66.88, 67.04, "te"], [67.04, 67.24, "vas"], [67.24, 67.58, "y"], [67.58, 67.98, "decime,"], [68.14, 68.34, "\u00bfcon"], [68.34, 68.56, "este"], [68.56, 68.82, "real,"], [69.22, 69.44, "Brasil"], [69.44, 69.72, "o"], [69.72, 69.84, "la"], [69.84, 70.2, "Costa?"]];
+const T = {"seg": [{"k": "s1", "A": 0.0, "va": 0, "n": 8.265}, {"k": "sA", "A": 8.265, "va": 9.385250000000001, "n": 5.025}, {"k": "sB", "A": 13.29, "va": 15.24, "n": 4.168}, {"k": "sC", "A": 17.458, "va": 20.2, "n": 9.847}, {"k": "sD", "A": 27.305, "va": 31.31, "n": 8.566}, {"k": "sE", "A": 35.871, "va": 40.22425, "n": 2.861}, {"k": "sF", "A": 38.732, "va": 43.418333, "n": 10.352}, {"k": "sG", "A": 49.084, "va": 54.943374999999996, "n": 5.738}, {"k": "sZ", "A": 54.822, "va": 61.755083, "n": 6.597}], "voz": [[0, 8.63, 0.12], [9.385, 14.45, 8.385], [15.24, 19.363, 13.41], [20.2, 25.13, 17.578], [25.2, 30.57, 22.123], [31.31, 33.09, 27.425], [33.123, 36.21, 29.073], [36.265, 39.61, 31.929], [40.224, 41.29, 35.991], [41.464, 42.91, 37.118], [43.418, 44.21, 38.852], [44.727, 54.21, 39.863], [54.943, 60.793, 49.204], [61.755, 64.63, 54.942], [64.76, 66.24, 57.674]], "dur": 61.419, "vel": 1.1}; const PAL = [[0.0, 0.62, "Gan\u00f3"], [0.62, 0.86, "Lula"], [0.86, 0.98, "y"], [0.98, 1.2, "se"], [1.2, 1.66, "desplom\u00f3"], [1.66, 1.86, "el"], [1.86, 2.08, "real."], [2.42, 2.56, "Ahora,"], [2.66, 2.72, "\u00bfte"], [2.72, 2.86, "sale"], [2.86, 3.02, "m\u00e1s"], [3.02, 3.3, "barato"], [3.3, 3.54, "Brasil"], [3.54, 3.72, "que"], [3.72, 3.86, "la"], [3.86, 4.32, "costa?"], [4.46, 4.8, "Eleg\u00ed"], [4.8, 5.04, "ya."], [5.2, 5.6, "\u00bfBrasil"], [5.6, 5.78, "o"], [5.78, 5.92, "Mar"], [5.92, 6.08, "del"], [6.08, 6.28, "Plata?"], [6.56, 7.0, "Comentalo"], [7.0, 7.12, "y"], [7.12, 7.28, "al"], [7.28, 7.44, "final"], [7.44, 7.62, "vemos"], [7.62, 7.8, "si"], [7.8, 8.38, "acertaste."], [9.48, 9.56, "El"], [9.56, 10.02, "viernes,"], [10.16, 10.24, "un"], [10.24, 10.46, "d\u00f3lar"], [10.46, 10.86, "compraba"], [10.86, 11.16, "4"], [11.16, 11.72, ",99"], [11.72, 12.46, "reales."], [12.46, 12.66, "El"], [12.66, 13.0, "lunes,"], [13.3, 13.62, "5"], [13.62, 14.2, ",40."], [15.28, 15.48, "Con"], [15.48, 15.74, "d\u00f3lar"], [15.74, 16.2, "tarjeta,"], [16.26, 16.46, "cada"], [16.46, 16.66, "real"], [16.66, 16.9, "pas\u00f3"], [16.9, 17.12, "de"], [17.12, 17.78, "406"], [17.78, 18.0, "pesos"], [18.0, 18.26, "a"], [18.26, 19.08, "375."], [20.24, 20.5, "Y"], [20.5, 20.6, "all\u00e1"], [20.6, 20.78, "el"], [20.78, 20.94, "d\u00eda"], [20.94, 21.2, "ya"], [21.2, 21.34, "era"], [21.34, 21.54, "m\u00e1s"], [21.54, 21.98, "barato."], [22.26, 22.62, "Almorzar"], [22.62, 23.12, "45"], [23.12, 23.68, "reales,"], [23.82, 23.98, "silla"], [23.98, 24.1, "y"], [24.1, 24.46, "sombrilla"], [24.46, 24.6, "a"], [24.6, 24.88, "30."], [25.24, 25.42, "En"], [25.42, 25.54, "Mar"], [25.54, 25.72, "del"], [25.72, 25.88, "Plata"], [25.88, 26.04, "un"], [26.04, 26.26, "men\u00fa"], [26.26, 26.46, "ronda"], [26.46, 26.62, "los"], [26.62, 27.04, "23"], [27.04, 27.28, "mil"], [27.28, 27.58, "pesos"], [27.58, 27.72, "y"], [27.72, 27.88, "la"], [27.88, 28.06, "carpa"], [28.06, 28.36, "80"], [28.36, 28.7, "mil."], [28.7, 29.14, "Por"], [29.14, 29.28, "d\u00eda"], [29.28, 29.64, "gast\u00e1s"], [29.64, 29.84, "casi"], [29.84, 29.96, "la"], [29.96, 30.32, "mitad."], [31.42, 31.52, "Pero"], [31.52, 31.68, "el"], [31.68, 31.96, "pasaje"], [31.96, 32.14, "se"], [32.14, 32.26, "come"], [32.26, 32.48, "la"], [32.48, 32.84, "diferencia."], [33.32, 33.48, "Avi\u00f3n"], [33.48, 33.62, "y"], [33.62, 33.76, "hotel"], [33.76, 34.0, "3"], [34.0, 34.34, "estrellas"], [34.34, 34.5, "en"], [34.5, 34.66, "R\u00edo,"], [34.74, 34.88, "m\u00e1s"], [34.88, 35.04, "de"], [35.04, 35.16, "un"], [35.16, 35.36, "mill\u00f3n"], [35.36, 35.52, "por"], [35.52, 35.96, "persona."], [36.4, 36.56, "Micro"], [36.56, 36.74, "y"], [36.74, 36.88, "hotel"], [36.88, 37.04, "en"], [37.04, 37.14, "Mar"], [37.14, 37.32, "del"], [37.32, 37.54, "Plata,"], [37.68, 38.26, "690"], [38.26, 38.58, "mil."], [38.88, 39.1, "Pausa"], [39.1, 39.24, "y"], [39.24, 39.36, "mira."], [40.3, 40.4, "\u00bfY"], [40.4, 40.54, "en"], [40.54, 40.72, "micro"], [40.72, 40.86, "a"], [40.86, 41.04, "Brasil?"], [41.52, 41.66, "No"], [41.66, 41.78, "sale"], [41.78, 41.92, "m\u00e1s"], [41.92, 42.14, "barato"], [42.14, 42.24, "que"], [42.24, 42.36, "el"], [42.36, 42.66, "avi\u00f3n."], [43.56, 43.96, "\u00bfAcertaste?"], [44.9, 45.3, "Pareja,"], [45.42, 45.54, "una"], [45.54, 45.92, "semana"], [45.92, 46.18, "con"], [46.18, 46.48, "hotel,"], [46.64, 46.84, "comida"], [46.84, 47.04, "y"], [47.04, 47.54, "playa."], [47.68, 48.08, "R\u00edo,"], [48.16, 48.32, "2"], [48.32, 48.66, ",7"], [48.66, 49.08, "millones."], [49.24, 49.42, "Mar"], [49.42, 49.62, "del"], [49.62, 49.9, "Plata,"], [49.96, 50.12, "2"], [50.12, 50.7, ",6."], [51.0, 51.3, "Gana"], [51.3, 51.46, "la"], [51.46, 51.72, "costa,"], [51.72, 51.9, "por"], [51.9, 52.2, "poco."], [52.44, 52.68, "Sin"], [52.68, 53.1, "carpa,"], [53.32, 53.46, "por"], [53.46, 53.64, "medio"], [53.64, 53.96, "mill\u00f3n."], [55.02, 55.18, "La"], [55.18, 55.44, "ca\u00edda"], [55.44, 55.66, "del"], [55.66, 55.82, "real"], [55.82, 55.98, "te"], [55.98, 56.18, "ahorra"], [56.18, 56.46, "apenas"], [56.46, 56.96, "50"], [56.96, 57.18, "mil"], [57.18, 57.52, "pesos."], [57.52, 58.04, "Y"], [58.04, 58.2, "el"], [58.2, 58.42, "martes"], [58.42, 58.58, "ya"], [58.58, 58.94, "rebot\u00f3."], [59.12, 59.16, "El"], [59.16, 59.48, "partido"], [59.48, 59.66, "de"], [59.66, 59.86, "Lula"], [59.86, 60.2, "prometi\u00f3"], [60.2, 60.52, "super\u00e1vit."], [61.86, 62.18, "Etiqueta"], [62.18, 62.38, "con"], [62.38, 62.46, "quien"], [62.46, 62.62, "te"], [62.62, 62.76, "vas."], [62.98, 63.1, "Y"], [63.1, 63.4, "decime,"], [63.68, 63.86, "\u00bfcon"], [63.86, 64.08, "este"], [64.08, 64.38, "real?"], [64.86, 65.3, "\u00bfBrasil"], [65.3, 65.64, "o"], [65.64, 65.78, "la"], [65.78, 66.0, "costa?"]]; const SUBS = [[0.0, 0.62, "Gan\u00f3"], [0.62, 0.86, "Lula"], [0.86, 0.98, "y"], [0.98, 1.2, "se"], [1.2, 1.66, "desplom\u00f3"], [1.66, 1.86, "el"], [1.86, 2.08, "real."], [2.42, 2.56, "Ahora,"], [2.66, 2.72, "\u00bfte"], [2.72, 2.86, "sale"], [2.86, 3.02, "m\u00e1s"], [3.02, 3.3, "barato"], [3.3, 3.54, "Brasil"], [3.54, 3.72, "que"], [3.72, 3.86, "la"], [3.86, 4.32, "Costa?"], [4.46, 4.8, "Eleg\u00ed"], [4.8, 5.04, "ya."], [5.2, 5.6, "\u00bfBrasil"], [5.6, 5.78, "o"], [5.78, 5.92, "Mar"], [5.92, 6.08, "del"], [6.08, 6.28, "Plata?"], [6.56, 7.0, "Comentalo"], [7.0, 7.12, "y"], [7.12, 7.28, "al"], [7.28, 7.44, "final"], [7.44, 7.62, "vemos"], [7.62, 7.8, "si"], [7.8, 8.38, "acertaste."], [9.48, 9.56, "El"], [9.56, 10.02, "viernes,"], [10.16, 10.24, "un"], [10.24, 10.46, "d\u00f3lar"], [10.46, 10.86, "compraba"], [10.86, 11.72, "4,99"], [11.72, 12.46, "reales."], [12.46, 12.66, "El"], [12.66, 13.0, "lunes,"], [13.3, 14.2, "5,40."], [15.28, 15.48, "Con"], [15.48, 15.74, "d\u00f3lar"], [15.74, 16.2, "tarjeta,"], [16.26, 16.46, "cada"], [16.46, 16.66, "real"], [16.66, 16.9, "pas\u00f3"], [16.9, 17.12, "de"], [17.12, 17.78, "406"], [17.78, 18.0, "pesos"], [18.0, 18.26, "a"], [18.26, 19.08, "375."], [20.24, 20.5, "Y"], [20.5, 20.6, "all\u00e1"], [20.6, 20.78, "el"], [20.78, 20.94, "d\u00eda"], [20.94, 21.2, "ya"], [21.2, 21.34, "era"], [21.34, 21.54, "m\u00e1s"], [21.54, 21.98, "barato."], [22.26, 22.62, "Almorzar"], [22.62, 23.12, "45"], [23.12, 23.68, "reales,"], [23.82, 23.98, "silla"], [23.98, 24.1, "y"], [24.1, 24.46, "sombrilla"], [24.46, 24.6, "a"], [24.6, 24.88, "30."], [25.24, 25.42, "En"], [25.42, 25.54, "Mar"], [25.54, 25.72, "del"], [25.72, 25.88, "Plata"], [25.88, 26.04, "un"], [26.04, 26.26, "men\u00fa"], [26.26, 26.46, "ronda"], [26.46, 26.62, "los"], [26.62, 27.04, "23"], [27.04, 27.28, "mil"], [27.28, 27.58, "pesos"], [27.58, 27.72, "y"], [27.72, 27.88, "la"], [27.88, 28.06, "carpa"], [28.06, 28.36, "80"], [28.36, 28.7, "mil."], [28.7, 29.14, "Por"], [29.14, 29.28, "d\u00eda"], [29.28, 29.64, "gast\u00e1s"], [29.64, 29.84, "casi"], [29.84, 29.96, "la"], [29.96, 30.32, "mitad."], [31.42, 31.52, "Pero"], [31.52, 31.68, "el"], [31.68, 31.96, "pasaje"], [31.96, 32.14, "se"], [32.14, 32.26, "come"], [32.26, 32.48, "la"], [32.48, 32.84, "diferencia."], [33.32, 33.48, "Avi\u00f3n"], [33.48, 33.62, "y"], [33.62, 33.76, "hotel"], [33.76, 34.0, "3"], [34.0, 34.34, "estrellas"], [34.34, 34.5, "en"], [34.5, 34.66, "R\u00edo,"], [34.74, 34.88, "m\u00e1s"], [34.88, 35.04, "de"], [35.04, 35.16, "un"], [35.16, 35.36, "mill\u00f3n"], [35.36, 35.52, "por"], [35.52, 35.96, "persona."], [36.4, 36.56, "Micro"], [36.56, 36.74, "y"], [36.74, 36.88, "hotel"], [36.88, 37.04, "en"], [37.04, 37.14, "Mar"], [37.14, 37.32, "del"], [37.32, 37.54, "Plata,"], [37.68, 38.26, "690"], [38.26, 38.58, "mil."], [38.88, 39.04, "Paus\u00e1"], [39.04, 39.2, "y"], [39.2, 39.36, "mir\u00e1."], [40.3, 40.4, "\u00bfY"], [40.4, 40.54, "en"], [40.54, 40.72, "micro"], [40.72, 40.86, "a"], [40.86, 41.04, "Brasil?"], [41.52, 41.66, "No"], [41.66, 41.78, "sale"], [41.78, 41.92, "m\u00e1s"], [41.92, 42.14, "barato"], [42.14, 42.24, "que"], [42.24, 42.36, "el"], [42.36, 42.66, "avi\u00f3n."], [43.56, 43.96, "\u00bfAcertaste?"], [44.9, 45.3, "Pareja,"], [45.42, 45.54, "una"], [45.54, 45.92, "semana"], [45.92, 46.18, "con"], [46.18, 46.48, "hotel,"], [46.64, 46.84, "comida"], [46.84, 47.04, "y"], [47.04, 47.54, "playa."], [47.68, 48.08, "R\u00edo,"], [48.16, 48.66, "2,7"], [48.66, 49.08, "millones."], [49.24, 49.42, "Mar"], [49.42, 49.62, "del"], [49.62, 49.9, "Plata,"], [49.96, 50.7, "2,6."], [51.0, 51.3, "Gana"], [51.3, 51.46, "la"], [51.46, 51.72, "Costa,"], [51.72, 51.9, "por"], [51.9, 52.2, "poco."], [52.44, 52.68, "Sin"], [52.68, 53.1, "carpa,"], [53.32, 53.46, "por"], [53.46, 53.64, "medio"], [53.64, 53.96, "mill\u00f3n."], [55.02, 55.18, "La"], [55.18, 55.44, "ca\u00edda"], [55.44, 55.66, "del"], [55.66, 55.82, "real"], [55.82, 55.98, "te"], [55.98, 56.18, "ahorra"], [56.18, 56.46, "apenas"], [56.46, 56.96, "50"], [56.96, 57.18, "mil"], [57.18, 57.52, "pesos."], [57.52, 58.04, "Y"], [58.04, 58.2, "el"], [58.2, 58.42, "martes"], [58.42, 58.58, "ya"], [58.58, 58.94, "rebot\u00f3."], [59.12, 59.16, "El"], [59.16, 59.48, "partido"], [59.48, 59.66, "de"], [59.66, 59.86, "Lula"], [59.86, 60.2, "prometi\u00f3"], [60.2, 60.52, "super\u00e1vit."], [61.86, 62.06, "Etiquet\u00e1"], [62.06, 62.26, "con"], [62.26, 62.46, "qui\u00e9n"], [62.46, 62.62, "te"], [62.62, 62.76, "vas."], [62.98, 63.1, "Y"], [63.1, 63.4, "decime,"], [63.68, 63.86, "\u00bfcon"], [63.86, 64.08, "este"], [64.08, 64.38, "real?"], [64.86, 65.3, "\u00bfBrasil"], [65.3, 65.64, "o"], [65.64, 65.78, "la"], [65.78, 66.0, "Costa?"]];
 const DUR = T.dur; window.DURACION = DUR;
 const $ = (s) => document.querySelector(s);
 const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
@@ -412,74 +416,67 @@ trazo('#aGl', V('sA', 'el lunes'), 1.0); pop('#aGp', V('sA', '5') + .3, 0);
 sella('#aS', V('sA', '40', true) + .1, -6); golpe('sA', V('sA', '40', true) + .1, 1.04);
 pop('#aC', V('sA', '40', true) + .55, 20);
 
-// B · ticket
+// B · cada real
 barre('sB', 'der');
 lineas('#bT', R('sB', .05), .1);
+tl.fromTo('#bb1', { y: -300, rotate: -20, autoAlpha: 0 }, { y: 900, rotate: 30, autoAlpha: 1, duration: 4, ease: 'none' }, R('sB', 0));
 pop('#bK', R('sB', .2), 30);
 cuenta('bKv', V('sB', '375'), 375, 406);
-sella('#bS', V('sB', '375', true) + .1, -6);
-pop('#bTk', V('sB', 'mil reales') - .3, 40);
-const TB = V('sB', 'mil reales');
-// sin teclas: el sonido tapaba 'te ahorran' (control de mezcla v1)
-tl.fromTo(['#bL1', '#bL2', '#bL3'], { autoAlpha: 0, x: -30 }, { autoAlpha: 1, x: 0, duration: .3, ease: E, stagger: .55 }, TB);
-pop('#bTot', V('sB', '31') - .05, 20); golpe('sB', V('sB', 'pesos', true), 1.04);
+sella('#bS', V('sB', '375', true) + .1, -6); golpe('sB', V('sB', '375', true) + .1, 1.05);
 
-// C · demanda / dólares
+// C · el día
 barre('sC', 'arr');
 lineas('#cT', R('sC', .05), .1);
-pop('#cK', V('sC', '40') - .2, 30); cuenta('cKv', V('sC', '40'), 40, 0);
-pop('#cC', V('sC', 'demanda', true) + .05, 20);
-pop('#cA', V('sC', 'avion'), 20); pop('#cH', V('sC', 'hotel'), 20);
-tl.to('#cC', { autoAlpha: 0, duration: .2 }, V('sC', 'avion') - .1);
-sella('#cS', V('sC', 'no bajan'), -5); golpe('sC', V('sC', 'no bajan'), 1.05);
+pop('#cBr', V('sC', 'almorzar') - .2, 40);
+tl.fromTo(['#cB1', '#cB2'], { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: .3, ease: E, stagger: 1.0 }, V('sC', 'almorzar'));
+pop('#cCo', V('sC', 'en mar del plata') - .1, 40);
+tl.fromTo('#cC1', { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: .3, ease: E }, V('sC', 'menu'));
+tl.fromTo('#cC2', { autoAlpha: 0, x: -20 }, { autoAlpha: 1, x: 0, duration: .3, ease: E }, V('sC', 'la carpa'));
+sella('#cS', V('sC', 'mitad') - .1, -5); golpe('sC', V('sC', 'mitad'), 1.04);
 
-// D · Brasil
+// D · el pasaje
 barre('sD', 'izq');
 lineas('#dT', R('sD', .05), .1);
-trazo('#dRl', R('sD', .3), 1.4);
+trazo('#dRl', R('sD', .3), 1.4); trazo('#dRm', R('sD', .3), .8);
 { const p = { u: 0 }; tl.fromTo(p, { u: 0 }, { u: 1, duration: 1.4, ease: 'power2.inOut', onUpdate: () => { const L = $('#dRl'); const l = L.getTotalLength(); const a = L.getPointAtLength(l * p.u), b = L.getPointAtLength(Math.min(l, l * p.u + 1)); $('#dAv').setAttribute('transform', `translate(${a.x},${a.y}) rotate(${Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI})`); } }, R('sD', .3)); sx('whoosh', R('sD', .3)); }
-pop('#dF', V('sD', 'rio') - .1, 40);
-pop('#dP', V('sD', 'comida', true), 10);
-pop('#dI', V('sD', 'con avion'), 20);
-tl.to(['#dR', '#dT'], { autoAlpha: 0, duration: .2 }, V('sD', '4') - .3);
-pop('#dK', V('sD', '4') - .2, 30); cuenta('dKv', V('sD', '4'), 4400000, 0, miles); golpe('sD', V('sD', 'con tarjeta', true), 1.04);
-tl.to('#dMas', { opacity: 1, duration: .3 }, V('sD', 'florianopolis') - .15); sx('whoosh', V('sD', 'florianopolis') - .2);
-pop('#dM1', V('sD', 'florianopolis'), 30); pop('#dM2', V('sD', 'bucios') , 30);
-pop('#dM1p', V('sD', 'bucios') + .1, 10); pop('#dM2p', V('sD', 'mas', true) + .05, 10);
-pop('#dM0p', V('sD', 'mas', true) + .4, 10);
-sube('#dPa', V('sD', 'pausa'), 80);
-tl.to('#dPa', { scale: 1.08, duration: .25, yoyo: true, repeat: 3 }, V('sD', 'pausa') + .5);
+pop('#dF', V('sD', 'avion') - .1, 40);
+pop('#dP1', V('sD', 'un millon') - .1, 20); golpe('sD', V('sD', 'por persona', true), 1.04);
+pop('#dG', V('sD', 'micro') - .1, 40);
+pop('#dP2', V('sD', '690') - .1, 20);
+pop('#dP0', V('sD', '690', true) + .1, 10);
+tl.to('#dMas', { opacity: 1, duration: .3 }, V('sD', 'pausa') - .2); sx('whoosh', V('sD', 'pausa') - .25);
+pop('#dM0', V('sD', 'pausa'), 20); pop('#dM1', V('sD', 'pausa') + .15, 20); pop('#dM2', V('sD', 'pausa') + .3, 20);
+sube('#dPa', V('sD', 'pausa') + .2, 80);
+tl.to('#dPa', { scale: 1.08, duration: .25, yoyo: true, repeat: 3 }, V('sD', 'pausa') + .7);
 
-// E · Costa
+// E · micro
 barre('sE', 'der');
-pop('#eF', R('sE', .1), 40);
-pop('#eTk', V('sE', 'departamento') - .2, 40);
-tipea('eTx', V('sE', 'departamento'), V('sE', 'departamento', true) + .1, 'Depto 1 semana  $420.000');
-tipea('eTx', V('sE', 'carpa'), V('sE', 'dias', true), 'Carpa x 7 días  $560.000');
-tipea('eTx', V('sE', 'tren'), V('sE', 'tren', true) + .2, 'Tren ida/vuelta $100.000');
-pop('#eTot', V('sE', '1') - .05, 20); golpe('sE', V('sE', '1') + .1, 1.04);
+lineas('#eT', R('sE', .05), .1);
+pop('#eM1', R('sE', .4), 20); pop('#eM2', R('sE', .7), 20);
+pop('#eC', V('sE', 'no sale') - .1, 20);
+sella('#eS', V('sE', 'avion') - .1, -5);
 
 // F · revelado
 barre('sF', 'arr');
 lineas('#fT', R('sF', .05), .1);
 tl.fromTo('#fBal', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: .4, ease: E }, R('sF', .1));
 tl.fromTo(['#fPB', '#fPC'], { autoAlpha: 0 }, { autoAlpha: 1, duration: .3 }, R('sF', .2));
-tl.fromTo(BAL, { a: 0 }, { a: -12, duration: .8, ease: 'elastic.out(1,.45)' }, V('sF', 'gana') - .1); sx('golpe', V('sF', 'gana'));
-sella('#fS', V('sF', 'lejos') , -6); flash(V('sF', 'lejos'), .25);
-tl.to('#fSob', { opacity: 1, duration: .3 }, V('sF', 'aunque') - .15); sx('whoosh', V('sF', 'aunque') - .2);
-tl.fromTo(['#fS1', '#fS2'], { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: .35, ease: E, stagger: .6 }, V('sF', 'aunque'));
-pop('#fK', V('sF', 'casi') - .1, 30); cuenta('fKv', V('sF', '3'), 2.99, 0, dec2);
-pop('#fRes', V('sF', 'millones', true) + .05, 30);
-tl.fromTo('#rB .fill', { width: 0 }, { width: '100%', duration: .6, ease: E }, V('sF', 'millones', true) + .15);
-tl.fromTo('#rC .fill', { width: 0 }, { width: '26%', duration: .6, ease: E }, V('sF', 'millones', true) + .15);
-tl.to(['#fS1', '#fS2'], { autoAlpha: 0, duration: .15 }, V('sF', '400') - .2); pop('#fDia', V('sF', '400') - .1, 20);
+tl.fromTo('#fPB', { scale: .6 }, { scale: 1, duration: .4, ease: 'back.out(2)' }, V('sF', 'rio') - .05);
+tl.fromTo('#fPC', { scale: .6 }, { scale: 1, duration: .4, ease: 'back.out(2)' }, V('sF', 'mar del plata', true) - .3);
+tl.fromTo(BAL, { a: 0 }, { a: -4, duration: .9, ease: 'elastic.out(1,.4)' }, V('sF', 'gana') - .1); sx('golpe', V('sF', 'gana'));
+sella('#fS', V('sF', 'por poco'), -5);
+tl.to('#fSob', { opacity: 1, duration: .3 }, V('sF', 'sin carpa') - .15); sx('whoosh', V('sF', 'sin carpa') - .2);
+pop('#fRes', V('sF', 'sin carpa'), 30);
+tl.fromTo('#rB .fill', { width: 0 }, { width: '100%', duration: .6, ease: E }, V('sF', 'sin carpa') + .1);
+tl.fromTo('#rC .fill', { width: 0 }, { width: '79%', duration: .6, ease: E }, V('sF', 'sin carpa') + .1);
+pop('#fK', V('sF', 'medio') - .1, 30); cuenta('fKv', V('sF', 'medio'), 541, 0);
 
-// G · se mueve
+// G · ahorro y se mueve
 barre('sG', 'izq');
-lineas('#gT', R('sG', .05), .1);
+pop('#gL', R('sG', .1), 20);
+pop('#gK', V('sG', 'apenas') - .1, 30); cuenta('gKv', V('sG', '50'), 52000, 0, miles); golpe('sG', V('sG', 'pesos', true), 1.04);
 pop('#gM', V('sG', 'martes') - .1, 30); tl.fromTo('#gM2', { scale: 1 }, { scale: 1.06, duration: .2, yoyo: true, repeat: 1 }, V('sG', 'rebot'));
 sube('#gQ', V('sG', 'partido'), 80);
-pop('#gD', V('sG', 'si el mercado'), 20); cuenta('gDv', V('sG', 'descuento'), 6.9, 7.6, (v) => '−' + dec1(v) + '%');
 
 // Z · cierre + loop
 barre('sZ', 'aba');
