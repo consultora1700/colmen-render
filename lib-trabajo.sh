@@ -15,7 +15,7 @@ FF=/root/reels-colmen/node_modules/ffmpeg-static/ffmpeg
 # lo poco que corre en el server con CPU (ffmpeg) va de a uno y con prioridad mínima: Colmen primero
 liviano() { flock /tmp/colmen-ffmpeg.lock nice -n 19 "$@"; }
 api() { curl -fsSL -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
-_push() { GIT_CONFIG_GLOBAL=/dev/null git push -q "https://x-access-token:$TOKEN@github.com/$REPO.git" "$@"; }
+_push() { GIT_CONFIG_GLOBAL=/dev/null git push -q "https://x-access-token:$TOKEN@github.com/$REPO.git" "$@" 2>&1 | { grep -v "^remote:" || true; } >&2; }
 
 trabajo_nuevo() {
   RAMA="trabajo/$1-$(date -u +%Y%m%d-%H%M%S)-$$"
