@@ -5,7 +5,7 @@ name: transcribir
 on:
   workflow_dispatch:
   push:
-    paths: ['transcribir/pedido.json']
+    branches: ['trabajo/transcribir-*']   # cada pedido llega en su rama (lib-trabajo.sh)
 
 concurrency:
   group: transcribir-${{ github.ref }}

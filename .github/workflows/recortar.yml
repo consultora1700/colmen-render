@@ -5,7 +5,7 @@ name: recortar
 on:
   workflow_dispatch:
   push:
-    paths: ['recortes/pedido.json']
+    branches: ['trabajo/recortar-*']   # cada pedido llega en su rama (lib-trabajo.sh)
 
 concurrency:
   group: recortar-${{ github.ref }}

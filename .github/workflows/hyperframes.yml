@@ -6,7 +6,7 @@ on:
     inputs:
       proyecto: { description: 'Carpeta dentro de hf/', default: 'costo-plato' }
   push:
-    paths: ['hf/pedido.json']
+    branches: ['trabajo/hf-*']   # cada pedido llega en su rama (lib-trabajo.sh)
 
 concurrency:
   group: hyperframes-${{ github.ref }}

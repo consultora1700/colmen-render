@@ -8,7 +8,7 @@ on:
       escena: { description: 'Archivo dentro de escenas/', default: 'escena3.html' }
       partes: { description: 'Cantidad de máquinas en paralelo', default: '12' }
   push:
-    paths: ['pedido.json']
+    branches: ['trabajo/render-*']   # cada pedido llega en su rama (lib-trabajo.sh)
 
 concurrency:
   group: render-${{ github.ref }}

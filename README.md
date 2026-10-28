@@ -11,3 +11,11 @@ N máquinas dibujan un tramo cada una con Chromium + SwiftShader y un último pa
 - `render-remoto.sh` — desde el servidor: sube la escena, espera, baja el video y le mezcla la voz (el audio no se sube)
 
 Disparo manual: Actions → render → Run workflow (escena + cantidad de partes).
+
+## Trabajos en paralelo (desde 28/10/2026)
+Cada script (`render-remoto.sh`, `transcribir-remoto.sh`, `recortar-remoto.sh`, `render-hf.sh`) sube su pedido en una rama
+propia `trabajo/<tipo>-<fecha>-<pid>` armada con un índice temporal (`lib-trabajo.sh`): no toca el directorio del clon,
+así que pueden correr varios a la vez sin candado. Los workflows se disparan por esa rama y la rama se borra al terminar.
+Lo único que usa CPU en el server (ffmpeg) pasa por `liviano` = `flock /tmp/colmen-ffmpeg.lock nice -n 19`.
+Límite real: 20 máquinas a la vez por cuenta (GitHub Free); un render en 12 partes usa 12.
+`vfx-remoto.sh` sigue con el esquema viejo (commit en main, espera que no haya otros runs).
