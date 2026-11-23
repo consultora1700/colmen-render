@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Colapinto turista · capa</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@500;700;800&display=block" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--ink:#0c0b0a;--paper:#f2ede4;--fire:#ff4b1f;--ember:#ffb547;--ice:#9fe6ff;--green:#22c55e;--mute:rgba(242,237,228,.6);--rule:rgba(242,237,228,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Inter Tight',sans-serif;color:var(--paper);-webkit-font-smoothing:antialiased}
+.sc{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+.cam{position:absolute;inset:0;transform-origin:50% 50%}
+.abs{position:absolute}
+canvas{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.k{font-weight:800;font-size:30px;letter-spacing:.1em;text-transform:uppercase}
+.d{font-weight:900;letter-spacing:-.03em;word-spacing:.05em;line-height:.98}
+.m{display:block;overflow:hidden;padding:.08em .1em .14em;margin:-.08em -.1em -.14em}
+.m>span{display:inline-block}
+/* resaltado estilo texto de TikTok/IG */
+.hl{display:inline-block;padding:.02em .16em .06em;margin:0 -.04em;border-radius:.14em;background:var(--fire);color:#fff;transform:rotate(-1.5deg)}
+.hl.am{background:var(--ember);color:#1a0d05}.hl.ice{background:var(--ice);color:#06202b}.hl.ok{background:var(--green);color:#04210f}.hl.ink{background:#111;color:#fff}
+.src{position:absolute;left:90px;font:600 21px 'Inter Tight';letter-spacing:.02em;color:var(--mute)}
+#hud{display:none!important;position:absolute;left:90px;right:90px;top:400px;height:40px;mix-blend-mode:difference;color:#fff;z-index:50}
+#hud .a,#hud .b{position:absolute;top:0;font:800 21px 'Inter Tight';letter-spacing:.16em}
+#hud .a{left:0}#hud .b{right:0}
+#hud .r{position:absolute;left:0;right:0;top:38px;height:3px;border-radius:2px;background:rgba(255,255,255,.25)}
+#hud .p{position:absolute;left:0;top:38px;height:3px;border-radius:2px;background:#fff;width:0}
+#grano{position:absolute;inset:0;z-index:60;opacity:.06;mix-blend-mode:overlay;pointer-events:none}
+#vin{position:absolute;inset:0;z-index:59;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 58%,rgba(0,0,0,.45) 100%)}
+/* dedo que toca */
+#dedo{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;background:rgba(255,255,255,.92);box-shadow:0 0 0 12px rgba(255,255,255,.25),0 10px 30px rgba(0,0,0,.35);z-index:55;opacity:0}
+#onda{position:absolute;left:0;top:0;width:84px;height:84px;margin:-42px;border-radius:50%;border:5px solid #fff;z-index:55;opacity:0}
+/* stickers */
+.stk{position:absolute;left:110px;width:860px;border-radius:44px;background:#fff;color:#111;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.stk .q{padding:40px 44px;color:#fff;font:900 60px/1.05 'Inter Tight';letter-spacing:-.02em;text-align:center}
+.stk .ops{padding:34px;display:grid;gap:20px}
+.op{position:relative;height:108px;border-radius:54px;background:#f1f1f1;display:flex;align-items:center;gap:22px;padding:0 18px;font:800 42px 'Inter Tight';overflow:hidden}
+.op .l{width:72px;height:72px;border-radius:50%;background:#fff;border:3px solid #ddd;display:grid;place-items:center;font:900 32px 'Inter Tight';color:#777;flex:none;position:relative;z-index:2}
+.op span{position:relative;z-index:2}
+.op .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--green)}
+.op.ok .l{background:var(--green);border-color:var(--green);color:#fff}
+.razon{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:96px 1fr;gap:30px;align-items:start}
+.razon .nn{width:96px;height:96px;border-radius:50%;background:var(--fire);color:#fff;display:grid;place-items:center;font:900 52px 'Inter Tight'}
+.razon .tx{font:800 54px/1.12 'Inter Tight';letter-spacing:-.02em}
+.razon .tx small{display:block;font:600 34px/1.3 'Inter Tight';color:var(--mute);margin-top:10px;letter-spacing:0}
+/* celular */
+.phone{position:absolute;width:520px;height:1080px;border-radius:84px;background:#0a0a0b;padding:16px;
+  box-shadow:0 0 0 3px #5b5a5e,0 0 0 6px #1d1d20,0 0 0 7px #77767b,0 60px 120px rgba(0,0,0,.6)}
+.phone .scr{position:relative;width:100%;height:100%;border-radius:68px;overflow:hidden;background:#000}
+.phone .isla{position:absolute;left:50%;top:22px;width:136px;height:40px;margin-left:-68px;border-radius:20px;background:#000;z-index:9}
+.phone .bt{position:absolute;width:6px;border-radius:3px;background:#3c3b3f}
+.tk-top{position:absolute;left:0;right:0;top:84px;text-align:center;font:600 25px 'Inter Tight';color:rgba(255,255,255,.65);z-index:5}
+.tk-top b{color:#fff;border-bottom:3px solid #fff;padding-bottom:6px;margin-left:22px}
+.tk-rail{position:absolute;right:16px;bottom:210px;display:flex;flex-direction:column;align-items:center;gap:34px;z-index:5}
+.tk-rail svg{width:58px;height:58px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.tk-av{width:64px;height:64px;border-radius:50%;border:3px solid #fff;background:#444 center/cover}
+.tk-cap{position:absolute;left:24px;right:110px;bottom:70px;z-index:5;font:500 24px/1.35 'Inter Tight';color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.tk-cap b{display:block;font-weight:800;font-size:27px;margin-bottom:6px}
+.tk-bar{position:absolute;left:0;right:0;bottom:36px;height:4px;background:rgba(255,255,255,.25);z-index:5}
+.tk-bar i{display:block;height:100%;width:0;background:#fff}
+.perfil{position:absolute;left:100px;width:840px;padding:36px;border-radius:44px;background:#fff;color:#111;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;box-shadow:0 40px 80px rgba(40,25,10,.25)}
+.perfil .av{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 200deg,#ff4b1f,#ffb547,#ff2d7a,#ff4b1f)}
+.perfil .av div{width:100%;height:100%;border-radius:50%;border:6px solid #fff;background:#ccc center/cover}
+.perfil .n{font:800 52px/1 'Inter Tight';letter-spacing:-.02em}
+.perfil .r{font:500 29px/1.25 'Inter Tight';color:#555;margin-top:10px}
+.perfil .kk{font:800 20px 'Inter Tight';letter-spacing:.12em;color:#ff4b1f;margin-top:14px;text-transform:uppercase}
+.perfil .btn{grid-column:1/3;height:92px;border-radius:24px;background:#ff3158;color:#fff;font:800 36px/92px 'Inter Tight';text-align:center;position:relative;overflow:hidden}
+.noti{position:absolute;left:100px;width:840px;padding:26px 30px;border-radius:40px;background:rgba(30,28,27,.94);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.noti .ic{width:84px;height:84px;border-radius:20px;background:#000;display:grid;place-items:center}
+.noti .t1{font:600 24px 'Inter Tight';color:rgba(255,255,255,.6);display:flex;justify-content:space-between}
+.noti .t2{font:700 33px/1.2 'Inter Tight';margin-top:6px}
+.subs{position:absolute;left:90px;right:90px;text-align:center;font:900 76px/1.04 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:2px #000;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.9),0 10px 30px rgba(0,0,0,.6)}
+.subs span{display:inline-block;margin:0 .1em}
+.subs .on{color:#ffd23f}
+.card{position:absolute;width:400px;border-radius:40px;padding:36px 30px;text-align:center}
+.card .t{font:800 26px 'Inter Tight';letter-spacing:.1em;text-transform:uppercase}
+.card .v{white-space:nowrap;font:900 74px/1 'Inter Tight';letter-spacing:-.03em;margin-top:20px}
+.card .s{font:700 30px/1.2 'Inter Tight';margin-top:12px}
+.mini{position:absolute;left:90px;right:90px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.mini div{border-radius:30px;background:#1c1917;padding:26px 28px}
+.mini b{display:block;font:900 66px/1 'Inter Tight';letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mini span{display:block;font:700 28px/1.2 'Inter Tight';color:var(--mute);margin-top:8px}
+
+/* ESTILO ÚNICO FV — sistema RESALTADOR (Franco, 01/11/2026): grafito, resaltador, hueso, gris + papel para el archivo + cristal.
+   FUENTE ÚNICA de colores, tamaños, zona segura y piezas para TODOS los videos. Ningún episodio redefine nada de esto.
+   Referencia aprobada: _comun/estilo-fv-referencia.html (todas las pantallas del sistema).
+   Uso: en el <style> del episodio poner ESTILO_FV (entre llaves dobles) (armar.py lo reemplaza por este archivo) y en el <head> las fuentes:
+   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Archivo:wght@500;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=block" rel="stylesheet">
+   Movimiento: ESTILO_FV_JS (entre llaves dobles) (estilo-fv.js) dentro del <script>, después de MOTOR_INI.
+   Todas las clases llevan prefijo fv- para no chocar con _base.css.
+
+   ZONA SEGURA (1080×1920, libre en Instagram Y TikTok): todo lo que se lee va entre
+     x 90 → 910 (170 px libres a la derecha por los botones) · y 260 → 1420 (abajo van nombre, texto y música).
+   Subtítulos: banda fija 1270–1400. Usar las variables --zs-* y las clases .fv-zs / .fv-pos-* para posicionar. */
+:root{
+  --grafito:#141416;--resaltador:#d2f53c;--hueso:#efeee9;--gris:#8d8c87;--papel:#f1efe8;--tinta:#141416;--oliva:#5f7300;
+  /* alias viejos (EP.54 v2): apuntan al sistema nuevo */
+  --negro:var(--grafito);--lima:var(--resaltador);
+  --vidrio:rgba(239,238,233,.07);--borde:rgba(239,238,233,.16);
+  --zs-izq:90px;--zs-der:170px;--zs-arriba:260px;--zs-abajo:1420px;--zs-ancho:820px;
+  --f-tit:'Oswald','Arial Narrow',sans-serif;--f-txt:'Archivo',system-ui,sans-serif;--f-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+.fv{background:var(--grafito);color:var(--hueso);font-family:var(--f-txt)}
+.fv-a{position:absolute}
+/* caja de la zona segura: left 90, ancho 820 */
+.fv-zs{position:absolute;left:var(--zs-izq);width:var(--zs-ancho);box-sizing:border-box}
+/* fondo: foto del protagonista de la escena, desenfocada y oscurecida + viñeta + brillo. Nunca grafito vacío. */
+.fv-fondo{position:absolute;inset:-90px;background-size:cover;background-position:center 20%;filter:blur(60px) grayscale(.6) brightness(.42);transform:scale(1.1)}
+.fv-vin{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 40%,transparent 28%,rgba(20,20,22,.88) 92%)}
+.fv-glow{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(210,245,60,.16),transparent 65%)}
+
+/* ===== FILA DE ARRIBA (y 270): etiqueta a la izquierda, firma a la derecha. La etiqueta, MÁXIMO 20 caracteres (si no, choca con la firma) ===== */
+.fv-pos-tag{position:absolute;left:var(--zs-izq);top:270px}
+.fv-tag{display:inline-flex;align-items:center;gap:18px;font:400 26px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--hueso);padding:14px 28px;border-radius:70px;background:var(--vidrio);border:2px solid var(--borde);white-space:nowrap;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px)}
+.fv-tag i{width:17px;height:17px;border-radius:50%;background:var(--resaltador);flex:none}
+.fv-firma{position:absolute;right:var(--zs-der);top:284px;z-index:70;font:600 26px var(--f-tit);letter-spacing:.06em;color:var(--hueso);opacity:.85;white-space:nowrap}
+.fv-firma b{color:var(--resaltador);font-weight:600}
+/* AHORA (último momento): sin rojo. Etiqueta en resaltador + punto que titila + hora. Va en lugar de .fv-tag. */
+.fv-ahora{display:inline-flex;align-items:center;gap:18px;font:700 38px var(--f-tit);letter-spacing:.14em;text-transform:uppercase;color:var(--grafito);background:var(--resaltador);padding:8px 26px 10px;border-radius:10px;white-space:nowrap}
+.fv-ahora i{width:22px;height:22px;border-radius:50%;background:var(--grafito);flex:none}
+.fv-desarrollo{font:400 26px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--hueso)}
+
+/* ===== PIEZAS ===== */
+/* fecha: bloque resaltador (posición típica: top 360) */
+.fv-fecha{display:inline-block;font:600 42px var(--f-tit);background:var(--resaltador);color:var(--grafito);padding:3px 24px 5px;border-radius:10px;white-space:nowrap}
+/* título de escena: condensada, mayúsculas, hueso (posición típica: top 440) */
+.fv-tit{font:700 76px/1.02 var(--f-tit);text-transform:uppercase;letter-spacing:.01em;color:var(--hueso)}
+/* tarjeta de cristal esmerilado. Poner con .fv-zs (o left 90 / right 170). .fv-sim = respaldo si el render no soporta backdrop-filter */
+.fv-vidrio{position:absolute;overflow:hidden;isolation:isolate;background:linear-gradient(160deg,rgba(239,238,233,.12),rgba(239,238,233,.04));border:2px solid var(--borde);border-radius:44px;
+  backdrop-filter:blur(70px) saturate(1.2);-webkit-backdrop-filter:blur(70px) saturate(1.2);box-shadow:0 36px 110px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.12)}
+.fv-vidrio>.fv-sim{position:absolute;inset:0;z-index:-1;background-size:cover;filter:blur(70px) saturate(1.2) brightness(.55)}
+.fv-pad{padding:42px 46px 36px}
+/* foto real adentro de una tarjeta de cristal (01/11/2026, EP.56): imagen arriba + pie con la fuente. Usar con .fv-vidrio.fv-zs y padding:16px */
+.fv-foto{height:440px;border-radius:30px;background-size:cover;background-repeat:no-repeat;background-position:center 30%}
+.fv-pie{padding:12px 14px 2px}
+/* titular de diario reescrito (nunca la captura del medio) */
+.fv-medio{font:400 26px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+.fv-titular{font:800 52px/1.2 var(--f-txt);color:var(--hueso);margin-top:16px}
+.fv-lima,.fv-acento{color:var(--resaltador)}
+/* resaltado en línea: la franja lima mide 1 renglón (1lh), NO la caja de la fuente. Oswald tiene la caja ~1,48em y el renglón 1,12em:
+   con la franja a caja llena, el renglón de abajo tapaba las patas (j, p, q) del de arriba (Ueno 04/11, Franco: "no quiero que vuelva a suceder").
+   Recorte .14em arriba / .04em abajo para no tocar las patas del renglón anterior. fvPinta anima background-size: no cambiar a otra técnica. */
+.fv-res{background:linear-gradient(transparent calc(50% - .5lh + .14em),var(--resaltador) 0,var(--resaltador) calc(50% + .5lh - .04em),transparent 0) no-repeat 0 0/100% 100%;color:var(--grafito);padding:0 10px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+/* cita */
+.fv-comillas{font:900 154px/.6 var(--f-txt);color:var(--resaltador)}
+.fv-cita{font:900 66px/1.1 var(--f-txt);text-transform:uppercase;color:var(--hueso)}
+/* subtítulo 54 px (Franco 01/11: "un poquito más grandes"; antes 46), 2 renglones = 127 px: banda fija 1270–1400, centrado en la zona segura (nunca más abajo: en TikTok lo tapa la botonera) */
+.fv-sub{position:absolute;box-sizing:border-box;left:var(--zs-izq);width:var(--zs-ancho);top:1270px;z-index:60;text-align:center;font:800 54px/1.18 var(--f-txt);color:var(--hueso);text-shadow:0 4px 16px rgba(0,0,0,.8)}
+.fv-sub em{font-style:normal;color:var(--resaltador)}
+/* fuente: gris, chica, DENTRO de la tarjeta */
+.fv-fuente{font:400 26px/1.4 var(--f-mono);color:var(--gris)}
+/* dato */
+.fv-num{font:700 260px/.85 var(--f-tit);color:var(--resaltador);white-space:nowrap}
+.fv-barra{height:28px;border-radius:14px;background:rgba(239,238,233,.18);overflow:hidden}
+.fv-barra span{display:block;height:100%;border-radius:14px;background:var(--hueso)}
+.fv-barra.yo span{background:var(--resaltador)}
+.fv-filas{display:grid;gap:24px;font:700 34px var(--f-txt)}
+.fv-filas>div{display:grid;grid-template-columns:220px 1fr 100px;gap:20px;align-items:center}
+.fv-filas>div.yo{color:var(--resaltador)}
+/* zócalo de quien habla: cristal con línea resaltador (posición típica: left 90, top ~ borde inferior del video) */
+.fv-zoc{position:absolute;display:flex;align-items:stretch;border-radius:34px;overflow:hidden}
+.fv-zoc .bl{width:14px;background:var(--resaltador);flex:none}
+.fv-zoc .tx{padding:20px 32px}
+.fv-zoc .n{font:700 46px/1.1 var(--f-tit);text-transform:uppercase;letter-spacing:.02em}
+.fv-zoc .m{font:400 26px var(--f-mono);letter-spacing:.1em;color:var(--gris);text-transform:uppercase;margin-top:4px}
+.fv-linea{height:8px;background:var(--resaltador);border-radius:8px}
+/* sellos de chequeo: CIERTO en resaltador; EN PARTE con borde resaltador y texto hueso; NO ES ASÍ en hueso con borde (nunca rojo). La frase falsa va con .fv-tachado */
+.fv-sello{display:inline-flex;align-items:center;gap:14px;font:700 60px var(--f-tit);letter-spacing:.06em;text-transform:uppercase;padding:10px 34px 12px;border-radius:14px;white-space:nowrap}
+.fv-sello.cierto{background:var(--resaltador);color:var(--grafito)}
+.fv-sello.noesasi{border:7px solid var(--hueso);color:var(--hueso)}
+/* EN PARTE (01/11/2026): para cuando lo dicho es cierto solo en una parte. Borde resaltador, texto hueso, SIN relleno (no compite con CIERTO). */
+.fv-sello.enparte{border:7px solid var(--resaltador);color:var(--hueso)}
+.fv-tachado{text-decoration:line-through;text-decoration-thickness:7px;text-decoration-color:var(--hueso);opacity:.6}
+/* línea resaltador que barre la pantalla entre escenas */
+.fv-barre{position:absolute;top:0;left:0;width:14px;height:1920px;background:var(--resaltador);z-index:65;box-shadow:0 0 60px rgba(210,245,60,.6);opacity:0}
+
+/* ===== ARCHIVO EN PAPEL: lo que dijo ANTES va en papel claro; lo de HOY en grafito =====
+   Poner .fv-papel en la escena (en lugar del fondo de foto). Recolorea solas todas las piezas de adentro. */
+.fv-papel{background:var(--papel);background-image:radial-gradient(rgba(0,0,0,.05) 2px,transparent 2.4px);background-size:24px 24px;color:var(--tinta);
+  --hueso:#141416;--gris:#6f6d66;--vidrio:rgba(0,0,0,.05);--borde:rgba(0,0,0,.12)}
+.fv-papel .fv-vidrio{background:#fbfaf6;box-shadow:0 20px 60px rgba(0,0,0,.10);backdrop-filter:none;-webkit-backdrop-filter:none}
+.fv-papel .fv-sub{text-shadow:none}
+.fv-papel .fv-sub em,.fv-papel .fv-lima,.fv-papel .fv-acento,.fv-papel .fv-firma b{color:var(--oliva)}
+.fv-papel .fv-firma{opacity:.8}
+/* Subtítulo y firma son GLOBALES en el motor (fuera de las escenas): cuando la escena activa es de papel, estilo-fv.js pone
+   data-fv-fondo="papel" en el <body> y se recolorean solos (aditivo: sin escenas .fv-papel, nada cambia). */
+body[data-fv-fondo="papel"] .fv-sub{color:var(--tinta);text-shadow:none}
+body[data-fv-fondo="papel"] .fv-sub em{color:var(--oliva)}
+body[data-fv-fondo="papel"] .fv-firma{color:var(--tinta);opacity:.8}
+body[data-fv-fondo="papel"] .fv-firma b{color:var(--oliva)}
+/* ANTES/AHORA (.fv-antes arriba, en papel): la firma cae sobre el papel → tinta/oliva; el subtítulo (abajo, en grafito) no cambia. */
+body[data-fv-fondo="antes"] .fv-firma{color:var(--tinta);opacity:.8}
+body[data-fv-fondo="antes"] .fv-firma b{color:var(--oliva)}
+/* ANTES / AHORA en una pantalla: mitad papel arriba, mitad grafito abajo, unidas por la línea resaltador */
+.fv-antes{position:absolute;left:0;right:0;top:0;height:960px}
+.fv-ahora-mitad{position:absolute;left:0;right:0;top:960px;bottom:0;background:var(--grafito)}
+.fv-corte{position:absolute;left:0;right:0;top:956px;height:8px;background:var(--resaltador);z-index:5}
+
+/* ===== SUBTÍTULO KARAOKE (Franco, 10/11/2026: «que se vaya pintando de verde lima cuando va hablando, como un reel de redes») =====
+   fvKaraoke() (estilo-fv.js) arma una palabra por <span class="fv-k">: SOLO la que se está diciendo va en resaltador (.on), las demás en hueso; no se acumula.
+   La sombra va con filter:drop-shadow (con el texto recortado, text-shadow ensucia la letra). En papel: tinta → oliva. */
+.fv-sub.fv-karaoke{text-shadow:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.85)) drop-shadow(0 0 2px rgba(0,0,0,.6));--k-on:var(--resaltador);--k-off:var(--hueso);--k-txt:var(--grafito)}
+.fv-k-linea{display:inline-block}
+.fv-k{display:inline-block;color:var(--k-off);padding:0 .12em;margin:0 -.08em;border-radius:.2em;transform-origin:50% 60%}
+.fv-k.on{color:var(--k-txt);background:var(--k-on);box-shadow:0 .08em .3em rgba(0,0,0,.35)}
+body[data-fv-fondo="papel"] .fv-sub.fv-karaoke{filter:none;--k-on:var(--grafito);--k-off:var(--tinta);--k-txt:var(--resaltador)}
+
+/* ===== AUDIO AJENO = NOTA DE VOZ (Franco, 10/11/2026: «la animación de la onda es muy de junior») =====
+   fvAudio(k, cfg) (estilo-fv.js) arma dentro de la escena #k: ficha de quién habla (foto con aro que late con el nivel REAL del audio),
+   nota de voz con la forma de onda REAL del tramo (barras medidas en build: lo reproducido en resaltador, lo que falta en gris, cabezal y reloj)
+   y la frase que se está diciendo, grande, en karaoke. Durante la cita el subtítulo de abajo se apaga (la frase grande lo reemplaza). */
+.fv-au-ficha{position:absolute;left:calc(var(--zs-izq) + 14px);top:410px;width:var(--zs-ancho);display:flex;align-items:center;gap:36px}
+.fv-au-foto{position:relative;flex:none;width:230px;height:230px}
+.fv-au-img{position:absolute;inset:0;border-radius:50%;background-size:cover;background-repeat:no-repeat;background-position:center 25%;filter:grayscale(1) contrast(1.1)}
+.fv-au-aro{position:absolute;inset:-14px;border-radius:50%;border:6px solid var(--resaltador)}
+.fv-au-halo{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(210,245,60,.0) 55%,rgba(210,245,60,.35) 70%,transparent 72%)}
+.fv-au-medio{font:500 26px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--resaltador);display:flex;align-items:center;gap:14px}
+.fv-au-medio i{width:16px;height:16px;border-radius:50%;background:var(--resaltador)}
+.fv-au-nom{font:700 70px/1 var(--f-tit);text-transform:uppercase;color:var(--hueso);margin-top:14px}
+.fv-au-rol{font:400 26px/1.35 var(--f-mono);color:var(--gris);margin-top:12px}
+.fv-au-nota{position:absolute;left:var(--zs-izq);top:720px;width:var(--zs-ancho);height:150px;box-sizing:border-box;display:flex;align-items:center;gap:26px;padding:0 34px;border-radius:80px;
+  background:linear-gradient(160deg,rgba(239,238,233,.12),rgba(239,238,233,.04));border:2px solid var(--borde);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px)}
+.fv-au-play{flex:none;width:86px;height:86px;border-radius:50%;background:var(--resaltador);display:grid;place-items:center}
+.fv-au-play svg{width:38px;height:38px}
+.fv-au-onda{position:relative;flex:1;height:96px;display:flex;align-items:center;gap:5px}
+.fv-au-onda i{flex:1;border-radius:6px;background:rgba(239,238,233,.28);min-height:6px}
+.fv-au-onda i.on{background:var(--resaltador)}
+.fv-au-cab{position:absolute;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--hueso);box-shadow:0 0 0 6px rgba(239,238,233,.18)}
+.fv-au-t{flex:none;font:500 30px var(--f-mono);color:var(--hueso);min-width:96px;text-align:right}
+.fv-au-frase{position:absolute;left:var(--zs-izq);top:1000px;width:var(--zs-ancho);font:800 64px/1.22 var(--f-txt);--k-on:var(--resaltador);--k-off:var(--hueso);--k-txt:var(--grafito);filter:drop-shadow(0 4px 14px rgba(0,0,0,.6))}
+.fv-au-comillas{position:absolute;left:var(--zs-izq);top:1000px;font:900 120px/.6 var(--f-txt);color:var(--resaltador);transform:translate(-8px,-56px)}
+
+/* Plus Ultra — SOLO la capa de textos (molde imagen-primero-ventana, Kicillof v4). El video se arma en el server con ffmpeg y esta capa
+   se renderiza dos veces (fondo negro y fondo blanco) para sacar su transparencia exacta (mate por diferencia). */
+html,body{background:#ffffff!important}
+body{font-family:var(--f-txt);color:var(--hueso)}
+#subtit{display:none!important}
+#grano{display:none}
+.fv-tag{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(20,20,22,.72)}
+.blk{position:absolute;inset:0;opacity:0;visibility:hidden}
+.cov{position:absolute;inset:0}
+.cov .tit{position:absolute;left:66px;top:752px;font:700 172px/1 var(--f-tit);text-transform:uppercase;color:var(--hueso);letter-spacing:-.005em}
+.cov .tit b{color:var(--resaltador);font-weight:700}
+.cov .sub{position:absolute;left:84px;top:962px;width:900px;font:500 33px/1.3 var(--f-mono);letter-spacing:.02em;color:var(--hueso)}
+.cov .pie{position:absolute;top:1590px;font:500 30px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--grafito,#141416);background:var(--resaltador);padding:6px 14px}
+.cov .sub b{color:var(--resaltador);font-weight:500}
+.cov .cr{position:absolute;left:90px;top:1222px;font:400 19px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.rot{position:absolute;left:90px;width:900px}
+.num{font:700 170px/.85 var(--f-tit);color:var(--resaltador);white-space:nowrap;text-shadow:0 8px 40px rgba(0,0,0,.55)}
+.num small{font-size:72px}
+.lab{display:inline-block;font:500 30px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--hueso);background:rgba(20,20,22,.78);padding:8px 16px;margin-top:12px}
+.zoc{display:inline-block;background:rgba(20,20,22,.8);padding:18px 26px 20px;max-width:900px;box-sizing:border-box}
+.zoc b{display:block;font:700 66px/1 var(--f-tit);text-transform:uppercase;color:var(--hueso)}
+.zoc span{display:block;margin-top:8px;font:500 28px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+.cred{position:absolute;left:90px;top:1222px;font:400 21px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hueso);opacity:.8;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+.voto{position:absolute;left:84px;top:300px;font:700 180px/.88 var(--f-tit);text-transform:uppercase;color:var(--hueso);text-shadow:0 10px 50px rgba(0,0,0,.6)}
+.voto b{color:var(--resaltador);font-weight:700}
+/* GOLPE (pedido de Franco 12/11, ref. reel de Infobae): frase en mayúsculas palabra por palabra + la palabra clave última, grande, en resaltador con brillo */
+#golpe{position:absolute;left:70px;width:940px;top:1010px;text-align:center;z-index:58}
+#golpe .l1{font:700 82px/1 var(--f-tit);text-transform:uppercase;color:var(--hueso);letter-spacing:.01em;text-shadow:0 6px 24px rgba(0,0,0,.75)}
+#golpe .l1 span{display:inline-block;margin:0 .1em}
+#golpe .kw{display:inline-block;margin-top:18px;font:700 196px/.9 var(--f-tit);text-transform:uppercase;color:var(--resaltador);
+  text-shadow:0 0 18px rgba(210,245,60,.85),0 0 46px rgba(210,245,60,.55),0 0 90px rgba(210,245,60,.35)}
+#golpe .dup{position:absolute;left:0;right:0;top:0;opacity:0}
+#flash{background:#fff}
+.cit{background:rgba(20,20,22,.8);padding:24px 30px 26px}
+.cit .fv-cita{font-size:56px}
+
+.cov .cr2{position:absolute;right:40px;top:690px;font:400 19px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hueso);opacity:.75;text-shadow:0 2px 8px rgba(0,0,0,.9)}
+#golpe .kw{font-size:190px}
+#golpe .l1{font-size:74px}
+
+.cov .tit{top:860px;font-size:124px;line-height:1.0}
+.cov .sub{top:1118px;font-size:29px;letter-spacing:0;white-space:nowrap}
+.cov .cr2{top:812px}
+.num{font-size:150px}
+.cmp{position:absolute;left:90px;top:330px;width:900px;display:flex;gap:24px}
+.cmp>div{flex:1;background:rgba(20,20,22,.8);padding:18px 22px 20px}
+.cmp .n{font:700 120px/.9 var(--f-tit);color:var(--hueso)}
+.cmp .p .n{color:var(--resaltador)}
+.cmp span{display:block;margin-top:10px;font:500 26px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hueso)}
+
+.cov .who{position:absolute;left:372px;top:1238px;width:200px;font:500 22px/1.3 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--hueso)}
+.cmp .p .n{color:var(--resaltador)} .cmp .nac .n{color:var(--hueso)}
+.fte{position:absolute;left:90px;top:560px;font:500 22px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hueso);background:rgba(20,20,22,.78);padding:6px 12px}
+.cmp .n{font-size:104px}
+.num{font-size:132px}
+.lab{display:table}
+#golpe .l1{font-size:70px}
+#golpe .kw{font-size:180px}
+.cred{top:1222px;font-size:19px}
+.cov .tit{top:812px;font-size:150px;line-height:.98}
+.cov .sub{top:1124px}
+.cov .cr2{top:752px}
+.cov .who{top:1262px}
+
+/* portada (heredado de ONU v2) (título = el hecho, sobre grafito medido; esquina de vistas libre) */
+.cov .chip{position:absolute;left:84px;top:968px;font:500 26px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--grafito,#141416);background:var(--resaltador);padding:6px 14px}
+.cov .tit{top:1000px;left:66px;font-size:108px;line-height:1.2;white-space:nowrap}
+.cov .sub{top:1400px;width:470px;left:84px;width:900px;white-space:normal;font-size:30px;line-height:1.35}
+.cov .cr2{right:40px;top:900px}
+.cov .cr3{position:absolute;left:600px;top:1752px;font:400 18px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+#golpe .fte2{margin-top:14px;font:500 26px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--hueso);opacity:.85}
+#golpe .kw{font-size:170px}
+#golpe{top:1000px;left:0;width:1080px;box-sizing:border-box;padding:70px 70px 40px;background:linear-gradient(180deg,rgba(20,20,22,0),rgba(20,20,22,.85) 24%,rgba(20,20,22,.85) 82%,rgba(20,20,22,0))}
+.lab{display:table}
+/* Malvinas: portada (título sobre grafito; tablero pegado a la derecha, esquina de vistas libre) */
+.cov .tit{top:1010px;font-size:112px;line-height:1.08}
+.cov .chip{top:960px}
+.cov .sub{top:1270px;width:900px;font-size:31px;line-height:1.35}
+.cov .cr2{top:930px;right:40px}
+.cov .cr3{left:auto;right:40px;top:1735px}
+#golpe .kw{font-size:132px;line-height:.95}
+/* PAPEL: lo que objetó EE.UU. (dato sin imagen propia: una sola placa, entre planos con imagen) */
+.pap{position:absolute;left:90px;top:520px;width:900px;box-sizing:border-box;background:var(--papel,#f1efe8);color:var(--grafito,#141416);padding:40px 44px 36px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.pap .h{font:500 26px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#5a5955}
+.pap .t{margin-top:14px;font:700 64px/1.02 var(--f-tit);text-transform:uppercase}
+.pap .q{margin-top:26px;font:600 56px/1.08 var(--f-tit);padding:6px 0 6px 22px;border-left:8px solid var(--grafito,#141416)}
+.pap .q b{background:var(--resaltador);font-weight:600;padding:0 8px}
+.pap .f{margin-top:26px;font:400 21px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:#6b6a66}
+.low{top:1010px!important}
+.cov .cr3{top:1656px}
+/* Passarella: portada (cara arriba hasta y 860, título sobre grafito liso, tarjeta del Monumental abajo a la derecha, esquina de vistas libre) */
+.cov .chip{top:892px}
+.cov .tit{top:938px;font-size:116px;line-height:1.04}
+.cov .sub{top:1206px;font-size:32px}
+.cov .cr2{top:820px;right:40px}
+.cov .cr3{top:1672px;right:40px;left:auto}
+#golpe .kw{font-size:200px;line-height:.95}
+/* Tapia / Pilar: portada (cara arriba hasta y 1100, título sobre grafito liso, tarjeta de la casa abajo a la derecha, esquina de vistas libre) */
+.cov .chip{top:1040px}
+.cov .tit{top:1092px;font-size:98px;line-height:1.06;white-space:nowrap}
+.cov .sub{top:1326px;width:470px;font-size:31px;line-height:1.36;white-space:normal}
+.cov .cr2{top:990px;right:40px}
+.cov .cr3{top:1700px;right:40px;left:auto}
+#golpe .l1{font-size:64px}
+#golpe .kw{font-size:200px;line-height:.95}
+/* Pity: portada (cara de la audiencia arriba hasta y ~1000, título sobre grafito liso, tarjeta de la entrega 2018 abajo a la derecha, esquina de vistas libre) */
+.cov .chip{top:1018px}
+.cov .tit{top:1060px;font-size:112px;line-height:1.2;white-space:nowrap}
+.cov .sub{top:1362px;width:580px;font-size:31px;line-height:1.36;white-space:normal}
+.cov .cr2{top:968px;right:40px}
+.cov .cr3{top:1736px;right:40px;left:auto}
+.cmp3{position:absolute;left:90px;top:330px;width:900px;display:flex;flex-direction:column;gap:14px}
+.cmp3>div{background:rgba(20,20,22,.82);padding:14px 22px 16px;display:flex;align-items:baseline;gap:22px}
+.cmp3 .n{font:700 84px/.95 var(--f-tit);color:var(--hueso);white-space:nowrap}
+.cmp3 span{font:500 26px/1.25 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--hueso)}
+.cmp3 .p .n{color:var(--resaltador)}
+
+/* Beligoy: portada (cara arriba hasta y ~1080, título sobre grafito liso, tarjeta del barrio abajo a la derecha, esquina de vistas libre) */
+.cov .chip{top:1030px}
+.cov .tit{top:1078px;font-size:118px;line-height:1.04;white-space:nowrap}
+.cov .sub{top:1352px;width:460px;font-size:31px;line-height:1.36;white-space:normal}
+.cov .cr2{top:990px;right:40px}
+.cov .cr3{top:1724px;right:40px;left:auto}
+/* COMPARATIVA (molde Massa v2 .cmpbox): sobre la foto real, velo arriba, dos columnas + chip + fuente */
+#velo{position:absolute;left:0;right:0;top:0;height:1000px;background:linear-gradient(180deg,rgba(20,20,22,.88),rgba(20,20,22,.7) 60%,rgba(20,20,22,0));opacity:0}
+.cmpbox{position:absolute;left:90px;top:350px;width:900px;display:flex;gap:20px}
+.cmpbox>div{flex:1;background:rgba(20,20,22,.84);padding:18px 22px 20px;box-sizing:border-box}
+.cmpbox .h{font:500 25px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+.cmpbox .n{margin-top:8px;font:700 92px/.95 var(--f-tit);color:var(--hueso);white-space:nowrap}
+.cmpbox .s{margin-top:10px;font:500 23px/1.3 var(--f-mono);letter-spacing:.03em;text-transform:uppercase;color:var(--hueso)}
+#cb2 .n{color:var(--resaltador);text-shadow:0 0 18px rgba(210,245,60,.55),0 0 46px rgba(210,245,60,.3)}
+#cbx.blk{inset:auto;left:90px;top:690px;font:700 64px/1 var(--f-tit);text-transform:uppercase;color:var(--grafito,#141416);background:var(--resaltador);padding:8px 20px 10px}
+#cbf.blk{inset:auto;left:90px;top:790px;width:900px;font:400 21px/1.35 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--hueso);background:rgba(20,20,22,.72);padding:8px 12px;box-sizing:border-box}
+#golpe .l2{margin-top:14px;font:700 60px/1 var(--f-tit);text-transform:uppercase;color:var(--hueso);text-shadow:0 6px 24px rgba(0,0,0,.75)}
+#golpe .kw{font-size:190px;line-height:.95}
+#golpe{top:200px!important;padding:60px 70px 70px!important;background:linear-gradient(180deg,rgba(20,20,22,0),rgba(20,20,22,.85) 20%,rgba(20,20,22,.85) 80%,rgba(20,20,22,0))!important}
+#pLP .pap{top:925px;padding:28px 36px 26px}
+#pLP .pap .t{font-size:54px}
+#pLP .pap .q{font-size:44px;margin-top:16px}
+.cmpbox>div{min-width:0}
+.cmpbox .n{font-size:76px}
+
+/* Colapinto turista: portada (foto del embarque arriba hasta y ~1070, título sobre grafito liso, cara en círculo abajo a la derecha, esquina de vistas libre) */
+.cov .chip{top:1086px}
+.cov .tit{top:1128px;font-size:108px;line-height:1.04;white-space:nowrap}
+.cov .sub{top:1372px;left:84px;width:600px;font-size:31px;line-height:1.36;white-space:normal}
+.cov .cr2{top:1030px;right:40px}
+.cov .cr3{top:1646px;right:40px;left:auto}
+.low{top:1040px!important}
+.citc{position:absolute;left:90px;top:300px;width:900px;box-sizing:border-box;background:rgba(20,20,22,.86);padding:26px 32px 24px}
+.citc .q{font:600 54px/1.1 var(--f-tit);color:var(--hueso)}
+.citc .q b{color:var(--resaltador);font-weight:600}
+.citc .w{margin-top:14px;font:500 26px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--gris)}
+#golpe .l1{font-size:66px}
+#golpe .kw{font-size:200px;line-height:.95}
+</style></head><body>
+<div style="position:absolute;left:0;right:0;top:0;height:460px;background:linear-gradient(180deg,rgba(20,20,22,.55),rgba(20,20,22,0))"></div>
+<div id="gbot" style="position:absolute;left:0;right:0;top:1120px;height:800px;background:linear-gradient(180deg,rgba(20,20,22,0),rgba(20,20,22,.6) 28%,rgba(20,20,22,.6))"></div>
+<!-- CUADRO 0 = PORTADA (completa en el frame 0) -->
+<div class="cov" id="cov">
+  <div class="cr2">Video: Caroline Smith · vía La Nación</div>
+  <div class="chip">Franco Colapinto · F1</div>
+  <div class="tit">Colapinto<br><b>en turista</b></div>
+  <div class="sub">Sexto en Las Vegas. Volvió con el <b>casco en la mano</b>.</div>
+  <div class="cr3">Colapinto · foto Wikimedia Commons</div>
+</div>
+<div class="blk" id="rF1"><div class="rot" style="top:330px"><div class="zoc"><b>GP de Las Vegas</b><span>6.º puesto</span></div></div></div>
+<div class="blk" id="rVU"><div class="rot" style="top:300px"><div class="zoc"><b>Caroline Smith</b><span>Fan de la F1</span></div></div></div>
+<div class="blk" id="rTUR"><div class="rot" style="top:300px"><div class="zoc"><b>Clase turista</b><span>Después del GP</span></div></div></div>
+<div class="blk" id="rCAS"><div class="rot" style="top:330px"><div class="zoc"><b>Un bulto de más</b><span>según la pasajera</span></div></div></div>
+<div class="blk" id="k1"><div class="rot low"><div class="num">US$ 1,5 M</div><div class="lab">por año · SalaryLeaks</div></div></div>
+<div class="blk" id="rMAS"><div class="rot low"><div class="zoc"><b>Sergio Massa</b><span>Exministro de Economía</span></div></div></div>
+<div class="blk" id="rGAL"><div class="rot" style="top:330px"><div class="zoc"><b>Massa y Galmarini</b><span>Barbados, jet de De Narváez</span></div></div></div>
+<div class="blk" id="k2"><div class="rot" style="top:330px"><div class="num">US$ 400 mil</div><div class="lab">según La Nación</div></div></div>
+<div class="blk" id="cGAL"><div class="citc"><div class="q">«Tenemos un amigo que tiene la enorme suerte de <b>tener un avión</b>»</div><div class="w">Malena Galmarini</div></div></div>
+<div class="blk" id="rESP"><div class="rot" style="top:300px"><div class="zoc"><b>José Luis Espert</b><span>Fue candidato de La Libertad Avanza</span></div></div></div>
+<div class="blk" id="k3"><div class="rot" style="top:330px"><div class="num">35 vuelos</div><div class="lab">aviones de Fred Machado · 2019</div></div></div>
+<div class="blk" id="rJUS"><div class="rot" style="top:300px"><div class="zoc"><b>Machado: condenado</b><span>Espert: procesado, sin condena</span></div></div></div>
+<div class="blk" id="rREV"><div class="rot" style="top:330px"><div class="zoc"><b>Franco Colapinto</b><span>La Revuelta, TVE, septiembre</span></div></div></div>
+<!-- GOLPE -->
+<div class="blk" id="golpe"><div class="l1" id="gl1"></div><div class="kw" id="gkw">amigo</div>
+  <div class="dup" id="gd1" style="color:var(--hueso)"></div><div class="dup" id="gd2" style="color:var(--resaltador)"></div></div>
+<div class="cov" id="loop" style="opacity:0;z-index:7">
+  <div class="cr2">Video: Caroline Smith · vía La Nación</div>
+  <div class="chip">Franco Colapinto · F1</div>
+  <div class="tit">Colapinto<br><b>en turista</b></div>
+  <div class="sub">Sexto en Las Vegas. Volvió con el <b>casco en la mano</b>.</div>
+  <div class="cr3">Colapinto · foto Wikimedia Commons</div>
+</div>
+<div class="cred" id="crd"></div>
+<div class="fv-firma">FRANCO<b>VALENCIA</b>.OK</div>
+<div class="fv-sub fv-karaoke" id="fvsub"></div>
+<div id="flash" style="position:absolute;inset:0;z-index:80;opacity:0;pointer-events:none"></div>
+<canvas id="grano" width="540" height="960"></canvas>
+<script>
+(async () => {
+await document.fonts.ready;
+await Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; })));
+const T = {"seg": [{"k": "s1", "A": 0.0, "va": 0, "n": 10.671}, {"k": "s2", "A": 10.671, "va": 10.405, "n": 11.809}, {"k": "s3", "A": 22.48, "va": 22.355, "n": 9.39}, {"k": "s4", "A": 31.87, "va": 31.995, "n": 16.629}, {"k": "s5", "A": 48.499, "va": 47.695, "n": 16.095}, {"k": "s6", "A": 64.594, "va": 65.164333, "n": 4.506}, {"k": "s7", "A": 69.1, "va": 67.4, "n": 24.23}, {"k": "s8", "A": 93.33, "va": 74.023042, "n": 8.115}], "voz": [[0, 6.04, 0.12], [6.644, 10.405, 6.76], [10.405, 10.73, 10.791], [11.698, 14.11, 11.716], [14.379, 15.106, 14.397], [15.14, 17.885, 15.158], [18.528, 20.65, 18.503], [21.0, 22.355, 20.975], [22.355, 22.67, 22.6], [23.48, 24.57, 23.515], [25.48, 31.995, 25.205], [31.995, 32.53, 31.99], [33.47, 42.618, 33.125], [43.1, 44.35, 42.754], [44.694, 47.695, 44.348], [47.695, 47.91, 48.619], [49.06, 50.47, 49.434], [50.836, 51.57, 51.21], [51.648, 58.19, 52.022], [58.66, 64.07, 59.034], [65.164, 66.155, 64.714], [66.286, 67.4, 65.836], [67.4, 67.51, 69.22], [68.094, 69.27, 69.914], [69.823, 71.87, 71.644], [72.358, 73.21, 74.178], [74.023, 75.29, 93.45], [76.02, 77.49, 95.317], [78.232, 79.674, 97.387], [79.898, 80.89, 99.053]], "dur": 101.445, "vel": 1.0}; const PAL = [[0.0, 0.86, "Colapinto"], [0.86, 1.22, "volvi\u00f3"], [1.22, 1.36, "de"], [1.36, 1.56, "Las"], [1.56, 1.78, "Vegas"], [1.78, 2.06, "en"], [2.06, 2.26, "clase"], [2.26, 3.2, "turista,"], [3.46, 3.6, "con"], [3.6, 3.76, "el"], [3.76, 3.92, "casco"], [3.92, 4.04, "en"], [4.04, 4.16, "la"], [4.16, 4.48, "mano,"], [4.96, 5.06, "despu\u00e9s"], [5.06, 5.24, "de"], [5.24, 5.46, "salir"], [5.46, 5.76, "sexto."], [6.76, 6.9, "Y"], [6.9, 6.98, "al"], [6.98, 7.14, "lado"], [7.14, 7.34, "de"], [7.34, 7.48, "c\u00f3mo"], [7.48, 7.86, "vuelan"], [7.86, 8.14, "algunos"], [8.14, 9.04, "pol\u00edticos,"], [9.52, 9.62, "parece"], [9.62, 10.0, "un"], [10.0, 10.48, "chiste."], [11.78, 11.98, "Lo"], [11.98, 12.14, "film\u00f3"], [12.14, 12.32, "una"], [12.32, 12.68, "fan\u00e1tica"], [12.68, 12.8, "de"], [12.8, 12.94, "la"], [12.94, 13.24, "F\u00f3rmula"], [13.24, 13.86, "1."], [15.18, 15.66, "Buso,"], [15.66, 16.14, "mochila"], [16.14, 16.58, "y"], [16.58, 16.74, "el"], [16.74, 16.96, "casco"], [16.96, 17.2, "sobre"], [17.2, 17.38, "las"], [17.38, 17.62, "rodillas."], [18.64, 18.86, "Seg\u00fan"], [18.86, 18.98, "ella,"], [19.02, 19.14, "en"], [19.14, 19.28, "el"], [19.28, 19.64, "embarque"], [19.64, 19.76, "se"], [19.76, 19.86, "lo"], [19.86, 20.1, "hicieron"], [20.1, 20.4, "poner."], [21.04, 21.4, "Contaba"], [21.4, 21.58, "como"], [21.58, 21.76, "un"], [21.76, 22.0, "multo"], [22.0, 22.12, "de"], [22.12, 22.42, "m\u00e1s."], [23.52, 23.76, "\u00bfLe"], [23.76, 24.08, "faltas"], [24.08, 24.32, "plata?"], [25.52, 25.88, "Seg\u00fan"], [25.88, 26.34, "estimaciones"], [26.34, 26.58, "de"], [26.58, 26.86, "Salar"], [26.86, 27.0, "y"], [27.0, 27.32, "Leaks,"], [27.52, 27.88, "cobrar\u00eda"], [27.88, 28.16, "un"], [28.16, 28.44, "mill\u00f3n"], [28.44, 28.58, "y"], [28.58, 28.72, "medio"], [28.72, 28.98, "de"], [28.98, 29.2, "d\u00f3lares"], [29.2, 29.44, "por"], [29.44, 29.7, "a\u00f1o."], [30.0, 30.42, "De"], [30.42, 30.56, "los"], [30.56, 30.82, "sueldos"], [30.82, 31.02, "m\u00e1s"], [31.02, 31.2, "bajos"], [31.2, 31.32, "de"], [31.32, 31.44, "la"], [31.44, 31.68, "F\u00f3rmula"], [31.68, 32.28, "1."], [33.6, 33.6, "Y"], [33.6, 33.64, "en"], [33.64, 33.86, "la"], [33.86, 34.08, "pol\u00edtica"], [34.08, 35.3, "argentina,"], [35.7, 35.8, "Maza"], [35.8, 35.92, "y"], [35.92, 36.34, "Balmarini"], [36.34, 36.52, "se"], [36.52, 36.7, "fueron"], [36.7, 37.22, "abarbados"], [37.22, 37.38, "en"], [37.38, 37.5, "el"], [37.5, 37.62, "jet"], [37.62, 38.02, "privado"], [38.02, 38.2, "de"], [38.2, 39.18, "Denarv\u00e1ez."], [39.48, 39.68, "Seg\u00fan"], [39.68, 39.86, "la"], [39.86, 40.08, "Naci\u00f3n,"], [40.28, 40.54, "costar\u00eda"], [40.54, 40.98, "unos"], [40.98, 41.48, "400"], [41.48, 41.92, ".000"], [41.92, 42.36, "d\u00f3lares."], [43.14, 43.38, "La"], [43.38, 43.7, "explicaci\u00f3n"], [43.7, 43.88, "de"], [43.88, 44.1, "ella,"], [44.8, 45.08, "tenemos"], [45.08, 45.32, "un"], [45.32, 45.5, "amigo"], [45.5, 45.76, "que"], [45.76, 45.92, "tiene"], [45.92, 46.08, "la"], [46.08, 46.42, "enorme"], [46.42, 46.78, "suerte"], [46.78, 47.06, "de"], [47.06, 47.14, "tener"], [47.14, 47.36, "un"], [47.36, 47.66, "avi\u00f3n."], [49.1, 49.3, "Y"], [49.3, 49.42, "no"], [49.42, 49.5, "es"], [49.5, 49.6, "de"], [49.6, 49.68, "un"], [49.68, 49.9, "solo"], [49.9, 50.22, "lado."], [51.06, 51.32, "Spert,"], [51.7, 51.84, "el"], [51.84, 51.9, "que"], [51.9, 52.04, "fue"], [52.04, 52.46, "candidato"], [52.46, 52.58, "de"], [52.58, 52.72, "la"], [52.72, 53.04, "Libertad"], [53.04, 53.62, "Avanza,"], [54.0, 54.2, "vol\u00f3"], [54.2, 54.84, "35"], [54.84, 55.26, "veces"], [55.26, 55.46, "en"], [55.46, 55.62, "aviones"], [55.62, 55.84, "de"], [55.84, 56.02, "Fred"], [56.02, 56.36, "Machado"], [56.36, 56.5, "en"], [56.5, 56.64, "su"], [56.64, 57.08, "campa\u00f1a"], [57.08, 57.3, "de"], [57.3, 57.94, "2019."], [58.7, 59.14, "Machado"], [59.14, 59.28, "ya"], [59.28, 59.4, "fue"], [59.4, 59.84, "condenado"], [59.84, 59.98, "en"], [59.98, 60.26, "Estados"], [60.26, 60.52, "Unidos"], [60.52, 60.7, "por"], [60.7, 61.34, "lavado."], [61.8, 62.0, "Spert"], [62.0, 62.26, "est\u00e1"], [62.26, 63.12, "procesado,"], [63.46, 63.6, "sin"], [63.6, 63.82, "condena."], [65.24, 65.36, "En"], [65.36, 65.58, "la"], [65.58, 65.9, "pol\u00edtica,"], [66.42, 66.52, "el"], [66.52, 66.62, "avi\u00f3n"], [66.62, 66.78, "lo"], [66.78, 66.86, "pone"], [66.86, 67.08, "un"], [67.08, 67.26, "amigo."], [68.22, 68.36, "Y"], [68.36, 68.44, "con"], [68.44, 68.58, "la"], [68.58, 69.02, "pinto,"], [69.9, 70.02, "para"], [70.02, 70.28, "llegar"], [70.28, 70.44, "la"], [70.44, 70.6, "plata"], [70.6, 70.76, "la"], [70.76, 70.96, "puso"], [70.96, 71.14, "su"], [71.14, 71.62, "familia."], [72.52, 72.96, "Esc\u00fachalo."], [74.16, 74.24, "Su"], [74.24, 74.44, "pap\u00e1"], [74.44, 74.64, "vendi\u00f3"], [74.64, 74.8, "la"], [74.8, 75.04, "casa,"], [76.12, 76.22, "no"], [76.22, 76.4, "un"], [76.4, 76.64, "amigo"], [76.64, 76.88, "con"], [76.88, 77.24, "avi\u00f3n."], [78.3, 78.48, "Por"], [78.48, 78.74, "eso,"], [78.84, 78.9, "en"], [78.9, 79.06, "la"], [79.06, 79.42, "Argentina,"], [80.0, 80.1, "es"], [80.1, 80.46, "noticia"], [80.46, 80.64, "esto."]]; const SUBS = [[0.0, 0.86, "Colapinto"], [0.86, 1.22, "volvi\u00f3"], [1.22, 1.36, "de"], [1.36, 1.56, "Las"], [1.56, 1.78, "Vegas"], [1.78, 2.06, "en"], [2.06, 2.26, "clase"], [2.26, 3.2, "turista,"], [3.46, 3.6, "con"], [3.6, 3.76, "el"], [3.76, 3.92, "casco"], [3.92, 4.04, "en"], [4.04, 4.16, "la"], [4.16, 4.48, "mano,"], [4.96, 5.06, "despu\u00e9s"], [5.06, 5.24, "de"], [5.24, 5.46, "salir"], [5.46, 5.76, "sexto."], [6.76, 6.9, "Y"], [6.9, 6.98, "al"], [6.98, 7.14, "lado"], [7.14, 7.34, "de"], [7.34, 7.48, "c\u00f3mo"], [7.48, 7.86, "vuelan"], [7.86, 8.14, "algunos"], [8.14, 9.04, "pol\u00edticos,"], [9.52, 9.62, "parece"], [9.62, 10.0, "un"], [10.0, 10.48, "chiste."], [11.78, 11.98, "Lo"], [11.98, 12.14, "film\u00f3"], [12.14, 12.32, "una"], [12.32, 12.68, "fan\u00e1tica"], [12.68, 12.8, "de"], [12.8, 12.94, "la"], [12.94, 13.24, "F\u00f3rmula"], [13.24, 13.86, "1."], [15.18, 15.66, "Buzo,"], [15.66, 16.14, "mochila"], [16.14, 16.58, "y"], [16.58, 16.74, "el"], [16.74, 16.96, "casco"], [16.96, 17.2, "sobre"], [17.2, 17.38, "las"], [17.38, 17.62, "rodillas."], [18.64, 18.86, "Seg\u00fan"], [18.86, 18.98, "ella,"], [19.02, 19.14, "en"], [19.14, 19.28, "el"], [19.28, 19.64, "embarque"], [19.64, 19.76, "se"], [19.76, 19.86, "lo"], [19.86, 20.1, "hicieron"], [20.1, 20.4, "poner."], [21.04, 21.4, "Contaba"], [21.4, 21.58, "como"], [21.58, 21.76, "un"], [21.76, 22.0, "bulto"], [22.0, 22.12, "de"], [22.12, 22.42, "m\u00e1s."], [23.52, 23.787, "\u00bfLe"], [23.787, 24.053, "falta"], [24.053, 24.32, "plata?"], [25.52, 25.88, "Seg\u00fan"], [25.88, 26.34, "estimaciones"], [26.34, 26.58, "de"], [26.58, 27.32, "SalaryLeaks,"], [27.52, 27.88, "cobrar\u00eda"], [27.88, 28.16, "un"], [28.16, 28.44, "mill\u00f3n"], [28.44, 28.58, "y"], [28.58, 28.72, "medio"], [28.72, 28.98, "de"], [28.98, 29.2, "d\u00f3lares"], [29.2, 29.44, "por"], [29.44, 29.7, "a\u00f1o."], [30.0, 30.42, "De"], [30.42, 30.56, "los"], [30.56, 30.82, "sueldos"], [30.82, 31.02, "m\u00e1s"], [31.02, 31.2, "bajos"], [31.2, 31.32, "de"], [31.32, 31.44, "la"], [31.44, 31.68, "F\u00f3rmula"], [31.68, 32.28, "1."], [33.6, 33.94, "\u00bfY"], [33.94, 34.28, "en"], [34.28, 34.62, "la"], [34.62, 34.96, "pol\u00edtica"], [34.96, 35.3, "argentina?"], [35.7, 35.8, "Massa"], [35.8, 35.92, "y"], [35.92, 36.34, "Galmarini"], [36.34, 36.52, "se"], [36.52, 36.7, "fueron"], [36.7, 36.96, "a"], [36.96, 37.22, "Barbados"], [37.22, 37.38, "en"], [37.38, 37.5, "el"], [37.5, 37.62, "jet"], [37.62, 38.02, "privado"], [38.02, 38.2, "de"], [38.2, 38.69, "De"], [38.69, 39.18, "Narv\u00e1ez."], [39.48, 39.68, "Seg\u00fan"], [39.68, 39.88, "La"], [39.88, 40.08, "Naci\u00f3n,"], [40.28, 40.54, "costar\u00eda"], [40.54, 40.98, "unos"], [40.98, 41.92, "400.000"], [41.92, 42.36, "d\u00f3lares."], [43.14, 43.38, "La"], [43.38, 43.7, "explicaci\u00f3n"], [43.7, 43.88, "de"], [43.88, 44.48, "ella?"], [44.48, 45.08, "\u00abTenemos"], [45.08, 45.32, "un"], [45.32, 45.5, "amigo"], [45.5, 45.76, "que"], [45.76, 45.92, "tiene"], [45.92, 46.08, "la"], [46.08, 46.42, "enorme"], [46.42, 46.78, "suerte"], [46.78, 47.06, "de"], [47.06, 47.14, "tener"], [47.14, 47.36, "un"], [47.36, 48.047, "avi\u00f3n\u00bb."], [48.047, 48.733, "Y"], [48.733, 49.42, "no"], [49.42, 49.5, "es"], [49.5, 49.6, "de"], [49.6, 49.68, "un"], [49.68, 49.9, "solo"], [49.9, 50.22, "lado."], [51.06, 51.32, "Espert,"], [51.7, 51.84, "el"], [51.84, 51.9, "que"], [51.9, 52.04, "fue"], [52.04, 52.46, "candidato"], [52.46, 52.58, "de"], [52.58, 52.81, "La"], [52.81, 53.04, "Libertad"], [53.04, 53.62, "Avanza,"], [54.0, 54.2, "vol\u00f3"], [54.2, 54.84, "35"], [54.84, 55.26, "veces"], [55.26, 55.46, "en"], [55.46, 55.62, "aviones"], [55.62, 55.84, "de"], [55.84, 56.02, "Fred"], [56.02, 56.36, "Machado"], [56.36, 56.5, "en"], [56.5, 56.64, "su"], [56.64, 57.08, "campa\u00f1a"], [57.08, 57.3, "de"], [57.3, 57.94, "2019."], [58.7, 59.14, "Machado"], [59.14, 59.28, "ya"], [59.28, 59.4, "fue"], [59.4, 59.84, "condenado"], [59.84, 59.98, "en"], [59.98, 60.26, "Estados"], [60.26, 60.52, "Unidos"], [60.52, 60.7, "por"], [60.7, 61.34, "lavado."], [61.8, 62.0, "Espert"], [62.0, 62.26, "est\u00e1"], [62.26, 63.12, "procesado,"], [63.46, 63.6, "sin"], [63.6, 63.82, "condena."], [65.24, 65.36, "En"], [65.36, 65.58, "la"], [65.58, 65.9, "pol\u00edtica,"], [66.42, 66.52, "el"], [66.52, 66.62, "avi\u00f3n"], [66.62, 66.78, "lo"], [66.78, 66.86, "pone"], [66.86, 67.08, "un"], [67.08, 67.26, "amigo."], [68.22, 68.62, "\u00bfY"], [68.62, 69.02, "Colapinto?"], [69.9, 70.02, "para"], [70.02, 70.28, "llegar"], [70.28, 70.44, "la"], [70.44, 70.6, "plata"], [70.6, 70.76, "la"], [70.76, 70.96, "puso"], [70.96, 71.14, "su"], [71.14, 71.62, "familia."], [72.52, 72.96, "Escuchalo:"], [74.16, 74.24, "Su"], [74.24, 74.44, "pap\u00e1"], [74.44, 74.64, "vendi\u00f3"], [74.64, 74.8, "la"], [74.8, 75.04, "casa,"], [76.12, 76.22, "no"], [76.22, 76.4, "un"], [76.4, 76.64, "amigo"], [76.64, 76.88, "con"], [76.88, 77.24, "avi\u00f3n."], [78.3, 78.48, "Por"], [78.48, 78.74, "eso,"], [78.84, 78.9, "en"], [78.9, 79.06, "la"], [79.06, 79.42, "Argentina,"], [80.0, 80.1, "es"], [80.1, 80.46, "noticia"], [80.46, 80.64, "esto:"]];
+const DUR = T.dur; window.DURACION = DUR;
+const $ = (s) => document.querySelector(s);
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const ease = (u) => 1 - Math.pow(1 - clamp(u), 4);
+const S = {}; T.seg.forEach((s) => { S[s.k] = s; s.B = s.A + s.n; });
+const R = (k, x = 0) => S[k].A + x;
+const W = (t) => { let p = T.voz[0]; for (const x of T.voz) if (t >= x[0] - 0.05) p = x; return p[2] + (t - p[0]) / T.vel; };
+// P(escena, 'frase'): segundo de la voz en que se dice esa frase dentro de la escena → V(...) la pasa al tiempo del video
+const nz = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const PW = PAL.map((w) => nz(w[2])); window.FALTAN = [];
+const P = (k, frase, fin = false) => {
+  const q = frase.split(/\s+/).map(nz).filter(Boolean), desde = S[k].va - 0.2;
+  for (let j = 0; j < PW.length; j++) { if (PAL[j][0] < desde) continue; if (q.every((w, i) => PW[j + i] && PW[j + i].startsWith(w))) return fin ? PAL[j + q.length - 1][1] : PAL[j][0]; }
+  window.FALTAN.push(k + ': ' + frase); return S[k].va + 0.5;
+};
+const V = (k, frase, fin) => W(P(k, frase, fin));
+const VIS = T.seg.filter((s) => document.getElementById(s.k));
+
+const tl = gsap.timeline({ paused: true });
+const E = 'expo.out', E2 = 'power4.inOut';
+const SFX = []; window.SFX = SFX; const sx = (n, t) => SFX.push([n, +(+t).toFixed(3)]);
+VIS.forEach((s, i) => { tl.set('#' + s.k, { visibility: 'visible' }, s.A); if (i < VIS.length - 1) tl.set('#' + s.k, { visibility: 'hidden' }, VIS[i + 1].A + 0.5); });
+tl.set({}, {}, DUR);
+const lineas = (sel, t, st = 0.1, d = 0.6) => sx('click', t) && tl.fromTo(sel + ' .m > span', { yPercent: 115 }, { yPercent: 0, duration: d, ease: E, stagger: st }, t);
+const pop = (sel, t, y = 50) => sx('pop', t) && tl.fromTo(sel, { y, scale: .85, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: .45, ease: 'back.out(1.8)' }, t);
+const sube = (sel, t, y = 120) => sx('whoosh', t - .1) && tl.fromTo(sel, { y, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .5, ease: E }, t);
+const entra = (sel, t, x = -220) => sx('whoosh', t - .1) && tl.fromTo(sel, { x, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .45, ease: E }, t);
+const sella = (sel, t, r = -7) => sx('boom', t) && sx('chas', t) && tl.fromTo(sel, { scale: 2.6, rotate: r - 10, autoAlpha: 0 }, { scale: 1, rotate: r, autoAlpha: 1, duration: .35, ease: 'back.out(2.2)' }, t);
+const flash = (t, o = .5) => tl.fromTo('#flash', { opacity: o }, { opacity: 0, duration: .3, immediateRender: false }, t);
+const golpe = (k, t, s = 1.05) => sx('golpe', t) && tl.fromTo(`#${k} .cam`, { scale: s }, { scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, t);
+// barre: mismas unidades en los 4 lados del inset; si no, GSAP no interpola y salta al final (cuadros negros)
+const barre = (k, dir) => { sx('whoosh', S[k].A - .05); const desde = { izq: 'inset(0% 0% 0% 100%)', der: 'inset(0% 100% 0% 0%)', arr: 'inset(100% 0% 0% 0%)', aba: 'inset(0% 0% 100% 0%)' }[dir]; tl.fromTo('#' + k, { clipPath: desde }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .45, ease: E2 }, S[k].A); };
+const deriva = (img, k) => tl.fromTo(img, { scale: 1.15 }, { scale: 1, duration: S[k].n + 20, ease: 'none' }, S[k].A);
+const toque = (x, y, t, desde = [x + 160, y + 260]) => {
+  tl.fromTo('#dedo', { x: desde[0], y: desde[1], opacity: 0, scale: 1 }, { x, y, opacity: 1, duration: .45, ease: 'power3.out', immediateRender: false }, t - .5);
+  tl.to('#dedo', { scale: .78, duration: .08, yoyo: true, repeat: 1 }, t);
+  tl.fromTo('#onda', { x, y, scale: .6, opacity: 1 }, { scale: 2.6, opacity: 0, duration: .5, ease: 'power2.out', immediateRender: false }, t + .04);
+  tl.to('#dedo', { opacity: 0, duration: .25 }, t + .35);
+};
+const pos = (sel, fx = .5) => { const r = $(sel).getBoundingClientRect(); return [Math.round(r.left + r.width * fx), Math.round(r.top + r.height / 2)]; };
+const C_ = {}; const ent = (v) => Math.round(v);
+// texto que se escribe solo: TX[id] = [[t0, t1, html], ...] (cada línea se tipea entre t0 y t1)
+const TX = {};
+const tipea = (id, t0, t1, html) => (TX[id] = TX[id] || []).push([t0, t1, html]);
+
+
+// ESTILO ÚNICO FV (sistema Resaltador, 01/11/2026) — movimiento (fuente única, va con estilo-fv.css). Se inserta con ESTILO_FV_JS (entre llaves dobles) después de MOTOR_INI
+// (usa tl, sx, E, S y R del motor). Requiere un <div class="fv-barre" id="fvBarre"></div> en el body para la línea entre escenas.
+// fvEntra: la tarjeta entra desde abajo con el desenfoque abriéndose (de borroso a nítido)
+const fvEntra = (sel, t, y = 90) => { sx('whoosh', t - .08); return tl.fromTo(sel, { y, autoAlpha: 0, filter: 'blur(24px)' }, { y: 0, autoAlpha: 1, filter: 'blur(0px)', duration: .6, ease: 'power3.out' }, t), tl.set(sel, { filter: 'none' }, t + .61); };
+// fvAparece: igual pero sin moverse (textos sueltos)
+const fvAparece = (sel, t) => (tl.fromTo(sel, { autoAlpha: 0, filter: 'blur(18px)' }, { autoAlpha: 1, filter: 'blur(0px)', duration: .45, ease: 'power2.out' }, t), tl.set(sel, { filter: 'none' }, t + .46));
+// fvPinta: el resaltador se pinta de izquierda a derecha (resaltado, fecha, barra)
+// (un resaltado en línea .fv-res se pinta con el fondo, renglón por renglón; un bloque —fecha, barra— con clip-path)
+const fvPinta = (sel, t, d = .45) => {
+  sx('click', t); const el = document.querySelector(sel);
+  if (el && getComputedStyle(el).display === 'inline')
+    return tl.fromTo(sel, { backgroundSize: '0% 100%', color: getComputedStyle(el).getPropertyValue('--hueso').trim() || '#efeee9' }, { backgroundSize: '100% 100%', color: '#141416', duration: d, ease: 'power2.inOut' }, t);
+  return tl.fromTo(sel, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: d, ease: 'power2.inOut' }, t);
+};
+// fvBarre: entre escenas (cruza el ancho real del lienzo: 1080 vertical, 1920 en 16:9), una línea resaltador cruza la pantalla y la escena nueva se descubre detrás de ella
+const fvBarre = (k, d = .42) => {
+  const t = S[k].A; sx('whoosh', t - .05);
+  tl.fromTo('#fvBarre', { x: -30, opacity: 1 }, { x: (document.documentElement.clientWidth || 1080) + 30, duration: d, ease: 'power2.inOut', immediateRender: false }, t);
+  tl.set('#fvBarre', { opacity: 0 }, t + d);
+  tl.fromTo('#' + k, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: d, ease: 'power2.inOut' }, t);
+};
+// fvDeriva: el fondo desenfocado se mueve despacio (el cristal lo acompaña)
+const fvDeriva = (sel, k) => tl.fromTo(sel, { scale: 1.1, x: -20 }, { scale: 1.2, x: 20, duration: S[k].n + 1, ease: 'none' }, S[k].A);
+// fvTitila: el punto de "AHORA" (último momento) titila 1 vez por segundo durante d segundos
+const fvTitila = (sel, t, d) => { for (let i = 0; i < d; i++) tl.set(sel, { opacity: .15 }, t + i + .5), tl.set(sel, { opacity: 1 }, t + i + 1); };
+// fvFondoPapel (automático, 01/11/2026): mientras se ve una escena .fv-papel, <body data-fv-fondo="papel"> → subtítulo y firma globales en tinta/oliva.
+// Escena con .fv-antes (antes/ahora): data-fv-fondo="antes" → solo la firma (que cae sobre el papel de arriba).
+// Va en la línea de tiempo (tl.set del atributo): es determinista y se puede saltar a cualquier cuadro. Sin escenas de papel no hace nada.
+T.seg.forEach((s, i) => {
+  const el = document.getElementById(s.k); if (!el) return;
+  const modo = el.classList.contains('fv-papel') ? 'papel' : (el.querySelector('.fv-antes') ? 'antes' : '');
+  if (!modo) return;
+  tl.set(document.body, { attr: { 'data-fv-fondo': modo } }, s.A + .2);
+  tl.set(document.body, { attr: { 'data-fv-fondo': '' } }, (T.seg[i + 1] ? T.seg[i + 1].A : s.A + s.n) + .2);
+});
+
+// SUSCRIBITE (01/11/2026) · videos largos 16:9 (la cápsula está en estilo-fv-16x9.css). Aditivo: si el episodio no la llama, no cambia nada.
+// Entra (0,5 s) → el cursor la toca (1,4 s) → "SUSCRIPTO ✓" y la campanita se sacude → se va (≈4,4 s). Sutil: un clic y un tic de sonido.
+const fvSuscribite = (t) => {
+  let el = document.getElementById('fvSusc');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'fvSusc'; el.className = 'fv-susc';
+    el.innerHTML = '<span class="fv-susc-cam"><svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.4-2h-4.8A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.8V3.5a1.5 1.5 0 0 0-3 0v.7A7 7 0 0 0 5 11v5l-2 2v1h18v-1z" fill="#141416"/></svg></span><span class="no">Suscribite</span><span class="ok">Suscripto ✓</span>';
+    document.body.appendChild(el);
+    const d = document.createElement('div'); d.id = 'fvSuscDedo'; d.className = 'fv-susc-dedo';
+    d.innerHTML = '<svg viewBox="0 0 24 24"><path d="M5 3l14 7-6 2-2 6z" fill="#efeee9" stroke="#141416" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+    document.body.appendChild(d);
+  }
+  const b = el.getBoundingClientRect(), x = b.left + b.width * .62, y = b.top + b.height * .55;
+  tl.set(el, { className: 'fv-susc' }, t - .01);
+  tl.fromTo(el, { autoAlpha: 0, x: 60, filter: 'blur(10px)' }, { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: .5, ease: 'power3.out' }, t);
+  tl.set(el, { filter: 'none' }, t + .51);
+  tl.fromTo('#fvSuscDedo', { left: x + 90, top: y + 80, autoAlpha: 0 }, { left: x, top: y, autoAlpha: 1, duration: .55, ease: 'power2.out' }, t + .8);
+  tl.to('#fvSuscDedo', { scale: .8, duration: .08, yoyo: true, repeat: 1 }, t + 1.38);
+  tl.to(el, { scale: .96, duration: .08, yoyo: true, repeat: 1 }, t + 1.38);
+  tl.set(el, { className: 'fv-susc hecho' }, t + 1.45); sx('click', t + 1.4); sx('tic', t + 1.5);
+  tl.to('#fvSuscDedo', { autoAlpha: 0, duration: .3 }, t + 1.9);
+  tl.fromTo('#fvSusc .fv-susc-cam svg', { rotate: 0 }, { keyframes: [{ rotate: -18 }, { rotate: 16 }, { rotate: -10 }, { rotate: 6 }, { rotate: 0 }], duration: .7, transformOrigin: '50% 10%' }, t + 1.5);
+  tl.to(el, { autoAlpha: 0, x: 40, duration: .45, ease: 'power2.in' }, t + 3.95);
+};
+
+// KARAOKE (10/11/2026, corregido x2 — Franco: «solo pintando la palabra que justo se menciona… con excelente animación profesional»):
+// SOLO la palabra que se dice va marcada: chapa de resaltador detrás (texto grafito) que entra con un pop corto (0,9 → 1,08 → 1 en ~0,18 s);
+// las demás en hueso, sin acumular. El renglón nuevo sube 18 px con fundido (0,16 s). Todo calculado por cuadro desde t: determinista.
+// ws = [[ini, fin, palabra], ...] en el MISMO tiempo que t (para la voz: pasar por W()). Fuente única: no rearmar esto en el episodio.
+const fvPop = (u) => { u = Math.min(1, Math.max(0, u)); return u < .55 ? .9 + .18 * (1 - Math.pow(1 - u / .55, 3)) : 1.08 - .08 * ((u - .55) / .45); };
+const fvKaraoke = (ws, t) => {
+  if (!ws.length) return '';
+  const u0 = Math.min(1, Math.max(0, (t - ws[0][0] + .08) / .16)), e0 = 1 - Math.pow(1 - u0, 3);
+  const pal = ws.map(([a, b, w], i) => {
+    const hasta = i + 1 < ws.length ? Math.max(ws[i + 1][0], b) : b + .25, on = t >= a && t < hasta;
+    const st = on ? ` style="transform:scale(${fvPop((t - a) / .18).toFixed(3)})"` : '';
+    return `<span class="fv-k${on ? ' on' : ''}"${st}>${String(w).replace(/[<>]/g, '')}</span>`;
+  }).join(' ');
+  return `<span class="fv-k-linea" style="transform:translateY(${((1 - e0) * 18).toFixed(1)}px);opacity:${e0.toFixed(2)}">${pal}</span>`;
+};
+// fvSubVoz(t): subtítulo de la voz en karaoke usando los trozos del motor (TZ). Devuelve '' fuera de un trozo.
+const fvSubVoz = (t) => { const k = TZ.findIndex(([a, b]) => t >= a && t < b); return k < 0 ? '' : fvKaraoke(TZ[k][2].map((w) => [W(w[0]) - .03, W(w[1]) - .03, w[2]]), t); };
+// AUDIO AJENO = NOTA DE VOZ (10/11/2026). cfg: { A, B (tiempo del video), foto, nombre, rol, medio, onda: [0..1 × N barras, medida del audio REAL],
+// nivel: [0..1 por cuadro a 30 fps, del audio REAL], pal: [[ini, fin, palabra] relativos a A], frases: [[ini relativo, n de palabras], ...] }.
+// Devuelve una función (t) que se llama en EXTRA en cada cuadro. Entra con fvEntra (ficha) y la nota se arma de izquierda a derecha.
+const fvAudio = (k, cfg) => {
+  const sc = document.getElementById(k);
+  const play = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z" fill="#141416"/></svg>';
+  sc.insertAdjacentHTML('beforeend', `<div class="fv-au-ficha" id="${k}Ficha"><div class="fv-au-foto"><div class="fv-au-halo"></div><div class="fv-au-img" style="background-image:url(${cfg.foto})"></div><div class="fv-au-aro"></div></div>
+    <div><div class="fv-au-medio"><i></i>${cfg.medio}</div><div class="fv-au-nom">${cfg.nombre}</div><div class="fv-au-rol">${cfg.rol}</div></div></div>
+    <div class="fv-au-nota" id="${k}Nota"><div class="fv-au-play">${play}</div><div class="fv-au-onda">${cfg.onda.map((v) => `<i style="height:${Math.round(8 + 88 * v)}px"></i>`).join('')}<div class="fv-au-cab"></div></div><div class="fv-au-t">0:00</div></div>
+    <div class="fv-au-comillas" id="${k}Com">“</div><div class="fv-au-frase" id="${k}Frase"></div>`);
+  const barras = [...sc.querySelectorAll('.fv-au-onda i')], cab = sc.querySelector('.fv-au-cab'), reloj = sc.querySelector('.fv-au-t');
+  const aro = sc.querySelector('.fv-au-aro'), halo = sc.querySelector('.fv-au-halo'), frase = document.getElementById(k + 'Frase');
+  const dur = cfg.B - cfg.A, mmss = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  fvEntra('#' + k + 'Ficha', cfg.A - .3); fvEntra('#' + k + 'Nota', cfg.A - .15); fvAparece('#' + k + 'Com', cfg.A);
+  // frases: rangos de palabras [i0, i1) con su inicio
+  const FR = []; let i0 = 0; cfg.frases.forEach(([ini, n]) => { FR.push([ini, i0, i0 + n]); i0 += n; });
+  return (t) => {
+    const r = t - cfg.A; if (r < -1 || r > dur + 1) return;
+    const u = Math.min(1, Math.max(0, r / dur)), n = barras.length;
+    barras.forEach((b, i) => b.classList.toggle('on', (i + .5) / n <= u));
+    cab.style.left = (u * 100).toFixed(2) + '%'; reloj.textContent = mmss(Math.max(0, Math.min(dur, r)));
+    const lv = cfg.nivel[Math.max(0, Math.min(cfg.nivel.length - 1, Math.round(r * 30)))] || 0;
+    aro.style.transform = `scale(${(1 + .07 * lv).toFixed(3)})`; halo.style.transform = `scale(${(1 + .22 * lv).toFixed(3)})`; halo.style.opacity = (.25 + .75 * lv).toFixed(2);
+    let f = -1; FR.forEach((x, j) => { if (r >= x[0] - .05) f = j; });
+    frase.innerHTML = f < 0 ? '' : fvKaraoke(cfg.pal.slice(FR[f][1], FR[f][2]), r);
+  };
+};
+
+// cortes del video base (montar.py usa los mismos números)
+const CUT = { cov1: 3.4, golpe: 64.59, fin: 69.1, loop: 97.45 };
+const LOOP = CUT.loop; window.LOOP = LOOP;
+const CIT = [[[75.08, 75.2, "Pero"], [75.18, 75.34, "bueno,"], [75.34, 75.58, "después"], [75.58, 75.9, "ya"], [75.9, 76.14, "estaba"]], [[76.14, 76.26, "muy"], [76.26, 76.66, "ocupado"], [76.66, 77.18, "porque"], [77.18, 77.46, "corría"]], [[77.46, 77.82, "en,"], [77.82, 77.94, "en"], [77.94, 78.26, "karting"], [78.26, 78.38, "a"], [78.3, 78.42, "los"], [78.42, 78.78, "14,"]], [[78.78, 78.9, "pues"], [78.9, 79.5, "mi"], [79.5, 80.62, "viejo"]], [[81.74, 81.9, "vendió"], [81.9, 82.02, "la"], [81.98, 82.22, "casa"], [82.22, 82.38, "para"], [82.38, 82.5, "que"], [82.46, 82.58, "yo"], [82.58, 82.9, "corriera"]], [[82.9, 83.02, "a"], [82.94, 83.06, "los"], [83.06, 83.38, "15"], [83.38, 83.82, "años,"], [83.82, 84.42, "y,"], [84.5, 84.9, "y"], [84.9, 85.1, "nada."]], [[85.1, 85.26, "—¿Vendió"], [85.26, 85.38, "la"], [85.38, 85.82, "casa,"], [85.82, 86.1, "eh?"]], [[86.1, 86.58, "—Sí,"], [86.58, 86.78, "hizo"], [86.78, 86.9, "un"], [86.86, 87.18, "esfuerzo"], [87.18, 87.38, "grande"]], [[87.38, 87.5, "para"], [87.5, 87.62, "que"], [87.58, 87.7, "yo"], [87.66, 87.86, "pudiera"], [87.86, 88.42, "correr"]], [[88.42, 88.54, "el"], [88.5, 88.7, "primer"], [88.7, 88.86, "año"], [88.86, 88.98, "de"], [88.9, 89.1, "Fórmula"], [89.1, 89.42, "4,"]], [[89.42, 89.54, "que"], [89.54, 89.82, "es,"], [89.82, 89.94, "que"], [89.9, 90.02, "es"], [89.98, 90.18, "como"], [90.18, 90.46, "que"], [90.46, 90.7, "tienes"], [90.7, 90.82, "que"], [90.82, 91.26, "invertir"]], [[91.26, 91.38, "y"], [91.34, 91.46, "te"], [91.46, 91.62, "tiene"], [91.62, 91.74, "que"], [91.7, 91.98, "ayudar"], [91.98, 92.58, "alguien."]]];
+const CITV = [[75.08, 92.93]];
+const CRED = [[3.4, 6.85, 'Formula 1 · GP de Las Vegas 2026'], [6.85, 10.67, 'Colapinto · GP de China 2026 · Wikimedia Commons'],
+  [10.67, 18.55, 'Video: Caroline Smith (@itscarolinescorner) · vía La Nación'], [18.55, 22.48, 'Video: Caroline Smith · vía A24'],
+  [22.48, 25.9, 'Formula 1 · GP de Las Vegas 2026'], [25.9, 31.87, 'Colapinto · Melbourne 2026 · Wikimedia Commons'],
+  [31.87, 35.3, 'Sergio Massa · Wikimedia Commons'], [35.3, 39.1, 'Malena Galmarini · Wikimedia Commons'], [39.1, 42.7, 'Sergio Massa · LN+'],
+  [42.7, 48.5, 'Malena Galmarini · Wikimedia Commons'], [48.5, 54.3, 'José Luis Espert · HCDN'], [54.3, 59.0, 'C5N · avión que usó Espert en 2019'],
+  [59.0, 62.1, 'Fred Machado y José Luis Espert · foto difundida por C5N'], [62.1, 64.59, 'C5N · avión que usó Espert en 2019'],
+  [69.1, 75.08, 'Colapinto · 2023 · Wikimedia Commons'], [75.08, 92.93, 'La Revuelta · RTVE · 15/09/2026'], [92.93, 97.45, 'Video: Caroline Smith · vía La Nación']];
+let EXTRA = (t) => {
+  const tapa = t < CUT.cov1 || t >= LOOP;
+  const enCita = CITV.some(([a, b]) => t >= a - .05 && t < b + .3);
+  const libre = !tapa && !(t >= CUT.golpe - .05 && t < CUT.fin) && t < DUR - 1.3;
+  let h = '';
+  if (libre && enCita) { const c = CIT.filter((x) => x[0][0] - .05 <= t).pop(); if (c && t < c[c.length - 1][1] + .6) h = fvKaraoke(c, t); }
+  else if (libre) h = fvSubVoz(t);
+  document.getElementById('fvsub').innerHTML = h;
+  document.getElementById('gbot').style.opacity = tapa ? 0 : 1;
+  document.querySelector('.fv-firma').style.opacity = (tapa || (t >= CUT.golpe && t < CUT.fin)) ? 0 : 1;
+  const cr = CRED.find(([a, b]) => t >= a && t < b); document.getElementById('crd').textContent = (!tapa && cr) ? cr[2] : '';
+  for (const id of ['gd1', 'gd2']) document.getElementById(id).innerHTML = (t >= CUT.fin - .2 && t < CUT.fin) ? GDUP : '';
+};
+const muestra = (sel, t0, t1) => { tl.set(sel, { autoAlpha: 0 }, 0); tl.fromTo(sel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .22, ease: 'power3.out', immediateRender: false }, t0); tl.to(sel, { autoAlpha: 0, duration: .1 }, t1 - .1); };
+tl.set('#cov', { autoAlpha: 0 }, CUT.cov1);
+muestra('#rF1', 3.45, 6.85);
+muestra('#rVU', 10.72, 14.6);
+muestra('#rTUR', 14.65, 18.55);
+muestra('#rCAS', 18.6, 22.48);
+muestra('#k1', 27.1, 31.87);
+muestra('#rMAS', 31.92, 35.3);
+muestra('#rGAL', 35.35, 39.1);
+muestra('#k2', 39.12, 42.7);
+muestra('#cGAL', 42.72, 48.5);
+muestra('#rESP', 48.55, 54.3);
+muestra('#k3', 54.35, 59.0);
+muestra('#rJUS', 59.05, 64.59);
+muestra('#rREV', 75.12, 81.5);
+// ===== GOLPE: flash → (base: el avión en B/N + punch-in) → «En la política, el avión lo pone un» palabra por palabra → «AMIGO» grande con brillo → glitch =====
+const GW = ['En', 'la', 'política,', 'el', 'avión', 'lo', 'pone', 'un'];
+const GWV = ['en', 'la', 'politica', 'el', 'avion', 'lo', 'pone', 'un'];
+const gTi = GW.map((w, i) => CUT.golpe + .15 + i * .2);
+const tKW = Math.max(CUT.golpe + 1.2, V('s6', 'amigo') - .1);
+const l1 = document.getElementById('gl1'); l1.innerHTML = GW.map((w, i) => `<span id="gw${i}">${w}</span>` + (i === 2 ? '<br>' : '')).join(' ');
+tl.set('#golpe', { autoAlpha: 0 }, 0); tl.set('#golpe', { autoAlpha: 1 }, CUT.golpe);
+tl.set('#flash', { opacity: 1 }, CUT.golpe); tl.set('#flash', { opacity: 0 }, CUT.golpe + 1 / 30); sx('boom', CUT.golpe);
+const PALG = (() => { const out = []; let j = 0; const desde = S.s6.va - .3;
+  for (let k = 0; k < PAL.length; k++) { if (PAL[k][0] < desde) continue; const w = nz(PAL[k][2]); if (j < GWV.length && w === nz(GWV[j])) { out.push(W(PAL[k][0])); j++; } else if (j > 0 && j < GWV.length) { j = 0; out.length = 0; if (w === nz(GWV[0])) { out.push(W(PAL[k][0])); j = 1; } } if (j === GWV.length) break; }
+  return out; })();
+GW.forEach((w, i) => tl.fromTo(`#gw${i}`, { autoAlpha: .18, filter: 'blur(10px)', y: 14 }, { autoAlpha: 1, filter: 'blur(0px)', y: 0, duration: .24, ease: 'power3.out', immediateRender: false }, Math.max(CUT.golpe + .05, (PALG[i] ?? gTi[i]) - .04)));
+GW.forEach((w, i) => tl.set(`#gw${i}`, { autoAlpha: .18 }, 0));
+tl.set('#gkw', { autoAlpha: 0 }, 0);
+tl.fromTo('#gkw', { autoAlpha: 0, scale: .55, filter: 'blur(16px)', y: 26 }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', y: 0, duration: .42, ease: 'back.out(2.6)', immediateRender: false }, tKW - .04);
+const GL = CUT.fin - .2;
+const GDUP = `<div class="l1">${GW.slice(0, 3).join(' ')}<br>${GW.slice(3).join(' ')}</div><div class="kw">amigo</div>`;
+tl.set('#gd1', { opacity: .7, x: -16, clipPath: 'inset(8% 0 52% 0)' }, GL); tl.set('#gd2', { opacity: .8, x: 18, clipPath: 'inset(55% 0 12% 0)' }, GL);
+tl.set('#gl1', { x: 22, clipPath: 'inset(0 0 40% 0)' }, GL + .067); tl.set('#gkw', { x: -26 }, GL + .067);
+tl.set('#gd1', { x: 24, clipPath: 'inset(30% 0 30% 0)' }, GL + .1); tl.set('#gd2', { x: -20, clipPath: 'inset(70% 0 4% 0)' }, GL + .1);
+tl.set('#golpe', { autoAlpha: 0 }, CUT.fin); sx('glitch', GL);
+// LOOP: la portada vuelve en la palabra puente («…Por eso, en la Argentina, es noticia esto:» → «Colapinto volvió de Las Vegas en clase turista»)
+tl.set('#loop', { opacity: 1 }, LOOP);
+
+// ===== mejoras comunes (27/10): encuadre grande, escenas sin arranque vacío, subtítulos =====
+// 1 · si lo primero de una escena entra tarde (espera una palabra), adelantarlo al arranque de la escena
+// (NO a la escena que arranca en 0 = CUADRO 0/portada: ya se ve entera en el cuadro 0 y lo primero que tiene es su SALIDA; adelantarla borraba la portada a los 0,2 s — Ueno/Baradel/Casa Rosada, 04/11/2026)
+for (const s of VIS) {
+  if (s.A < 0.01) continue;
+  const tw = tl.getChildren(true, true, false).filter((x) => x.targets && x.targets().some((el) => el.closest && el.closest('.sc') && el.closest('.sc').id === s.k && !el.classList.contains('bgfoto') && el.id !== 'loop') && x.startTime() > s.A + 0.02 && x.startTime() < s.B);
+  if (!tw.length) continue;
+  const t0 = Math.min(...tw.map((x) => x.startTime()));
+  if (t0 > s.A + 0.6) {
+    const nuevo = s.A + 0.2;
+    tw.filter((x) => Math.abs(x.startTime() - t0) < 0.05).forEach((x) => x.startTime(nuevo));
+    SFX.forEach((e) => { if (Math.abs(e[1] - t0) < 0.15) e[1] = +(nuevo + (e[1] - t0)).toFixed(3); });
+  }
+}
+// 2 · auto-encuadre: el contenido de cada escena se agranda y se centra en la zona segura (x 90–940, y 480–1250)
+const FUERA = '.fondo,.bgfoto,.src,.scan,.reja,#loop,.foto-fondo';
+for (const s of VIS) {
+  const sc = document.getElementById(s.k), cam = sc.querySelector('.cam'); if (!cam) continue;
+  const fit = document.createElement('div'); fit.style.cssText = 'position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0';
+  [...cam.children].forEach((ch) => { if (!ch.matches(FUERA)) fit.appendChild(ch); });
+  cam.appendChild(fit);
+  tl.seek(Math.max(s.A, s.B - 0.05), false); sc.style.visibility = 'visible';
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  fit.querySelectorAll(':scope > *').forEach((el) => {
+    if (el.matches('img.cut')) return;
+    const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || +cs.opacity < 0.05 || cs.display === 'none') return;
+    const r = el.getBoundingClientRect(); if (r.width < 2 || r.height < 2) return;
+    x0 = Math.min(x0, Math.max(0, r.left)); y0 = Math.min(y0, r.top); x1 = Math.max(x1, Math.min(1080, r.right)); y1 = Math.max(y1, r.bottom);
+  });
+  if (x1 > x0 && y1 > y0) {
+    const w = x1 - x0, h = y1 - y0;
+    const k = Math.max(0.82, Math.min(1.32, 850 / w, 770 / h));
+    const tx = 90 - x0 * k, ty = 480 + Math.max(0, (770 - h * k) * 0.42) - y0 * k;
+    fit.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${k.toFixed(3)})`;
+  }
+  sc.style.visibility = '';
+}
+tl.seek(0, false);
+// 3 · subtítulos palabra por palabra (texto corregido en armar.py), arriba de las fuentes
+const SUB = document.createElement('div'); SUB.id = 'subtit';
+SUB.style.cssText = "position:absolute;left:90px;width:850px;top:1270px;z-index:57;text-align:center;font:900 60px/1.08 'Inter Tight';letter-spacing:-.02em;color:#fff;-webkit-text-stroke:10px #000;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.7)";
+document.body.appendChild(SUB);
+const TROZOS = []; { let cur = [];
+  const corte = (w) => /[.,;:?!…]$/.test(w[2]);
+  SUBS.forEach((w, i) => { cur.push(w); const largo = cur.map((x) => x[2]).join(' ').length; if (corte(w) || cur.length >= 4 || largo > 20 || i === SUBS.length - 1) { TROZOS.push(cur); cur = []; } });
+}
+const TZ = TROZOS.map((c, i) => [W(c[0][0]) - 0.05, i + 1 < TROZOS.length ? Math.min(W(TROZOS[i + 1][0][0]) - 0.05, W(c[c.length - 1][1]) + 0.6) : W(c[c.length - 1][1]) + 0.5, c]);
+let SUBK = -1;
+const subtitulos = (t) => {
+  const PF = document.getElementById('perfil');
+  if (t > DUR - 1.2 || (PF && +getComputedStyle(PF).opacity > 0.05 && getComputedStyle(PF).visibility !== 'hidden' && PF.closest('.sc').style.visibility !== 'hidden' && getComputedStyle(PF.closest('.sc')).visibility === 'visible')) { SUB.innerHTML = ''; return; }
+  const k = TZ.findIndex(([a, b]) => t >= a && t < b);
+  if (k < 0) { SUB.innerHTML = ''; return; }
+  const [a, , c] = TZ[k];
+  SUB.innerHTML = c.map((w) => `<span style="color:${t >= W(w[0]) - 0.03 ? '#ffd23f' : '#fff'}">${w[2].replace(/[<>]/g, '')}</span>`).join(' ');
+  const u = clamp((t - a) / 0.12); SUB.style.transform = `scale(${(0.86 + 0.14 * ease(u)).toFixed(3)})`;
+};
+const gr = $('#grano').getContext('2d'); const RUIDO = [];
+for (let k = 0; k < 6; k++) { const im = gr.createImageData(540, 960); for (let i = 0; i < im.data.length; i += 4) { const v = hash(i * .37 + k * 1013.3) * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } RUIDO.push(im); }
+const NUM = Object.keys(C_).map((id) => [document.getElementById(id), ...C_[id]]);
+const reloj = (seg) => String(Math.floor(seg / 60)).padStart(2, '0') + ':' + String(Math.floor(seg % 60)).padStart(2, '0');
+// el reloj corre "20 minutos" comprimidos en el tiempo del video
+const corre = (t, [a, b]) => reloj(1200 * ease((t - a) / (b - a)) * 0 + 1200 * clamp((t - a) / (b - a)));
+const plano = (h) => h.replace(/<[^>]+>/g, '');
+const corta = (h, n) => { let out = '', k = 0, dentro = false; for (const ch of h) { if (ch === '<') dentro = true; if (dentro) { out += ch; if (ch === '>') dentro = false; continue; } if (k >= n) break; out += ch; k++; } return out; };
+window.render = (t) => {
+  tl.seek(t, false);
+  gr.putImageData(RUIDO[Math.floor(t * 30) % 6], 0, 0);
+  for (const [el, t0, t1, max, desde, f] of NUM) el.textContent = f(desde + (max - desde) * ease((t - t0) / Math.min(0.45, Math.max(0.05, t1 - t0))));  // el número llega al valor dicho en <0,5 s: lo que se ve = lo que se dice
+  for (const id in TX) {
+    let html = ''; const L = TX[id];
+    L.forEach(([a, b, h]) => { if (t < a) return; const n = plano(h).length; const u = clamp((t - a) / Math.max(.2, b - a)); html += (html ? '\n' : '') + corta(h, Math.ceil(n * u)); });
+    const el = document.getElementById(id); el.innerHTML = html + (el.dataset.cursor === 'no' ? '' : (Math.floor(t * 2.5) % 2 ? '<span class="cur"></span>' : '<span class="cur" style="opacity:0"></span>'));
+  }
+  if ($('#btnt')) $('#btnt').textContent = t >= TBT + .05 ? 'Siguiendo' : 'Seguir';
+  EXTRA(t); subtitulos(t);
+};
+for (const id in C_) { const [t0, t1] = C_[id]; const d = Math.min(0.45, Math.max(0.05, t1 - t0)); for (let i = 0; i < 7; i++) sx('tic', t0 + i * d / 7); }
+for (const id in TX) for (const [a, b] of TX[id]) for (let t = a; t < b; t += .075) sx('tecla', t);
+window.render(0); window.listo = true;
+})();
+
+</script>
+</body></html>
