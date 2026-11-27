@@ -45,6 +45,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
+      - run: sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list /etc/apt/sources.list.d/microsoft-prod.sources || true   # el repo de Microsoft da 403 en algunas máquinas y rompe el apt de playwright
       - run: npx playwright install --with-deps chromium
       - run: node render.mjs "${{ needs.plan.outputs.escena }}" cuadros "${{ matrix.tramo }}/${{ needs.plan.outputs.partes }}"
       - uses: actions/upload-artifact@v4
